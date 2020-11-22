@@ -1,13 +1,13 @@
 {
-  "name": "codenerd",
-  "version": "0.2.0",
-  "description": "Code school for kids.",
+  "name": "meteor-base",
+  "version": "3.0.0",
+  "description": "A foundation for Meteor, React, Apollo GraphQL projects based on Clever Beagle's Pup base.",
   "private": true,
   "repository": {
-    "url": "git@cleverbeagle:cleverbeagle/pup.git",
+    "url": "git@github.com:allenfuller/meteor-base.git",
     "type": "git"
   },
-  "author": "cleverbeagle <business@cleverbeagle.com>",
+  "author": "Allen Fuller <meteor@allenfuller.com>",
   "license": "MIT",
   "meteor": {
     "mainModule": {
@@ -16,7 +16,7 @@
     }
   },
   "scripts": {
-    "dev": "meteor --settings settings-development.json",
+    "start": "meteor --settings settings-dev.json",
     "deploy": "node ../.deploy codenerd",
     "certificates": "cd ~/projects/cleverbeagle/.deploy && kubectl --kubeconfig='kubectl_config' describe certificate",
     "cluster": "doctl kubernetes cluster get cleverbeagle",

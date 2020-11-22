@@ -5,40 +5,40 @@ import { Grid } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 
-import Navigation from '../../components/Navigation';
+import Navigation from '../../global/components/Navigation';
 
-import Authenticated from '../../components/Authenticated';
-import Authorized from '../../components/Authorized';
-import Public from '../../components/Public';
+import Authenticated from '../../global/components/Authenticated';
+import Authorized from '../../global/components/Authorized';
+import Public from '../../global/components/Public';
 
-import Index from '../../pages/Index';
+import Index from '../../global/pages/Index';
 
-import Documents from '../../pages/Documents';
-import ViewDocument from '../../pages/ViewDocument';
-import EditDocument from '../../pages/EditDocument';
+import Documents from '../../global/pages/Documents';
+import ViewDocument from '../../documents/pages/ViewDocument';
+import EditDocument from '../../global/pages/EditDocument';
 
-import Profile from '../../pages/Profile';
-import Signup from '../../pages/Signup';
-import Login from '../../pages/Login';
-import Logout from '../../pages/Logout';
+import Profile from '../../users/pages/Profile';
+import Signup from '../../users/pages/Signup';
+import Login from '../../users/pages/Login';
+import Logout from '../../global/pages/Logout';
 
-import VerifyEmail from '../../pages/VerifyEmail';
-import RecoverPassword from '../../pages/RecoverPassword';
-import ResetPassword from '../../pages/ResetPassword';
+import VerifyEmail from '../../users/pages/VerifyEmail';
+import RecoverPassword from '../../users/pages/RecoverPassword';
+import ResetPassword from '../../users/pages/ResetPassword';
 
-import AdminUsers from '../../pages/AdminUsers';
-import AdminUser from '../../pages/AdminUser';
-import AdminUserSettings from '../../pages/AdminUserSettings';
+import AdminUsers from '../../global/pages/AdminUsers';
+import AdminUser from '../../global/pages/AdminUser';
+import AdminUserSettings from '../../admin/pages/AdminUserSettings';
 
-import NotFound from '../../pages/NotFound';
-import Footer from '../../components/Footer';
+import NotFound from '../../global/pages/NotFound';
+import Footer from '../../global/components/Footer';
 
-import Terms from '../../pages/Terms';
-import Privacy from '../../pages/Privacy';
-import ExamplePage from '../../pages/ExamplePage';
+import Terms from '../../global/pages/Terms';
+import Privacy from '../../global/pages/Privacy';
+import ExamplePage from '../../global/pages/ExamplePage';
 
-import VerifyEmailAlert from '../../components/VerifyEmailAlert';
-import GDPRConsentModal from '../../components/GDPRConsentModal';
+import VerifyEmailAlert from '../../global/components/VerifyEmailAlert';
+import GDPRConsentModal from '../../global/components/GDPRConsentModal';
 
 import withTrackerSsr from '../../../modules/withTrackerSsr';
 import getUserName from '../../../modules/getUserName';

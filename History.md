@@ -1,3 +1,6 @@
+## v3.0.0, November 22, 2020
+
+- Branch from Clever Beagle's Pup template
 ## v2.2.1, August 26th, 2020
 
 - Bump `bcrypt` to `5.0.0`
