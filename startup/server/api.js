@@ -36,6 +36,7 @@ const schema = {
       users(currentPage: Int, perPage: Int, search: String): Users
       userSettings: [UserSetting]
       exportUserData: UserDataExport
+      queryRoles: [Role]
       oAuthServices(services: [String]): [String]
     }
 

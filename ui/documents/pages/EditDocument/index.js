@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
-import DocumentEditor from '../../../documents/components/DocumentEditor';
-import Loading from '../../components/Loading';
-import NotFound from '../NotFound';
+import { graphql } from '@apollo/client/react/hoc';
+
+import Loading from '../../../global/components/Loading';
+import NotFound from '../../../global/pages/NotFound';
+import DocumentEditor from '../../components/DocumentEditor';
 import { editDocument as editDocumentQuery } from '../../queries/Documents.gql';
 
 const EditDocument = ({ data, history }) => (

@@ -1,39 +1,45 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { compose, graphql } from 'react-apollo';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import { Button, ListGroup } from 'react-bootstrap';
+import { useMutation, useQuery } from '@apollo/client';
 import { Bert } from 'meteor/themeteorchef:bert';
-import AdminUserSettingsModal from '../../components/AdminUserSettingsModal';
+
 import BlankState from '../../../global/components/BlankState';
-import userSettingsQuery from '../../queries/UserSettings.gql';
+import GET_USERSETTINGS from '../../../users/queries/UserSettings.gql';
 import {
-  addUserSetting as addUserSettingMutation,
-  updateUserSetting as updateUserSettingMutation,
-  removeUserSetting as removeUserSettingMutation,
-} from '../../mutations/UserSettings.gql';
+  addUserSetting as ADD_USERSETTING,
+  updateUserSetting as UPDATE_USERSETTING,
+  removeUserSetting as REMOVE_USERSETTING,
+} from '../../../users/mutations/UserSettings.gql';
+import AdminUserSettingsModal from '../../components/AdminUserSettingsModal';
+import Styles from './styles';
 
-const Setting = styled(ListGroupItem)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+const AdminUserSettings = () => {
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [currentSetting, setCurrentSetting] = useState(null);
+  const { data } = useQuery(GET_USERSETTINGS);
 
-  p {
-    margin: 0;
-    word-break: break-word;
-  }
+  const [addUserSetting] = useMutation(ADD_USERSETTING, {
+    refetchQueries: [{ query: GET_USERSETTINGS }],
+    onCompleted: () => {
+      Bert.alert('Setting added!', 'success');
+    },
+  });
 
-  .btn:last-child {
-    margin-left: 10px;
-    margin-right: -5px;
-  }
-`;
+  const [updateUserSetting] = useMutation(UPDATE_USERSETTING, {
+    refetchQueries: [{ query: GET_USERSETTINGS }],
+    onCompleted: () => {
+      Bert.alert('Setting updated!', 'success');
+    },
+  });
 
-class AdminUserSettings extends React.Component {
-  state = { showSettingsModal: false, currentSetting: null };
+  const [removeUserSetting] = useMutation(REMOVE_USERSETTING, {
+    refetchQueries: [{ query: GET_USERSETTINGS }],
+    onCompleted: () => {
+      Bert.alert('Setting removed!', 'success');
+    },
+  });
 
-  handleDeleteSetting = (settingId) => {
-    const { removeUserSetting } = this.props;
+  const handleDeleteSetting = (settingId) => {
     if (
       confirm(
         "Are you sure? Before deleting this setting make sure that it's no longer in use in your application!",
@@ -47,40 +53,44 @@ class AdminUserSettings extends React.Component {
     }
   };
 
-  render() {
-    const { data, addUserSetting, updateUserSetting } = this.props;
-    const { showSettingsModal, currentSetting } = this.state;
+  const handleAddSetting = () => {
+    setShowSettingsModal(true);
+    setCurrentSetting(null);
+  };
+
+  const handleEditSetting = (setting) => {
+    setShowSettingsModal(true);
+    setCurrentSetting(setting);
+  };
+
+  const handleHideModal = () => {
+    setShowSettingsModal(false);
+    setCurrentSetting(null);
+  };
+
+  if (data) {
     return (
       <div className="AdminUserSettings">
         <div className="page-header clearfix">
           <h4 className="pull-left">User Settings</h4>
-          <Button
-            bsStyle="success"
-            className="pull-right"
-            onClick={() => this.setState({ showSettingsModal: true, currentSetting: null })}
-          >
+          <Button bsStyle="success" className="pull-right" onClick={() => handleAddSetting()}>
             Add Setting
           </Button>
         </div>
         {data.userSettings && data.userSettings.length > 0 ? (
           <ListGroup>
             {data.userSettings.map((setting) => (
-              <Setting key={setting._id}>
+              <Styles.Setting key={setting._id}>
                 <p>{setting.key}</p>
                 <div>
-                  <Button
-                    bsStyle="default"
-                    onClick={() =>
-                      this.setState({ showSettingsModal: true, currentSetting: setting })
-                    }
-                  >
+                  <Button bsStyle="default" onClick={() => handleEditSetting(setting)}>
                     Edit
                   </Button>
-                  <Button bsStyle="danger" onClick={() => this.handleDeleteSetting(setting._id)}>
+                  <Button bsStyle="danger" onClick={() => handleDeleteSetting(setting._id)}>
                     Delete
                   </Button>
                 </div>
-              </Setting>
+              </Styles.Setting>
             ))}
           </ListGroup>
         ) : (
@@ -90,14 +100,14 @@ class AdminUserSettings extends React.Component {
             subtitle="Add your first setting by clicking the button below."
             action={{
               style: 'success',
-              onClick: () => this.setState({ showSettingsModal: true, currentSetting: null }),
+              onClick: () => handleAddSetting(),
               label: 'Create Your First Setting',
             }}
           />
         )}
         <AdminUserSettingsModal
           show={showSettingsModal}
-          onHide={() => this.setState({ showSettingsModal: false, currentSetting: null })}
+          onHide={() => handleHideModal()}
           setting={currentSetting}
           addUserSetting={addUserSetting}
           updateUserSetting={updateUserSetting}
@@ -105,42 +115,7 @@ class AdminUserSettings extends React.Component {
       </div>
     );
   }
-}
-
-AdminUserSettings.propTypes = {
-  data: PropTypes.object.isRequired,
-  addUserSetting: PropTypes.func.isRequired,
-  updateUserSetting: PropTypes.func.isRequired,
-  removeUserSetting: PropTypes.func.isRequired,
+  return null;
 };
 
-export default compose(
-  graphql(userSettingsQuery),
-  graphql(addUserSettingMutation, {
-    name: 'addUserSetting',
-    options: () => ({
-      refetchQueries: [{ query: userSettingsQuery }],
-      onCompleted: () => {
-        Bert.alert('Setting added!', 'success');
-      },
-    }),
-  }),
-  graphql(updateUserSettingMutation, {
-    name: 'updateUserSetting',
-    options: () => ({
-      refetchQueries: [{ query: userSettingsQuery }],
-      onCompleted: () => {
-        Bert.alert('Setting updated!', 'success');
-      },
-    }),
-  }),
-  graphql(removeUserSettingMutation, {
-    name: 'removeUserSetting',
-    options: () => ({
-      refetchQueries: [{ query: userSettingsQuery }],
-      onCompleted: () => {
-        Bert.alert('Setting removed!', 'success');
-      },
-    }),
-  }),
-)(AdminUserSettings);
+export default AdminUserSettings;

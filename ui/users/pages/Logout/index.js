@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import Icon from '../../components/Icon';
+import Icon from '../../../global/components/Icon';
 import Styles from './styles';
 
-const { productName, twitterUsername, facebookUsername } = Meteor.settings.public;
+const { facebook, productName, twitterUsername } = Meteor.settings.public;
+const facebookUsername = facebook && facebook.username;
 
 class Logout extends React.Component {
   componentDidMount() {

@@ -1,10 +1,27 @@
-export default `
-  type Name {
+import { gql } from '@apollo/client';
+
+export default gql`
+  scalar JSON
+
+  input NameInput {
     first: String
     last: String
   }
 
-  input NameInput {
+  input ProfileInput {
+    name: NameInput
+  }
+
+  input UserInput {
+    _id: String
+    email: String
+    password: String
+    profile: ProfileInput
+    roles: [String]
+    settings: [UserSettingInput] # From /api/UserSettings/types.js
+  }
+
+  type Name {
     first: String
     last: String
   }
@@ -12,30 +29,21 @@ export default `
   type Role {
     _id: String
     name: String
-    inRole: Boolean
-  }
-
-  input ProfileInput {
-    name: NameInput
-  }
-  
-  input UserInput {
-    _id: String,
-    email: String,
-    password: String,
-    profile: ProfileInput,
-    roles: [String],
-    settings: [UserSettingInput] # From /api/UserSettings/types.js
   }
 
   type User {
     _id: String
-    name: Name
-    username: String
+    createdAt: String
+    aboutMe: String
+    coverPic: String
     emailAddress: String
+    emailVerified: Boolean
+    name: Name
     oAuthProvider: String
-    roles: [Role]
+    profilePic: String
+    roles: JSON
     settings: [UserSetting] # From /api/UserSettings/types.js
+    username: String
   }
 
   type Users {

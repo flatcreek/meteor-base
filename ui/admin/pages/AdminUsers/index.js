@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role, jsx-a11y/anchor-is-valid */
-
 import React from 'react';
-import SearchInput from '../../components/SearchInput';
-import AdminUsersList from '../../components/AdminUsersList';
 
+import SearchInput from '../../../global/components/SearchInput';
+import AdminUsersList from '../../components/AdminUsersList';
 import AdminUsersHeader from './styles';
 
 class AdminUsers extends React.Component {

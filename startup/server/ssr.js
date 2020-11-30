@@ -1,14 +1,13 @@
 import React from 'react';
-import { ApolloProvider, renderToStringWithData } from 'react-apollo';
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { Meteor } from 'meteor/meteor';
+import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { renderToStringWithData } from '@apollo/client/react/ssr';
 import 'isomorphic-fetch';
 import { onPageLoad } from 'meteor/server-render';
 import { StaticRouter } from 'react-router';
 import { Helmet } from 'react-helmet';
 import { ServerStyleSheet } from 'styled-components';
-import { Meteor } from 'meteor/meteor';
+
 import App from '../../ui/layouts/App';
 import checkIfBlacklisted from '../../modules/server/checkIfBlacklisted';
 

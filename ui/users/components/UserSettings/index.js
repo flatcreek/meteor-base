@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ListGroup } from 'react-bootstrap';
-import ToggleSwitch from '../ToggleSwitch';
-import BlankState from '../BlankState';
-import unfreezeApolloCacheValue from '../../../modules/unfreezeApolloCacheValue';
-import delay from '../../../modules/delay';
+
+import ToggleSwitch from '../../../global/components/ToggleSwitch';
+import BlankState from '../../../global/components/BlankState';
+import unfreezeApolloCacheValue from '../../../../modules/unfreezeApolloCacheValue';
+import delay from '../../../../modules/delay';
 import Styles from './styles';
 
 class UserSettings extends React.Component {

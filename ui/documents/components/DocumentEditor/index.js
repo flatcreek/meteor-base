@@ -2,16 +2,16 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ControlLabel, DropdownButton, MenuItem } from 'react-bootstrap';
-import { Mutation } from 'react-apollo';
 import autoBind from 'react-autobind';
-import { Bert } from '../../../admin/pages/AdminUserSettings/node_modules/meteor/themeteorchef:bert';
+import { Mutation } from '@apollo/client/react/components';
+import { ControlLabel, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Bert } from 'meteor/themeteorchef:bert';
+
+import delay from '../../../../modules/delay';
+import { timeago } from '../../../../modules/dates';
 import Icon from '../../../global/components/Icon';
 import { editDocument as editDocumentQuery, documents } from '../../queries/Documents.gql';
 import { updateDocument, removeDocument } from '../../mutations/Documents.gql';
-import delay from '../../../modules/delay';
-import { timeago } from '../../../modules/dates';
-
 import {
   StyledDocumentEditor,
   DocumentEditorHeader,
@@ -28,12 +28,11 @@ class DocumentEditor extends React.Component {
   }
 
   handleUpdateDocument(mutate) {
-    const { doc } = this.props;
     this.setState({ mutation: 'updateDocument', saving: true }, () => {
       delay(() => {
         mutate({
           variables: {
-            _id: doc._id,
+            _id: this.props.doc._id,
             title: this.form.title.value.trim(),
             body: this.form.body.value.trim(),
           },
@@ -44,11 +43,10 @@ class DocumentEditor extends React.Component {
   }
 
   handleSetVisibility(mutate, isPublic) {
-    const { doc } = this.props;
     this.setState({ mutation: 'updateDocument', saving: true }, () => {
       mutate({
         variables: {
-          _id: doc._id,
+          _id: this.props.doc._id,
           isPublic: isPublic === 'public',
         },
       });
@@ -56,12 +54,11 @@ class DocumentEditor extends React.Component {
   }
 
   handleRemoveDocument(mutate) {
-    const { doc } = this.props;
     if (confirm('Are you sure? This is permanent!')) {
       this.setState({ mutation: 'removeDocument' }, () => {
         mutate({
           variables: {
-            _id: doc._id,
+            _id: this.props.doc._id,
           },
         });
       });
@@ -70,27 +67,19 @@ class DocumentEditor extends React.Component {
 
   render() {
     const { doc, history } = this.props;
-    const { mutation, saving } = this.state;
-
-    const settingsIcon = (
-      <span>
-        <Icon iconStyle="solid" icon="gear" />
-      </span>
-    );
-
     return (
       <Mutation
         ignoreResults
-        mutation={{ updateDocument, removeDocument }[mutation]}
-        refetchQueries={mutation === 'removeDocument' ? [{ query: documents }] : []}
+        mutation={{ updateDocument, removeDocument }[this.state.mutation]}
+        refetchQueries={this.state.mutation === 'removeDocument' ? [{ query: documents }] : []}
         awaitRefetchQueries
         onCompleted={() => {
-          if (mutation === 'updateDocument') {
-            // NOTE: Delay set of saving to false so UI changes aren't jarring.
+          if (this.state.mutation === 'updateDocument') {
+            // NOTE: Delay set of this.state.saving to false so UI changes aren't jarring.
             setTimeout(() => this.setState({ saving: false }), 1000);
           }
 
-          if (mutation === 'removeDocument') {
+          if (this.state.mutation === 'removeDocument') {
             history.push('/documents');
             Bert.alert('Document removed!', 'success');
           }
@@ -103,19 +92,23 @@ class DocumentEditor extends React.Component {
           <React.Fragment>
             <DocumentEditorHeader className="clearfix">
               <p>
-                {saving ? (
+                {this.state.saving ? (
                   <em>Saving...</em>
                 ) : (
-                  <span>
-                    Last edit was
-                    {timeago(doc.updatedAt)}
-                  </span>
+                  <span>Last edit was {timeago(doc.updatedAt)}</span>
                 )}
               </p>
-              <DropdownButton bsStyle="default" title={settingsIcon} id="set-document-public">
+              <DropdownButton
+                bsStyle="default"
+                title={
+                  <span>
+                    <Icon iconStyle="solid" icon="gear" />
+                  </span>
+                }
+                id="set-document-public"
+              >
                 <MenuItem onClick={() => history.push(`/documents/${doc._id}`)}>
-                  <Icon iconStyle="solid" icon="external-link-alt" />
-                  {' View Document'}
+                  <Icon iconStyle="solid" icon="external-link-alt" /> View Document
                 </MenuItem>
                 <MenuItem divider />
                 <MenuItem header>Visibility</MenuItem>
@@ -124,16 +117,14 @@ class DocumentEditor extends React.Component {
                   eventKey="1"
                   onClick={() => this.handleSetVisibility(mutate, 'public')}
                 >
-                  <Icon iconStyle="solid" icon="unlock" />
-                  {' Public'}
+                  <Icon iconStyle="solid" icon="unlock" /> Public
                 </MenuItem>
                 <MenuItem
                   className={!doc.isPublic && 'active'}
                   eventKey="2"
                   onClick={() => this.handleSetVisibility(mutate, 'private')}
                 >
-                  <Icon iconStyle="solid" icon="lock" />
-                  {' Private'}
+                  <Icon iconStyle="solid" icon="lock" /> Private
                 </MenuItem>
                 <MenuItem divider />
                 <MenuItem onClick={() => this.handleRemoveDocument(mutate)}>
@@ -182,7 +173,7 @@ class DocumentEditor extends React.Component {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Markdown Supported
+                    Formatting guide
                   </a>
                 </p>
               </span>

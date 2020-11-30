@@ -1,0 +1,22 @@
+fragment UserAttributes on User {
+  _id
+  name {
+    first
+    last
+  }
+  profilePic
+  coverPic
+  aboutMe
+  username
+  emailAddress
+  emailVerified
+  oAuthProvider
+  roles
+  settings {
+    _id
+    key
+    label
+    type
+    value 
+  }
+}

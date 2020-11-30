@@ -5,7 +5,7 @@ import { camelCase } from 'lodash';
 import Validation from '../../../global/components/Validation';
 import InputHint from '../../../global/components/InputHint';
 import ToggleSwitch from '../../../global/components/ToggleSwitch';
-import delay from '../../../modules/delay';
+import delay from '../../../../modules/delay';
 
 const defaultState = {
   keyName: '',

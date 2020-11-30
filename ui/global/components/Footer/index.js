@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Grid } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
-import { year } from '../../../modules/dates';
+
+import { year } from '../../../../modules/dates';
 import Styles from './styles';
 
 const { productName, copyrightStartYear } = Meteor.settings.public;

@@ -1,17 +1,23 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal } from 'react-bootstrap';
-import { compose, graphql } from 'react-apollo';
-import UserSettings from '../UserSettings';
-import { userSettings as userSettingsQuery } from '../../queries/Users.gql';
-import { updateUser as updateUserMutation } from '../../mutations/Users.gql';
-import unfreezeApolloCacheValue from '../../../modules/unfreezeApolloCacheValue';
+import { graphql } from '@apollo/client/react/hoc';
+import flowRight from 'lodash/flowRight';
+
+import unfreezeApolloCacheValue from '../../../../modules/unfreezeApolloCacheValue';
+import { userSettings as GET_USERSETTINGS } from '../../../users/queries/Users.gql';
+import { updateUser as UPDATE_USER } from '../../../users/mutations/Users.gql';
+import UserSettings from '../../../users/components/UserSettings';
 import Styles from './styles';
 
 class GDPRConsentModal extends React.Component {
-  state = { show: false };
+  constructor() {
+    super();
+    this.state = { show: false };
+  }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data && nextProps.data.user && nextProps.data.user.settings) {
       let gdprComplete = true;
       const gdprSettings = nextProps.data.user.settings.filter(
@@ -25,9 +31,9 @@ class GDPRConsentModal extends React.Component {
   }
 
   handleSaveSettings = () => {
-    const { data, updateUser } = this.props;
+    const { data } = this.props;
     if (data && data.user && data.user.settings) {
-      updateUser({
+      this.props.updateUser({
         variables: {
           user: {
             settings: unfreezeApolloCacheValue(data && data.user && data.user.settings).map(
@@ -39,20 +45,18 @@ class GDPRConsentModal extends React.Component {
             ),
           },
         },
-        refetchQueries: [{ query: userSettingsQuery }],
+        refetchQueries: [{ query: GET_USERSETTINGS }],
       });
     }
   };
 
   render() {
     const { data, updateUser } = this.props;
-    const { show } = this.state;
-
     return (
-      <div className="GDPRConsentModal">
+      <div className="GDPRConsentModal" keyboard={false}>
         <Styles.GDPRConsentModal
           backdrop="static"
-          show={show}
+          show={this.state.show}
           onHide={() => this.setState({ show: false })}
         >
           <Modal.Header>
@@ -60,13 +64,12 @@ class GDPRConsentModal extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <p>
-              {"In cooperation with the European Union's (EU) "}
+              In cooperation with the European Union&apos;s (EU){' '}
               <a href="https://www.eugdpr.org/" target="_blank" rel="noopener noreferrer">
-                {'General Data Protection Regulation'}
-              </a>
-              {
-                ' (GDPR), we need to obtain your consent for how we make use of your data. Please review each of the settings below to customize your experience.'
-              }
+                General Data Protection Regulation
+              </a>{' '}
+              (GDPR), we need to obtain your consent for how we make use of your data. Please review
+              each of the settings below to customize your experience.
             </p>
             <UserSettings settings={data.user && data.user.settings} updateUser={updateUser} />
           </Modal.Body>
@@ -92,9 +95,9 @@ GDPRConsentModal.propTypes = {
   updateUser: PropTypes.func.isRequired,
 };
 
-export default compose(
-  graphql(userSettingsQuery),
-  graphql(updateUserMutation, {
+export default flowRight(
+  graphql(GET_USERSETTINGS),
+  graphql(UPDATE_USER, {
     name: 'updateUser',
   }),
 )(GDPRConsentModal);

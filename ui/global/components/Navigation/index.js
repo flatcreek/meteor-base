@@ -1,35 +1,35 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
+import { Meteor } from 'meteor/meteor';
 import { Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { Meteor } from 'meteor/meteor';
-import PublicNavigation from '../PublicNavigation';
-import AuthenticatedNavigation from '../AuthenticatedNavigation';
 
-const Navigation = (props) => {
-  const { authenticated } = props;
-  return (
-    <Navbar collapseOnSelect>
-      <Navbar.Header>
-        <Navbar.Brand>
-          <Link to="/">{Meteor.settings.public.productName}</Link>
-        </Navbar.Brand>
-        <Navbar.Toggle />
-      </Navbar.Header>
-      <Navbar.Collapse>
-        {!authenticated ? <PublicNavigation /> : <AuthenticatedNavigation {...props} />}
-      </Navbar.Collapse>
-    </Navbar>
-  );
-};
+import { AuthContext } from '../../context/Authentication';
+import NavigationAuthenticated from '../NavigationAuthenticated';
+import NavigationPublic from '../NavigationPublic';
+import Styles from './styles';
 
-Navigation.defaultProps = {
-  name: '',
-};
+const Navigation = () => {
+  const { userId, loading } = useContext(AuthContext);
+  const { productName } = Meteor.settings.public;
+  if (!loading) {
+    return (
+      <Styles.Navbar>
+        <Navbar collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <Link to="/">{productName}</Link>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            {!userId ? <NavigationPublic /> : <NavigationAuthenticated />}
+          </Navbar.Collapse>
+        </Navbar>
+      </Styles.Navbar>
+    );
+  }
 
-Navigation.propTypes = {
-  authenticated: PropTypes.bool.isRequired,
-  name: PropTypes.string,
+  return null;
 };
 
 export default Navigation;

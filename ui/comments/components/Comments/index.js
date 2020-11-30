@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CommentComposer from '../../../comments/components/CommentComposer';
-import { timeago } from '../../../modules/dates';
+import CommentComposer from '../CommentComposer';
+import { timeago } from '../../../../modules/dates';
 
 import { StyledComments, CommentsList, CommentsListHeader, Comment } from './styles';
 

@@ -1,38 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
 import { Meteor } from 'meteor/meteor';
+import { graphql } from '@apollo/client/react/hoc';
+import { Link } from 'react-router-dom';
 
+import parseMarkdown from '../../../../modules/parseMarkdown';
 import SEO from '../../../global/components/SEO';
 import BlankState from '../../../global/components/BlankState';
-import Comments from '../../components/Comments';
 import { document as documentQuery } from '../../queries/Documents.gql';
-import parseMarkdown from '../../../../modules/parseMarkdown';
-
 import { StyledViewDocument, DocumentBody } from './styles';
 
-class ViewDocument extends React.Component {
-  state = {
-    sortBy: 'newestFirst',
-  };
+const { twitterUsername } = Meteor.settings.public;
 
-  componentWillMount() {
+class ViewDocument extends React.Component {
+  componentDidMount() {
     const { data } = this.props;
     if (Meteor.isClient && Meteor.userId()) data.refetch();
   }
 
-  handleChangeCommentSort = (event) => {
-    const { data } = this.props;
-    event.persist();
-
-    this.setState({ sortBy: event.target.value }, () => {
-      data.refetch({ sortBy: event.target.value });
-    });
-  };
-
   render() {
     const { data } = this.props;
-    const { sortBy } = this.state;
 
     if (!data.loading && data.document) {
       return (
@@ -41,11 +28,11 @@ class ViewDocument extends React.Component {
             <SEO
               title={data.document && data.document.title}
               description={data.document && data.document.body}
-              url={`documents/${data.document && data.document._id}`}
+              path={`documents/${data.document && data.document._id}`}
               contentType="article"
               published={data.document && data.document.createdAt}
               updated={data.document && data.document.updatedAt}
-              twitter="clvrbgl"
+              twitter={`${twitterUsername}`}
             />
             <React.Fragment>
               <h1>{data.document && data.document.title}</h1>
@@ -54,14 +41,11 @@ class ViewDocument extends React.Component {
                   __html: parseMarkdown(data.document && data.document.body),
                 }}
               />
+              <div>
+                <Link to="/documents">Return to documents</Link>
+              </div>
             </React.Fragment>
           </StyledViewDocument>
-          <Comments
-            documentId={data.document && data.document._id}
-            comments={data.document && data.document.comments}
-            sortBy={sortBy}
-            onChangeSortBy={this.handleChangeCommentSort}
-          />
         </React.Fragment>
       );
     }
@@ -88,7 +72,6 @@ export default graphql(documentQuery, {
   options: ({ match }) => ({
     variables: {
       _id: match.params._id,
-      sortBy: 'newestFirst',
     },
   }),
 })(ViewDocument);

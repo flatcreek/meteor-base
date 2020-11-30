@@ -1,4 +1,6 @@
-export default `
+import { gql } from '@apollo/client';
+
+export default gql`
   enum AllowedSettingType {
     boolean
     string
@@ -15,6 +17,10 @@ export default `
     lastUpdatedByUser: String
   }
 
+  type GDPRComplete {
+    complete: Boolean
+  }
+
   type UserSetting {
     _id: String
     isGDPR: Boolean
@@ -23,9 +29,5 @@ export default `
     type: AllowedSettingType
     value: String
     lastUpdatedByUser: String
-  }
-
-  type GDPRComplete {
-    complete: Boolean
   }
 `;

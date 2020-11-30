@@ -30,8 +30,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    margin-bottom: 80px;
     margin: 0;
+    margin-bottom: 80px;
     padding: 0;
     font-size: 14px;
     line-height: 20px;

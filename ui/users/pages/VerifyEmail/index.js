@@ -1,46 +1,39 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
-import { Alert } from 'react-bootstrap';
+import React, { useEffect, useState, useContext } from 'react';
 import { Accounts } from 'meteor/accounts-base';
-import { Bert } from '../../../admin/pages/AdminUserSettings/node_modules/meteor/themeteorchef:bert';
-import { sendWelcomeEmail as sendWelcomeEmailMutation } from '../../mutations/Users.gql';
+import { Bert } from 'meteor/themeteorchef:bert';
+import { Alert } from 'react-bootstrap';
+import { useHistory, useParams } from 'react-router-dom';
 
-class VerifyEmail extends React.Component {
-  state = { error: null };
+import { AuthContext } from '../../../global/context/Authentication';
 
-  componentDidMount() {
-    const { match, history, sendWelcomeEmail } = this.props;
-    Accounts.verifyEmail(match.params.token, (error) => {
+const VerifyEmail = () => {
+  const { login } = useContext(AuthContext);
+  const [verifyError, setVerifyError] = useState(null);
+  const { token } = useParams();
+  const history = useHistory();
+
+  useEffect(() => {
+    Accounts.verifyEmail(token, async (error) => {
       if (error) {
+        console.warn('VerifyEmail error');
+        console.warn(error);
         Bert.alert(error.reason, 'danger');
-        this.setState({ error: `${error.reason}. Please try again.` });
+        setVerifyError(`${error.reason}. Please try again.`);
       } else {
-        setTimeout(() => {
-          Bert.alert('All set, thanks!', 'success');
-          sendWelcomeEmail();
-          history.push('/documents');
-        }, 1500);
+        await login();
+        Bert.alert('All set, thanks!', 'success');
+        history.push('/');
       }
     });
-  }
+  }, [verifyError]);
 
-  render() {
-    const { error } = this.state;
-    return (
-      <div className="VerifyEmail">
-        <Alert bsStyle={!error ? 'info' : 'danger'}>{!error ? 'Verifying...' : error}</Alert>
-      </div>
-    );
-  }
-}
-
-VerifyEmail.propTypes = {
-  match: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
-  sendWelcomeEmail: PropTypes.func.isRequired,
+  return (
+    <div className="VerifyEmail">
+      <Alert bsStyle={!verifyError ? 'info' : 'danger'}>
+        {!verifyError ? 'Verifying...' : verifyError}
+      </Alert>
+    </div>
+  );
 };
 
-export default graphql(sendWelcomeEmailMutation, {
-  name: 'sendWelcomeEmail',
-})(VerifyEmail);
+export default VerifyEmail;

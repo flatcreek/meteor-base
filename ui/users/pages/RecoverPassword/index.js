@@ -3,7 +3,7 @@ import { Row, Col, Alert, FormGroup, ControlLabel, Button } from 'react-bootstra
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
-import { Bert } from '../../../admin/pages/AdminUserSettings/node_modules/meteor/themeteorchef:bert';
+import { Bert } from 'meteor/themeteorchef:bert';
 import Validation from '../../../global/components/Validation';
 import AccountPageFooter from '../../components/AccountPageFooter';
 import StyledRecoverPassword from './styles';

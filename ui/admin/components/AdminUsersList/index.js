@@ -1,23 +1,25 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-
 import React from 'react';
 import PropTypes from 'prop-types';
-import autoBind from 'react-autobind';
 import { Link } from 'react-router-dom';
-import { graphql } from 'react-apollo';
-import Loading from '../Loading';
-import { users as usersQuery } from '../../queries/Users.gql';
+import { useQuery } from '@apollo/client';
+
+import Loading from '../../../global/components/Loading';
+import { users as GET_USERS } from '../../../users/queries/Users.gql';
 
 import { StyledListGroup, StyledListGroupItem } from './styles';
 
-class AdminUsersList extends React.Component {
-  constructor(props) {
-    super(props);
-    autoBind(this);
-  }
+const AdminUsersList = (props) => {
+  const { perPage, currentPage, onChangePage, search } = props;
+  const { data, loading } = useQuery(GET_USERS, {
+    variables: {
+      perPage,
+      currentPage,
+      search,
+    },
+  });
 
-  renderPagination = () => {
-    const { data, perPage, currentPage, onChangePage } = this.props;
+  const renderPagination = () => {
     const pages = [];
     const pagesToGenerate = Math.ceil(data.users.total / perPage);
 
@@ -40,56 +42,44 @@ class AdminUsersList extends React.Component {
     return <ul className="pagination pagination-md">{pages}</ul>;
   };
 
-  render() {
-    const { data, search, perPage } = this.props;
+  if (loading) return <Loading />;
 
-    if (data.loading) return <Loading />;
-    return (
-      <React.Fragment>
-        <StyledListGroup>
-          {data.users &&
-            data.users.users &&
-            data.users.users.map(({ _id, emailAddress, name, username, oAuthProvider }) => (
-              <StyledListGroupItem key={_id}>
-                <Link to={`/admin/users/${_id}`} />
-                <p>
-                  {name ? `${name.first} ${name.last}` : username}
-                  <span>{emailAddress}</span>
-                  {oAuthProvider && (
-                    <span className={`label label-${oAuthProvider}`}>{oAuthProvider}</span>
-                  )}
-                </p>
-              </StyledListGroupItem>
-            ))}
-        </StyledListGroup>
+  return (
+    <React.Fragment>
+      <StyledListGroup>
         {data.users &&
-          data.users.total &&
-          search.trim() === '' &&
-          data.users.total > perPage &&
-          this.renderPagination()}
-      </React.Fragment>
-    );
-  }
-}
+          data.users.users &&
+          data.users.users.map(({ _id, emailAddress, name, username, oAuthProvider }) => (
+            <StyledListGroupItem key={_id}>
+              <Link to={`/admin/users/${_id}`} />
+              <p>
+                {name ? `${name.first} ${name.last}` : username}
+                <span>{emailAddress}</span>
+                {oAuthProvider && (
+                  <span className={`label label-${oAuthProvider}`}>{oAuthProvider}</span>
+                )}
+              </p>
+            </StyledListGroupItem>
+          ))}
+      </StyledListGroup>
+      {data.users &&
+        data.users.total &&
+        search.trim() === '' &&
+        data.users.total > perPage &&
+        renderPagination()}
+    </React.Fragment>
+  );
+};
 
 AdminUsersList.defaultProps = {
   search: '',
 };
 
 AdminUsersList.propTypes = {
-  data: PropTypes.object.isRequired,
   search: PropTypes.string,
   perPage: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
 };
 
-export default graphql(usersQuery, {
-  options: ({ perPage, currentPage, search }) => ({
-    variables: {
-      perPage,
-      currentPage,
-      search,
-    },
-  }),
-})(AdminUsersList);
+export default AdminUsersList;

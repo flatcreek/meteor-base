@@ -2,12 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { compose, graphql } from 'react-apollo';
-import { timeago } from '../../../modules/dates';
-import BlankState from '../../components/BlankState';
-import { StyledDocuments, DocumentsList, Document } from './styles';
+import { graphql } from '@apollo/client/react/hoc';
+import flowRight from 'lodash/flowRight';
+
+import { timeago } from '../../../../modules/dates';
+import BlankState from '../../../global/components/BlankState';
 import { documents } from '../../queries/Documents.gql';
 import { addDocument } from '../../mutations/Documents.gql';
+import { StyledDocuments, DocumentsList, Document } from './styles';
 
 const Documents = ({ data, mutate }) => (
   <StyledDocuments>
@@ -53,7 +55,7 @@ Documents.propTypes = {
   mutate: PropTypes.func.isRequired,
 };
 
-export default compose(
+export default flowRight(
   graphql(documents),
   graphql(addDocument, {
     options: ({ history }) => ({

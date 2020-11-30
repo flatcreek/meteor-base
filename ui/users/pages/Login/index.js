@@ -2,9 +2,9 @@ import React from 'react';
 import { Row, Col, FormGroup, ControlLabel, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
-import { Bert } from '../../../admin/pages/AdminUserSettings/node_modules/meteor/themeteorchef:bert';
+import { Bert } from 'meteor/themeteorchef:bert';
 import Validation from '../../../global/components/Validation';
-import OAuthLoginButtons from '../../../global/components/OAuthLoginButtons';
+import OAuthLoginButtons from '../../components/OAuthLoginButtons';
 import AccountPageFooter from '../../components/AccountPageFooter';
 import { StyledLogin, LoginPromo } from './styles';
 
@@ -99,9 +99,7 @@ class Login extends React.Component {
                 </Button>
                 <AccountPageFooter>
                   <p>
-                    {"Don't have an account? "}
-                    <Link to="/signup">Sign Up</Link>
-                    {'.'}
+                    {"Don't have an account? "} <Link to="/signup">Sign Up</Link>.
                   </p>
                 </AccountPageFooter>
               </form>
