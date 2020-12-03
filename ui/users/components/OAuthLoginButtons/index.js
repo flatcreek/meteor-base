@@ -9,8 +9,6 @@ import Styles from './styles';
 const OAuthLoginButtons = ({ emailMessage }) => {
   const { data, loading } = useQuery(oAuthServicesQuery);
   const { oAuthServices } = data || {};
-  console.log('OAuthLoginButtons.data');
-  console.log(data);
 
   if (loading) {
     return <Loading />;

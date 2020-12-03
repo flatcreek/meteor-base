@@ -59,10 +59,10 @@ const Authentication = ({ children }) => {
         const idMatch = currentUser._id === userData.user._id;
         if (idMatch) {
           const { emailAddress, emailVerified, name, profilePic } = userData.user || {};
-          // Use the Roles package to be sure we are pulling the user's roles directly from the collection
-          const roles = Roles.getRolesForUser(currentUser._id);
           const firstName = name && name.first;
           const lastName = name && name.last;
+          // Use the Roles package to be sure we are pulling the user's roles directly from the collection
+          const roles = Roles.getRolesForUser(currentUser._id);
 
           const authObj = {
             emailAddress,
@@ -89,6 +89,8 @@ const Authentication = ({ children }) => {
     }
   };
 
+  // We use a local method to check roles on the client so we don't
+  // have any database calls via the actual Roles package.
   const isInRole = (roles, parentId) => {
     if (!isEmpty(userRoles)) {
       const roleArray = Array.isArray(roles) ? roles : roles.split();
@@ -99,7 +101,7 @@ const Authentication = ({ children }) => {
         if (parentId) {
           return userRoles[parentId] && userRoles[parentId].includes(roleName);
         }
-        return userRoles.includes(roleName);
+        return userRoles.__global_roles__.includes(roleName);
       });
     }
     return false;
