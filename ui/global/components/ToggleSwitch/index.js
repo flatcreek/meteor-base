@@ -1,56 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+
 import Icon from '../Icon';
 import Styles from './styles';
 
-class ToggleSwitch extends React.Component {
-  constructor(props) {
-    super(props);
-    const { toggled } = props;
-    this.state = { toggled };
-  }
+const ToggleSwitch = (props) => {
+  const { id, onLabel, offLabel, onToggle, toggled } = props;
+  const [isToggled, setIsToggled] = useState(toggled);
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ toggled: nextProps.toggled });
-  }
-
-  toggleSwitch = (event) => {
-    const { id, onToggle } = this.props;
+  const toggleSwitch = (event) => {
     event.stopPropagation();
-    this.setState(
-      ({ toggled }) => ({
-        toggled: !toggled,
-      }),
-      () => {
-        const { toggled } = this.state;
-        if (onToggle) onToggle(id, toggled);
-      },
-    );
+    setIsToggled(!isToggled);
+    if (onToggle) {
+      onToggle(id, !isToggled);
+    }
   };
 
-  render() {
-    const { onLabel, offLabel } = this.props;
-    const { toggled } = this.state;
-    return (
-      <Styles.ToggleSwitch className="ToggleSwitch" toggled={toggled} onClick={this.toggleSwitch}>
-        <div className="handle">
-          <span className="handle-label">
-            {toggled
-              ? onLabel || <Icon iconStyle="solid" icon="check" />
-              : offLabel || <Icon iconStyle="solid" icon="remove" />}
-          </span>
-        </div>
-      </Styles.ToggleSwitch>
-    );
-  }
-}
-
-ToggleSwitch.propTypes = {
-  id: PropTypes.string,
-  toggled: PropTypes.bool,
-  onLabel: PropTypes.string,
-  offLabel: PropTypes.string,
-  onToggle: PropTypes.func,
+  return (
+    <Styles.ToggleSwitch className="ToggleSwitch" toggled={isToggled} onClick={toggleSwitch}>
+      <div className="handle">
+        <span className="handle-label">
+          {isToggled
+            ? onLabel || <Icon iconStyle="solid" icon="check" />
+            : offLabel || <Icon iconStyle="solid" icon="remove" />}
+        </span>
+      </div>
+    </Styles.ToggleSwitch>
+  );
 };
 
 ToggleSwitch.defaultProps = {
@@ -58,7 +34,15 @@ ToggleSwitch.defaultProps = {
   toggled: false,
   onLabel: '',
   offLabel: '',
-  onToggle: () => {},
+  onToggle: null,
+};
+
+ToggleSwitch.propTypes = {
+  id: PropTypes.string,
+  offLabel: PropTypes.string,
+  onLabel: PropTypes.string,
+  onToggle: PropTypes.func,
+  toggled: PropTypes.bool,
 };
 
 export default ToggleSwitch;

@@ -1,46 +1,68 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Button, Row, Col, FormGroup, ControlLabel } from 'react-bootstrap';
 import { camelCase } from 'lodash';
+
 import Validation from '../../../global/components/Validation';
 import InputHint from '../../../global/components/InputHint';
 import ToggleSwitch from '../../../global/components/ToggleSwitch';
-import delay from '../../../../modules/delay';
 
 const defaultState = {
-  keyName: '',
   isGDPR: false,
-  settingType: 'boolean',
-  value: '',
+  key: '',
   label: '',
+  type: 'boolean',
+  value: '',
 };
 
-class AdminUserSettingsModal extends React.Component {
-  state = defaultState;
+const AdminUserSettingsModal = (props) => {
+  console.log('AdminUserSettingsModal.props');
+  console.log(props);
+  const { addUserSetting, show, onHide, setting, updateUserSetting } = props;
+  const formRef = useRef();
+  const [isGDPR, setIsGDPR] = useState(false);
+  const [thisSetting, setThisSetting] = useState(defaultState);
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.setting) {
-      this.setState({
-        keyName: nextProps.setting.key,
-        isGDPR: nextProps.setting.isGDPR,
-        settingType: nextProps.setting.type,
-        value: nextProps.setting.value,
-        label: nextProps.setting.label,
-      });
+  useEffect(() => {
+    if (setting) {
+      setThisSetting(setting);
     } else {
-      this.setState(defaultState);
+      setThisSetting(defaultState);
     }
-  }
+  }, [setting]);
 
-  handleSubmit = (form) => {
-    const { setting, updateUserSetting, addUserSetting, onHide } = this.props;
+  useEffect(() => {
+    const settingValues = thisSetting;
+    settingValues.isGDPR = isGDPR;
+    setThisSetting({ ...settingValues });
+  }, [isGDPR]);
+
+  const handleChange = (event) => {
+    const { name } = event.target;
+    let { value } = event.target;
+    const settingValues = thisSetting;
+    if (name === 'key') {
+      value = camelCase(value.trim());
+    }
+    if (name === 'value' && settingValues.type === 'number') {
+      value = value ? parseInt(value, 10) : '';
+    }
+    settingValues[name] = value;
+    setThisSetting({ ...settingValues });
+  };
+
+  const handleChangeToggle = (toggled) => {
+    setIsGDPR(toggled);
+  };
+
+  const handleSubmit = (form) => {
     const mutation = setting ? updateUserSetting : addUserSetting;
     const settingToAddOrUpdate = {
-      isGDPR: this.isGDPR.state.toggled,
-      key: form.keyName.value,
+      isGDPR: thisSetting.isGDPR,
+      key: form.key.value,
       label: form.label.value.trim(),
       type: form.type.value,
-      value: form.defaultValue.value,
+      value: form.value.value,
     };
 
     if (setting) {
@@ -51,6 +73,9 @@ class AdminUserSettingsModal extends React.Component {
       if (!confirmUpdate) return;
     }
 
+    console.log('AdminUserSettingsModal.handleSubmit.settingToAddOrUpdate:');
+    console.log(settingToAddOrUpdate);
+
     mutation({
       variables: {
         setting: settingToAddOrUpdate,
@@ -60,151 +85,134 @@ class AdminUserSettingsModal extends React.Component {
     onHide();
   };
 
-  handleSetKeyName = (event) => {
-    event.persist();
-    this.setState({ keyName: event.target.value }, () => {
-      delay(() => {
-        this.setState({ keyName: camelCase(event.target.value.trim()) });
-      }, 300);
-    });
-  };
-
-  render() {
-    const { show, onHide, setting } = this.props;
-    const { keyName, isGDPR, label, settingType, value } = this.state;
-
-    return (
-      <Modal show={show} onHide={onHide}>
-        <Modal.Header>
-          <Modal.Title>
-            {setting ? 'Edit' : 'Add a'}
-            User Setting
-          </Modal.Title>
-        </Modal.Header>
-        <Validation
-          rules={{
-            keyName: {
-              required: true,
-            },
-            label: {
-              required: true,
-            },
-          }}
-          messages={{
-            keyName: {
-              required: "What's a good keyName for this?",
-            },
-            label: {
-              required: "What's a good label for this?",
-            },
-          }}
-          submitHandler={(form) => {
-            this.handleSubmit(form);
-          }}
-        >
-          <form ref={(form) => (this.form = form)} onSubmit={(event) => event.preventDefault()}>
-            <Modal.Body>
-              <Row>
-                <Col xs={12} sm={6}>
-                  <FormGroup>
-                    <ControlLabel>Key Name</ControlLabel>
-                    <input
-                      type="text"
-                      name="keyName"
-                      className="form-control"
-                      value={keyName}
-                      onChange={this.handleSetKeyName}
-                      placeholder="canWeSendYouMarketingEmails"
-                    />
-                  </FormGroup>
-                </Col>
-                <Col xs={12} sm={6}>
-                  <FormGroup>
-                    <ControlLabel>Is this a GDPR setting?</ControlLabel>
-                    <ToggleSwitch
-                      ref={(isGDPRToggle) => (this.isGDPR = isGDPRToggle)}
-                      toggled={isGDPR}
-                      onToggle={(id, toggled) => this.setState({ isGDPR: toggled })}
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
-              <FormGroup>
-                <ControlLabel>Label</ControlLabel>
-                <input
-                  type="text"
-                  name="label"
+  return (
+    <Modal show={show} onHide={onHide}>
+      <Modal.Header>
+        <Modal.Title>
+          {setting ? 'Edit ' : 'Add a '}
+          User Setting
+        </Modal.Title>
+      </Modal.Header>
+      <Validation
+        rules={{
+          keyName: {
+            required: true,
+          },
+          label: {
+            required: true,
+          },
+        }}
+        messages={{
+          keyName: {
+            required: "What's a good keyName for this?",
+          },
+          label: {
+            required: "What's a good label for this?",
+          },
+        }}
+        submitHandler={(form) => {
+          handleSubmit(form);
+        }}
+      >
+        <form ref={formRef} onSubmit={(event) => event.preventDefault()}>
+          <Modal.Body>
+            <Row>
+              <Col xs={12} sm={6}>
+                <FormGroup>
+                  <ControlLabel>Key Name</ControlLabel>
+                  <input
+                    type="text"
+                    name="key"
+                    className="form-control"
+                    value={thisSetting.key}
+                    onChange={handleChange}
+                    placeholder="canWeSendYouMarketingEmails"
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12} sm={6}>
+                <FormGroup>
+                  <ControlLabel>Is this a GDPR setting?</ControlLabel>
+                  <ToggleSwitch
+                    toggled={thisSetting.isGDPR}
+                    onToggle={(id, toggled) => handleChangeToggle(toggled)}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <FormGroup>
+              <ControlLabel>Label</ControlLabel>
+              <input
+                type="text"
+                name="label"
+                className="form-control"
+                value={thisSetting.label}
+                onChange={handleChange}
+                placeholder="Can we send you marketing emails?"
+              />
+              <InputHint>This is what users will see in their settings panel.</InputHint>
+            </FormGroup>
+            <Row>
+              <Col xs={12} sm={6}>
+                <ControlLabel>Type</ControlLabel>
+                <select
+                  name="type"
+                  value={thisSetting.type}
+                  onChange={handleChange}
                   className="form-control"
-                  value={label}
-                  onChange={(event) => this.setState({ label: event.target.value })}
-                  placeholder="Can we send you marketing emails?"
-                />
-                <InputHint>This is what users will see in their settings panel.</InputHint>
-              </FormGroup>
-              <Row>
-                <Col xs={12} sm={6}>
-                  <ControlLabel>Type</ControlLabel>
+                >
+                  <option value="boolean">Boolean (true/false)</option>
+                  <option value="number">Number</option>
+                  <option value="string">String</option>
+                </select>
+              </Col>
+              <Col xs={12} sm={6}>
+                <ControlLabel>Default Value</ControlLabel>
+                {thisSetting.type === 'boolean' && (
                   <select
-                    name="type"
-                    value={settingType}
-                    onChange={(event) => this.setState({ settingType: event.target.value })}
+                    name="value"
+                    value={thisSetting.value}
+                    onChange={handleChange}
                     className="form-control"
                   >
-                    <option value="boolean">Boolean (true/false)</option>
-                    <option value="number">Number</option>
-                    <option value="string">String</option>
+                    <option value="true">true</option>
+                    <option value="false">false</option>
                   </select>
-                </Col>
-                <Col xs={12} sm={6}>
-                  <ControlLabel>Default Value</ControlLabel>
-                  {settingType === 'boolean' && (
-                    <select
-                      name="defaultValue"
-                      value={value}
-                      onChange={(event) => this.setState({ value: event.target.value })}
-                      className="form-control"
-                    >
-                      <option value="true">true</option>
-                      <option value="false">false</option>
-                    </select>
-                  )}
-                  {settingType === 'number' && (
-                    <input
-                      type="number"
-                      name="defaultValue"
-                      className="form-control"
-                      value={value}
-                      onChange={(event) => {
-                        this.setState({ value: parseInt(event.target.value, 10) });
-                      }}
-                      placeholder={5}
-                    />
-                  )}
-                  {settingType === 'string' && (
-                    <input
-                      type="text"
-                      name="defaultValue"
-                      className="form-control"
-                      value={value}
-                      onChange={(event) => this.setState({ value: event.target.value })}
-                      placeholder="Squirrel?!"
-                    />
-                  )}
-                </Col>
-              </Row>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button type="submit" bsStyle="success">
-                {setting ? 'Save' : 'Add'}
-                {' Setting'}
-              </Button>
-            </Modal.Footer>
-          </form>
-        </Validation>
-      </Modal>
-    );
-  }
-}
+                )}
+                {thisSetting.type === 'number' && (
+                  <input
+                    type="number"
+                    name="value"
+                    className="form-control"
+                    value={thisSetting.value}
+                    onChange={handleChange}
+                    placeholder={5}
+                  />
+                )}
+                {thisSetting.type === 'string' && (
+                  <input
+                    type="text"
+                    name="value"
+                    className="form-control"
+                    value={thisSetting.value}
+                    onChange={handleChange}
+                    placeholder="Squirrel?!"
+                  />
+                )}
+              </Col>
+            </Row>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button type="submit" bsStyle="success">
+              {setting ? 'Save' : 'Add'}
+              {' Setting'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Validation>
+    </Modal>
+  );
+};
 
 AdminUserSettingsModal.defaultProps = {
   setting: null,

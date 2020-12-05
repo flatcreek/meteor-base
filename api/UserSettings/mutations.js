@@ -6,6 +6,11 @@ import addSettingToUsers from './actions/addSettingToUsers';
 
 export default {
   addUserSetting(parent, args, context) {
+    if (Meteor.isDevelopment) {
+      console.log('addUserSetting starting');
+      console.log(args);
+    }
+
     if (!isAdmin(context.user._id)) {
       throw new Error('Sorry, you must be an admin to do this.');
     }
@@ -23,6 +28,11 @@ export default {
     };
   },
   updateUserSetting(parent, args, context) {
+    if (Meteor.isDevelopment) {
+      console.log('updateUserSetting starting');
+      console.log(args);
+    }
+
     if (!isAdmin(context.user._id)) {
       throw new Error('Sorry, you must be an admin to do this.');
     }
@@ -38,6 +48,11 @@ export default {
     );
   },
   removeUserSetting(parent, args, context) {
+    if (Meteor.isDevelopment) {
+      console.log('removeUserSetting starting');
+      console.log(args);
+    }
+
     if (!isAdmin(context.user._id)) {
       throw new Error('Sorry, you must be an admin to do this.');
     }
