@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Button, Row, Col, FormGroup, ControlLabel } from 'react-bootstrap';
 import { camelCase } from 'lodash';
@@ -15,74 +15,91 @@ const defaultState = {
   value: '',
 };
 
+const init = (setting) => {
+  if (setting) {
+    return { ...setting };
+  }
+  return { ...defaultState };
+};
+
+const reducer = (state, action) => {
+  // eslint-disable-next-line prefer-const
+  let { field, value } = action;
+  if (action.initialize) {
+    return init(action.payload);
+  }
+  if (field === 'key') {
+    value = camelCase(value);
+  }
+  if (field === 'value' && state.type === 'number') {
+    value = value ? parseInt(value, 10) : '';
+  }
+  return {
+    ...state,
+    [field]: value,
+  };
+};
+
 const AdminUserSettingsModal = (props) => {
-  console.log('AdminUserSettingsModal.props');
-  console.log(props);
   const { addUserSetting, show, onHide, setting, updateUserSetting } = props;
   const formRef = useRef();
-  const [isGDPR, setIsGDPR] = useState(false);
-  const [thisSetting, setThisSetting] = useState(defaultState);
+  const [inSubmit, setInSubmit] = useState(false);
+  const [state, dispatch] = useReducer(reducer, defaultState, init);
+
+  const { isGDPR, key, label, type, value } = state;
 
   useEffect(() => {
     if (setting) {
-      setThisSetting(setting);
-    } else {
-      setThisSetting(defaultState);
+      dispatch({ initialize: true, payload: setting });
     }
   }, [setting]);
 
   useEffect(() => {
-    const settingValues = thisSetting;
-    settingValues.isGDPR = isGDPR;
-    setThisSetting({ ...settingValues });
-  }, [isGDPR]);
+    if (inSubmit) {
+      const mutation = setting ? updateUserSetting : addUserSetting;
+      const settingToAddOrUpdate = {
+        isGDPR,
+        key: key.trim(),
+        label: label.trim(),
+        type,
+        value: value.toString(),
+      };
+
+      if (setting) {
+        settingToAddOrUpdate._id = setting._id;
+        const confirmUpdate = confirm(
+          "Are you sure? This will overwrite this setting for all users immediately. If you're changing the Key Name or Type, double-check that your UI can support this to avoid rendering errors.",
+        );
+        if (!confirmUpdate) return;
+      }
+
+      mutation({
+        variables: {
+          setting: settingToAddOrUpdate,
+        },
+      })
+        .then(() => {
+          setInSubmit(false);
+          dispatch({ initialize: true });
+          onHide();
+        })
+        .catch((error) => {
+          console.warn('AdminUserSetting mutation error');
+          console.warn(error);
+        });
+    }
+  }, [inSubmit]);
 
   const handleChange = (event) => {
-    const { name } = event.target;
-    let { value } = event.target;
-    const settingValues = thisSetting;
-    if (name === 'key') {
-      value = camelCase(value.trim());
-    }
-    if (name === 'value' && settingValues.type === 'number') {
-      value = value ? parseInt(value, 10) : '';
-    }
-    settingValues[name] = value;
-    setThisSetting({ ...settingValues });
+    dispatch({ field: event.target.name, value: event.target.value });
   };
 
   const handleChangeToggle = (toggled) => {
-    setIsGDPR(toggled);
+    dispatch({ field: 'isGDPR', value: toggled });
   };
 
-  const handleSubmit = (form) => {
-    const mutation = setting ? updateUserSetting : addUserSetting;
-    const settingToAddOrUpdate = {
-      isGDPR: thisSetting.isGDPR,
-      key: form.key.value,
-      label: form.label.value.trim(),
-      type: form.type.value,
-      value: form.value.value,
-    };
-
-    if (setting) {
-      settingToAddOrUpdate._id = setting._id;
-      const confirmUpdate = confirm(
-        "Are you sure? This will overwrite this setting for all users immediately. If you're changing the Key Name or Type, double-check that your UI can support this to avoid rendering errors.",
-      );
-      if (!confirmUpdate) return;
-    }
-
-    console.log('AdminUserSettingsModal.handleSubmit.settingToAddOrUpdate:');
-    console.log(settingToAddOrUpdate);
-
-    mutation({
-      variables: {
-        setting: settingToAddOrUpdate,
-      },
-    });
-
-    onHide();
+  const handleSubmit = () => {
+    setInSubmit(true);
   };
 
   return (
@@ -124,7 +141,7 @@ const AdminUserSettingsModal = (props) => {
                     type="text"
                     name="key"
                     className="form-control"
-                    value={thisSetting.key}
+                    value={key}
                     onChange={handleChange}
                     placeholder="canWeSendYouMarketingEmails"
                   />
@@ -134,7 +151,7 @@ const AdminUserSettingsModal = (props) => {
                 <FormGroup>
                   <ControlLabel>Is this a GDPR setting?</ControlLabel>
                   <ToggleSwitch
-                    toggled={thisSetting.isGDPR}
+                    toggled={isGDPR}
                     onToggle={(id, toggled) => handleChangeToggle(toggled)}
                   />
                 </FormGroup>
@@ -146,7 +163,7 @@ const AdminUserSettingsModal = (props) => {
                 type="text"
                 name="label"
                 className="form-control"
-                value={thisSetting.label}
+                value={label}
                 onChange={handleChange}
                 placeholder="Can we send you marketing emails?"
               />
@@ -155,12 +172,7 @@ const AdminUserSettingsModal = (props) => {
             <Row>
               <Col xs={12} sm={6}>
                 <ControlLabel>Type</ControlLabel>
-                <select
-                  name="type"
-                  value={thisSetting.type}
-                  onChange={handleChange}
-                  className="form-control"
-                >
+                <select name="type" value={type} onChange={handleChange} className="form-control">
                   <option value="boolean">Boolean (true/false)</option>
                   <option value="number">Number</option>
                   <option value="string">String</option>
@@ -168,10 +180,10 @@ const AdminUserSettingsModal = (props) => {
               </Col>
               <Col xs={12} sm={6}>
                 <ControlLabel>Default Value</ControlLabel>
-                {thisSetting.type === 'boolean' && (
+                {type === 'boolean' && (
                   <select
                     name="value"
-                    value={thisSetting.value}
+                    value={value}
                     onChange={handleChange}
                     className="form-control"
                   >
@@ -179,22 +191,22 @@ const AdminUserSettingsModal = (props) => {
                     <option value="false">false</option>
                   </select>
                 )}
-                {thisSetting.type === 'number' && (
+                {type === 'number' && (
                   <input
                     type="number"
                     name="value"
                     className="form-control"
-                    value={thisSetting.value}
+                    value={value}
                     onChange={handleChange}
                     placeholder={5}
                   />
                 )}
-                {thisSetting.type === 'string' && (
+                {type === 'string' && (
                   <input
                     type="text"
                     name="value"
                     className="form-control"
-                    value={thisSetting.value}
+                    value={value}
                     onChange={handleChange}
                     placeholder="Squirrel?!"
                   />

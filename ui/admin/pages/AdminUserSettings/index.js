@@ -80,7 +80,7 @@ const AdminUserSettings = () => {
         <ListGroup>
           {data.userSettings.map((setting) => (
             <Styles.Setting key={setting._id}>
-              <p>{setting.key}</p>
+              <p>{setting.label}</p>
               <div>
                 <Button bsStyle="default" onClick={() => handleEditSetting(setting)}>
                   Edit

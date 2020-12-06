@@ -29,7 +29,6 @@ const NoSidebar = (props) => {
 
   // If this page requires a role, check that the user is in that role
   if (authRequired && userId && reqRole) {
-    console.log('NoSidebar -- Checking Role');
     const hasRole = isInRole(allowedRoles);
     if (!hasRole) {
       return <Redirect to="/" />;
