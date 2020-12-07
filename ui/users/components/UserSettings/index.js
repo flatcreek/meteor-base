@@ -1,24 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { ListGroup } from 'react-bootstrap';
 
 import ToggleSwitch from '../../../global/components/ToggleSwitch';
 import BlankState from '../../../global/components/BlankState';
-import { AuthContext } from '../../../global/context/Authentication';
-// import unfreezeApolloCacheValue from '../../../../modules/unfreezeApolloCacheValue';
 import delay from '../../../../modules/delay';
 import Styles from './styles';
 
 const UserSettings = (props) => {
-  console.log('UserSettings:');
-  console.log(props);
-  const { userId } = useContext(AuthContext);
-  const { isAdmin, settings, updateUser } = props;
-
-  // constructor(props) {
-  //   super(props);
-  //   this.state = { settings: unfreezeApolloCacheValue([...settings]) };
-  // }
+  const { isAdmin, settings, updateUser, userId } = props;
 
   const handleUpdateSetting = (setting) => {
     const settingsUpdate = [...settings];
@@ -104,12 +94,14 @@ UserSettings.defaultProps = {
   isAdmin: false,
   settings: [],
   updateUser: null,
+  userId: null,
 };
 
 UserSettings.propTypes = {
   isAdmin: PropTypes.bool,
   settings: PropTypes.array,
   updateUser: PropTypes.func,
+  userId: PropTypes.string,
 };
 
 export default UserSettings;

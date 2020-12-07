@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 
 import Loading from '../../../global/components/Loading';
-import { users as GET_USERS } from '../../../users/queries/Users.gql';
+import { users as GET_USERS } from '../../queries/Admin.gql';
 
-import { StyledListGroup, StyledListGroupItem } from './styles';
+import Styles from './styles';
 
 const AdminUsersList = (props) => {
   const { perPage, currentPage, onChangePage, search } = props;
@@ -17,6 +17,7 @@ const AdminUsersList = (props) => {
       currentPage,
       search,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const renderPagination = () => {
@@ -45,29 +46,34 @@ const AdminUsersList = (props) => {
   if (loading) return <Loading />;
 
   return (
-    <React.Fragment>
-      <StyledListGroup>
+    <Fragment>
+      <Styles.AdminListGroup>
         {data.users &&
           data.users.users &&
-          data.users.users.map(({ _id, emailAddress, name, username, oAuthProvider }) => (
-            <StyledListGroupItem key={_id}>
-              <Link to={`/admin/users/${_id}`} />
-              <p>
-                {name ? `${name.first} ${name.last}` : username}
-                <span>{emailAddress}</span>
-                {oAuthProvider && (
-                  <span className={`label label-${oAuthProvider}`}>{oAuthProvider}</span>
-                )}
-              </p>
-            </StyledListGroupItem>
-          ))}
-      </StyledListGroup>
+          data.users.users.map(
+            ({ _id, emailAddress, name, username, oAuthProvider, emailVerified }) => (
+              <Styles.AdminListGroupItem key={_id}>
+                <Link to={`/admin/users/${_id}`} />
+                <p>
+                  {name ? `${name.first} ${name.last}` : username}
+                  <span>{emailAddress}</span>
+                  {oAuthProvider && (
+                    <span className={`label label-${oAuthProvider}`}>{oAuthProvider}</span>
+                  )}
+                  {!emailVerified && (
+                    <Styles.AdminLabel bsStyle="danger">Email not verified</Styles.AdminLabel>
+                  )}
+                </p>
+              </Styles.AdminListGroupItem>
+            ),
+          )}
+      </Styles.AdminListGroup>
       {data.users &&
         data.users.total &&
         search.trim() === '' &&
         data.users.total > perPage &&
         renderPagination()}
-    </React.Fragment>
+    </Fragment>
   );
 };
 

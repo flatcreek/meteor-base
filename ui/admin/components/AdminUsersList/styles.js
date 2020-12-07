@@ -1,11 +1,15 @@
 import styled from 'styled-components';
-import { ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Label, ListGroup, ListGroupItem } from 'react-bootstrap';
 
-export const StyledListGroup = styled(ListGroup)`
+const AdminLabel = styled(Label)`
+  margin-left: 12px !important;
+`;
+
+const AdminListGroup = styled(ListGroup)`
   margin-bottom: 0;
 `;
 
-export const StyledListGroupItem = styled(ListGroupItem)`
+const AdminListGroupItem = styled(ListGroupItem)`
   padding: 15px;
   position: relative;
   overflow: hidden;
@@ -71,3 +75,9 @@ export const StyledListGroupItem = styled(ListGroupItem)`
     }
   }
 `;
+
+export default {
+  AdminLabel,
+  AdminListGroup,
+  AdminListGroupItem,
+};

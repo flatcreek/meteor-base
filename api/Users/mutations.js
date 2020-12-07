@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
 import { Accounts } from 'meteor/accounts-base';
 import updateUser from './actions/updateUser';
 import queryUser from './actions/queryUser';
@@ -20,10 +21,14 @@ export default {
       user: args,
     }),
   sendVerificationEmail: (parent, args, context) => {
-    Accounts.sendVerificationEmail(context.user._id);
-
+    const { userId } = args;
+    if (userId && !Roles.userIsInRole(context.user._id, 'admin')) {
+      throw new Error('You must be an administrator to perform this action.');
+    }
+    const thisUserId = userId || context.user._id;
+    Accounts.sendVerificationEmail(thisUserId);
     return {
-      _id: context.user._id,
+      _id: thisUserId,
     };
   },
   sendWelcomeEmail: async (parent, args, context) => {

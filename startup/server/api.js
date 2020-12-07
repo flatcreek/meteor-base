@@ -51,7 +51,7 @@ const schema = {
       addUserSetting(setting: UserSettingInput): UserSetting
       updateUserSetting(setting: UserSettingInput): UserSetting
       removeUserSetting(_id: String!): UserSetting
-      sendVerificationEmail: User
+      sendVerificationEmail(userId: String): User
       sendWelcomeEmail: User
     }
 

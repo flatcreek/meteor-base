@@ -1,6 +1,4 @@
-import { Meteor } from 'meteor/meteor';
 import sanitizeHtml from 'sanitize-html';
-
 import removeNullValuesFromObj from '../../../modules/utils';
 import Documents from '../Documents';
 
@@ -16,10 +14,6 @@ const validateOptions = (args, context) => {
 };
 
 const updateDocument = (_, args, context) => {
-  if (Meteor.isDevelopment) {
-    console.log('updateDocument starting');
-    console.log(args);
-  }
   try {
     validateOptions(args, context);
     const updatedBody = args.body ? sanitizeHtml(args.body) : null;

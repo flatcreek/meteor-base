@@ -12,8 +12,8 @@ mutation removeUser($_id: String) {
   }
 }
 
-mutation sendVerificationEmail {
-  sendVerificationEmail {
+mutation sendVerificationEmail($userId: String) {
+  sendVerificationEmail(userId: $userId) {
     _id
   }
 }

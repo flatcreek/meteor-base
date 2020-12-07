@@ -1,19 +1,26 @@
-/* eslint-disable consistent-return */
-
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
-import checkIfAuthorized, { isAdmin } from './checkIfAuthorized';
+import { isAdmin } from './checkIfAuthorized';
 
-let action;
+// Deny all client-side updates to user documents.
+// Fixes meteor 'profile' vulnerability.
+Meteor.users.deny({
+  update() {
+    return true;
+  },
+});
 
 const updateUserSettings = ({ _id, settings }) => {
+  console.log('updateUserSettings');
+  console.log(_id);
+  console.log(settings);
   try {
     return Meteor.users.update(_id, {
       $set: { settings },
     });
   } catch (exception) {
-    throw new Error(`[updateUser.updateUserSettings] ${exception.message}`);
+    throw new Error(`[updateUserSettings] ${exception.message}`);
   }
 };
 
@@ -35,7 +42,7 @@ const updateUserEmail = ({ _id, email }) => {
       },
     });
   } catch (exception) {
-    throw new Error(`[updateUser.updateUserEmail] ${exception.message}`);
+    throw new Error(`[updateUserEmail] ${exception.message}`);
   }
 };
 
@@ -43,7 +50,7 @@ const updateUserRoles = ({ _id, roles }) => {
   try {
     return Roles.setUserRoles(_id, roles);
   } catch (exception) {
-    throw new Error(`[updateUser.updateUserRoles] ${exception.message}`);
+    throw new Error(`[updateUserRoles] ${exception.message}`);
   }
 };
 
@@ -51,7 +58,7 @@ const updateUserPassword = ({ _id, password }) => {
   try {
     return Accounts.setPassword(_id, password);
   } catch (exception) {
-    throw new Error(`[updateUser.updateUserPassword] ${exception.message}`);
+    throw new Error(`[updateUserPassword] ${exception.message}`);
   }
 };
 
@@ -60,42 +67,46 @@ const validateOptions = (options) => {
     if (!options) throw new Error('options object is required.');
     if (!options.currentUser) throw new Error('options.currentUser is required.');
     if (!options.user) throw new Error('options.user is required.');
+    if (!isAdmin(options.currentUser._id) && !(options.currentUser._id === options.user._id)) {
+      throw new Error('Sorry, you need to be an admin or the current user to do this.');
+    }
   } catch (exception) {
-    throw new Error(`[updateUser.validateOptions] ${exception.message}`);
+    throw new Error(`[validateOptions] ${exception.message}`);
   }
 };
 
 const updateUser = (options) => {
+  if (Meteor.isDevelopment) {
+    console.log('updateUser starting');
+    console.log(options);
+  }
   try {
     validateOptions(options);
-    checkIfAuthorized({
-      as: ['admin', () => !options.user._id],
-      userId: options.currentUser._id,
-      errorMessage: 'Sorry, you need to be an admin or the passed user to do this.',
-    });
+    // eslint-disable-next-line prefer-const
+    let { currentUser, user } = options;
 
-    const userToUpdate = options.user;
-
-    if (userToUpdate && !userToUpdate._id) {
+    if (user && !user._id) {
+      console.log('updateUser -- RESET USER ID');
+      console.log(user);
       // NOTE: If passed user doesn't have an _id, we know we're updating the
       // currently logged in user (i.e., via the /profile page).
-      userToUpdate._id = options.currentUser._id;
+      user._id = currentUser._id;
     }
 
-    if (userToUpdate.password) updateUserPassword(userToUpdate);
-    if (userToUpdate.roles && isAdmin(options.currentUser._id)) updateUserRoles(userToUpdate);
-    if (userToUpdate.email) updateUserEmail(userToUpdate);
-    if (userToUpdate.profile) updateUserProfile(userToUpdate);
-    if (userToUpdate.settings) updateUserSettings(userToUpdate);
+    if (user.password) updateUserPassword(user);
+    if (user.roles && isAdmin(currentUser._id)) {
+      updateUserRoles(user).catch((e) => console.warn(e));
+    }
+    if (user.email) updateUserEmail(user);
+    if (user.profile) updateUserProfile(user);
+    if (user.settings) updateUserSettings(user);
 
-    action.resolve();
+    return true;
   } catch (exception) {
-    action.reject(`[updateUser] ${exception.message}`);
+    console.warn('[updateUser] error:');
+    console.warn(exception);
+    throw new Error(`[updateUser] ${exception.message}`);
   }
 };
 
-export default (options) =>
-  new Promise((resolve, reject) => {
-    action = { resolve, reject };
-    updateUser(options);
-  });
+export default updateUser;
