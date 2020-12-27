@@ -3,6 +3,8 @@ import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
 import { isAdmin } from './checkIfAuthorized';
 
+import queryUser from './queryUser';
+
 // Deny all client-side updates to user documents.
 // Fixes meteor 'profile' vulnerability.
 Meteor.users.deny({
@@ -12,9 +14,6 @@ Meteor.users.deny({
 });
 
 const updateUserSettings = ({ _id, settings }) => {
-  console.log('updateUserSettings');
-  console.log(_id);
-  console.log(settings);
   try {
     return Meteor.users.update(_id, {
       $set: { settings },
@@ -62,12 +61,12 @@ const updateUserPassword = ({ _id, password }) => {
   }
 };
 
-const validateOptions = (options) => {
+const validateOptions = (options, context) => {
   try {
     if (!options) throw new Error('options object is required.');
-    if (!options.currentUser) throw new Error('options.currentUser is required.');
+    if (!context.user) throw new Error('You must be logged in to perform this action.');
     if (!options.user) throw new Error('options.user is required.');
-    if (!isAdmin(options.currentUser._id) && !(options.currentUser._id === options.user._id)) {
+    if (!isAdmin(context.user._id) && !(context.user._id === options.user._id)) {
       throw new Error('Sorry, you need to be an admin or the current user to do this.');
     }
   } catch (exception) {
@@ -75,19 +74,18 @@ const validateOptions = (options) => {
   }
 };
 
-const updateUser = (options) => {
+const updateUser = (parent, args, context) => {
   if (Meteor.isDevelopment) {
     console.log('updateUser starting');
-    console.log(options);
+    console.log(args.user);
   }
   try {
-    validateOptions(options);
+    validateOptions(args, context);
     // eslint-disable-next-line prefer-const
-    let { currentUser, user } = options;
+    let { user } = args;
+    const { user: currentUser } = context;
 
     if (user && !user._id) {
-      console.log('updateUser -- RESET USER ID');
-      console.log(user);
       // NOTE: If passed user doesn't have an _id, we know we're updating the
       // currently logged in user (i.e., via the /profile page).
       user._id = currentUser._id;
@@ -101,7 +99,7 @@ const updateUser = (options) => {
     if (user.profile) updateUserProfile(user);
     if (user.settings) updateUserSettings(user);
 
-    return true;
+    return queryUser({ userIdToQuery: user._id });
   } catch (exception) {
     console.warn('[updateUser] error:');
     console.warn(exception);

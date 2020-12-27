@@ -1,14 +1,18 @@
 import styled from 'styled-components';
 
-const StyledLogin = styled.div`
+const Login = styled.div`
   border: 1px solid var(--gray-lighter);
-  padding: 25px;
   border-radius: 3px;
-  max-width: 768px;
   margin: 0 auto;
+  max-width: 425px;
+  padding: 25px;
 
   .page-header {
     margin-top: 0;
+  }
+
+  .text-right {
+    display: block;
   }
 
   > .row {
@@ -21,26 +25,11 @@ const StyledLogin = styled.div`
   }
 
   @media screen and (min-width: 768px) {
-    padding: 0;
     margin-top: 0px;
-    display: flex;
-    flex-direction: row;
-
-    > .row {
-      width: 55%;
-      padding: 40px 25px;
-    }
-  }
-
-  @media screen and (min-width: 992px) {
-    max-width: 900px;
-
-    > .row {
-      width: 50%;
-    }
+    padding: 40px 25px;
   }
 `;
 
 export default {
-  StyledLogin,
+  Login,
 };

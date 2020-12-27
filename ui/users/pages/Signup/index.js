@@ -10,7 +10,7 @@ import Validation from '../../../global/components/Validation';
 import AccountPageFooter from '../../components/AccountPageFooter';
 import OAuthLoginButtons from '../../components/OAuthLoginButtons';
 import { sendVerificationEmail as SEND_VERIFICATION } from '../../mutations/Users.gql';
-import StyledSignup from './styles';
+import Styles from './styles';
 
 const Signup = () => {
   const [sendVerification] = useMutation(SEND_VERIFICATION);
@@ -41,7 +41,7 @@ const Signup = () => {
   };
 
   return (
-    <StyledSignup>
+    <Styles.Signup>
       <Row>
         <Col xs={12}>
           <h4 className="page-header">Sign Up</h4>
@@ -148,7 +148,7 @@ const Signup = () => {
           </Validation>
         </Col>
       </Row>
-    </StyledSignup>
+    </Styles.Signup>
   );
 };
 

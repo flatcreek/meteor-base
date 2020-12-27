@@ -1,33 +1,59 @@
-import React from 'react';
+/* eslint-disable prefer-const */
+import React, { useEffect, useState } from 'react';
+import { Bert } from 'meteor/themeteorchef:bert';
 import PropTypes from 'prop-types';
-import { ListGroup } from 'react-bootstrap';
+import { Button, ListGroup } from 'react-bootstrap';
 
 import ToggleSwitch from '../../../global/components/ToggleSwitch';
 import BlankState from '../../../global/components/BlankState';
-import delay from '../../../../modules/delay';
 import Styles from './styles';
 
 const UserSettings = (props) => {
   const { isAdmin, settings, updateUser, userId } = props;
+  const [settingsValues, setSettingsValues] = useState(null);
+  const [inSave, setInSave] = useState(false);
 
-  const handleUpdateSetting = (setting) => {
-    const settingsUpdate = [...settings];
-    const settingToUpdate = settingsUpdate.find(({ _id }) => _id === setting._id);
+  useEffect(() => {
+    if (settings) {
+      setSettingsValues(settings);
+    }
+  }, []);
 
-    settingToUpdate.value = setting.value;
-
-    if (!userId) settingToUpdate.lastUpdatedByUser = new Date().toISOString();
-
-    delay(() => {
+  useEffect(() => {
+    if (inSave) {
       updateUser({
         variables: {
           user: {
             _id: userId,
-            settings: settingsUpdate,
+            settings: settingsValues,
           },
         },
+      }).then(() => {
+        setInSave(false);
+        Bert.alert('User updated!', 'success');
       });
-    }, 750);
+    }
+  }, [inSave]);
+
+  const handleUpdateSetting = (setting) => {
+    let currentSettings = settings;
+    let updatedSetting = setting;
+
+    let { _id, value } = updatedSetting;
+    let updatedSettingIndex = currentSettings.findIndex((obj) => obj._id === _id);
+    const updatedObj = { ...currentSettings[updatedSettingIndex], value };
+
+    const updatedSettings = [
+      ...currentSettings.slice(0, updatedSettingIndex),
+      updatedObj,
+      ...currentSettings.slice(updatedSettingIndex + 1),
+    ];
+
+    setSettingsValues(updatedSettings);
+  };
+
+  const handleSubmit = () => {
+    setInSave(true);
   };
 
   const renderSettingValue = (type, key, value, onChange) => {
@@ -36,7 +62,7 @@ const UserSettings = (props) => {
         <ToggleSwitch
           id={key}
           toggled={value === 'true'}
-          onToggle={(id, toggled) => onChange({ key, value: `${toggled}` })}
+          onToggle={(_id, toggled) => onChange({ key, value: `${toggled}` })}
         />
       );
     }
@@ -62,11 +88,11 @@ const UserSettings = (props) => {
     );
   };
 
-  return (
-    <div className="UserSettings">
-      <ListGroup>
-        {settings.length > 0 ? (
-          settings.map(({ _id, key, label, type, value }) => (
+  if (settingsValues && settingsValues.length > 0) {
+    return (
+      <div className="UserSettings">
+        <ListGroup>
+          {settingsValues.map(({ _id, key, label, type, value }) => (
             <Styles.Setting key={key} className="clearfix">
               <p>{label}</p>
               <div>
@@ -75,16 +101,25 @@ const UserSettings = (props) => {
                 )}
               </div>
             </Styles.Setting>
-          ))
-        ) : (
-          <BlankState
-            icon={{ style: 'solid', symbol: 'cogs' }}
-            title={`No settings to manage ${isAdmin ? 'for this user' : 'yet'}.`}
-            subtitle={`${
-              isAdmin ? 'GDPR-specific settings intentionally excluded. ' : ''
-            } When there are settings to manage, they'll appear here.`}
-          />
-        )}
+          ))}
+        </ListGroup>
+        <Button bsStyle="primary" onClick={() => handleSubmit()}>
+          Save changes
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="UserSettings">
+      <ListGroup>
+        <BlankState
+          icon={{ style: 'solid', symbol: 'cogs' }}
+          title={`No settings to manage ${isAdmin ? 'for this user' : 'yet'}.`}
+          subtitle={`${
+            isAdmin ? 'GDPR-specific settings intentionally excluded. ' : ''
+          } When there are settings to manage, they'll appear here.`}
+        />
       </ListGroup>
     </div>
   );

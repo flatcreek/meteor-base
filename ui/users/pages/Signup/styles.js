@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-const StyledSignup = styled.div`
+const Signup = styled.div`
   border: 1px solid var(--gray-lighter);
-  padding: 25px;
-  max-width: 425px;
-  margin: 0 auto;
   border-radius: 3px;
+  margin: 0 auto;
+  max-width: 425px;
+  padding: 25px;
 
   .page-header {
     margin-top: 0;
@@ -26,4 +26,6 @@ const StyledSignup = styled.div`
   }
 `;
 
-export default StyledSignup;
+export default {
+  Signup,
+};

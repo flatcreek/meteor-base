@@ -5,8 +5,6 @@ import { Row, Col, FormGroup, ControlLabel, Button } from 'react-bootstrap';
 import InputHint from '../../../global/components/InputHint';
 
 const PasswordUser = ({ data }) => {
-  console.log('PasswordUser.user:');
-  console.log(data);
   const thisUser = data && data.user;
   return (
     <div>

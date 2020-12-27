@@ -22,7 +22,7 @@ const Login = () => {
   };
 
   return (
-    <Styles.StyledLogin>
+    <Styles.Login>
       <Row>
         <Col xs={12}>
           <h4 className="page-header">Log In</h4>
@@ -73,9 +73,6 @@ const Login = () => {
               <FormGroup>
                 <ControlLabel className="clearfix">
                   <span className="pull-left">Password</span>
-                  <Link className="pull-right" to="/recover-password">
-                    Forgot password?
-                  </Link>
                 </ControlLabel>
                 <input
                   type="password"
@@ -84,6 +81,9 @@ const Login = () => {
                   placeholder="Password"
                   data-test="password"
                 />
+                <Link className="text-right" to="/recover-password">
+                  Forgot password?
+                </Link>
               </FormGroup>
               <Button type="submit" bsStyle="success" block>
                 Log In
@@ -97,7 +97,7 @@ const Login = () => {
           </Validation>
         </Col>
       </Row>
-    </Styles.StyledLogin>
+    </Styles.Login>
   );
 };
 
