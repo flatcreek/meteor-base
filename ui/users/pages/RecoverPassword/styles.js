@@ -26,4 +26,4 @@ const StyledRecoverPassword = styled.div`
   }
 `;
 
-export default StyledRecoverPassword;
+export default { StyledRecoverPassword };

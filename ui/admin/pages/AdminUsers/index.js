@@ -1,41 +1,31 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role, jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, { useState } from 'react';
 
 import SearchInput from '../../../global/components/SearchInput';
 import AdminUsersList from '../../components/AdminUsersList';
-import AdminUsersHeader from './styles';
+import Styles from './styles';
 
-class AdminUsers extends React.Component {
-  state = {
-    currentPage: 1,
-  };
+const AdminUsers = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState('');
 
-  render() {
-    const { search, currentPage } = this.state;
-
-    return (
-      <div className="AdminUsers">
-        <AdminUsersHeader className="page-header clearfix">
-          <h4 className="pull-left">Users</h4>
-          <SearchInput
-            placeholder="Search users..."
-            value={search}
-            onChange={(event) => this.setState({ search: event.target.value })}
-          />
-        </AdminUsersHeader>
-        <AdminUsersList
-          search={search}
-          currentPage={currentPage}
-          perPage={10}
-          onChangePage={(newPage) => this.setState({ currentPage: newPage })}
+  return (
+    <div className="AdminUsers">
+      <Styles.AdminUsersHeader className="page-header clearfix">
+        <h4 className="pull-left">Users</h4>
+        <SearchInput
+          placeholder="Search users..."
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
         />
-      </div>
-    );
-  }
-}
-
-AdminUsers.propTypes = {
-  // prop: PropTypes.string.isRequired,
+      </Styles.AdminUsersHeader>
+      <AdminUsersList
+        search={search}
+        currentPage={currentPage}
+        perPage={10}
+        onChangePage={(newPage) => setCurrentPage(newPage)}
+      />
+    </div>
+  );
 };
 
 export default AdminUsers;

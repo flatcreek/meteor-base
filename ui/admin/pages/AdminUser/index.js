@@ -14,6 +14,7 @@ import {
   updateUser as UPDATE_USER,
   removeUser as REMOVE_USER,
 } from '../../../users/mutations/Users.gql';
+import { users as GET_USERS } from '../../queries/Admin.gql';
 import Styles from './styles';
 
 const AdminUser = () => {
@@ -42,7 +43,7 @@ const AdminUser = () => {
   });
 
   const [removeUser] = useMutation(REMOVE_USER, {
-    refetchQueries: ['users'],
+    refetchQueries: [{ query: GET_USERS }],
     onCompleted: () => {
       Bert.alert('User deleted!', 'success');
       history.push('/admin/users');

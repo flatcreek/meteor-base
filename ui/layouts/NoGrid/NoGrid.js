@@ -27,7 +27,6 @@ const NoGrid = (props) => {
 
   // If this page requires a role, check that the user is in that role
   if (authRequired && userId && allowedRoles.length) {
-    console.log('NoSidebar -- Checking Role');
     const hasRole = isInRole(allowedRoles);
     if (!hasRole) {
       return <Redirect to="/" />;

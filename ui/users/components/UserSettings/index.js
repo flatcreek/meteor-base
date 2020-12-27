@@ -1,115 +1,142 @@
-import React from 'react';
+/* eslint-disable prefer-const */
+import React, { useEffect, useState } from 'react';
+import { Bert } from 'meteor/themeteorchef:bert';
 import PropTypes from 'prop-types';
-import { ListGroup } from 'react-bootstrap';
+import { Button, ListGroup } from 'react-bootstrap';
 
 import ToggleSwitch from '../../../global/components/ToggleSwitch';
 import BlankState from '../../../global/components/BlankState';
-import unfreezeApolloCacheValue from '../../../../modules/unfreezeApolloCacheValue';
-import delay from '../../../../modules/delay';
 import Styles from './styles';
 
-class UserSettings extends React.Component {
-  constructor(props) {
-    super(props);
-    const { settings } = props;
-    this.state = { settings: unfreezeApolloCacheValue([...settings]) };
-  }
+const UserSettings = (props) => {
+  const { isAdmin, settings, updateUser, userId } = props;
+  const [settingsValues, setSettingsValues] = useState(null);
+  const [inSave, setInSave] = useState(false);
 
-  handleUpdateSetting = (setting) => {
-    const { userId, updateUser } = this.props;
-    const { settings } = this.state;
-    const settingsUpdate = [...settings];
-    const settingToUpdate = settingsUpdate.find(({ _id }) => _id === setting._id);
+  useEffect(() => {
+    if (settings) {
+      setSettingsValues(settings);
+    }
+  }, []);
 
-    settingToUpdate.value = setting.value;
-
-    if (!userId) settingToUpdate.lastUpdatedByUser = new Date().toISOString();
-
-    this.setState({ settings }, () => {
-      delay(() => {
-        updateUser({
-          variables: {
-            user: {
-              _id: userId,
-              settings: settingsUpdate,
-            },
+  useEffect(() => {
+    if (inSave) {
+      updateUser({
+        variables: {
+          user: {
+            _id: userId,
+            settings: settingsValues,
           },
-        });
-      }, 750);
-    });
+        },
+      }).then(() => {
+        setInSave(false);
+        Bert.alert('User updated!', 'success');
+      });
+    }
+  }, [inSave]);
+
+  const handleUpdateSetting = (setting) => {
+    let currentSettings = settings;
+    let updatedSetting = setting;
+
+    let { _id, value } = updatedSetting;
+    let updatedSettingIndex = currentSettings.findIndex((obj) => obj._id === _id);
+    const updatedObj = { ...currentSettings[updatedSettingIndex], value };
+
+    const updatedSettings = [
+      ...currentSettings.slice(0, updatedSettingIndex),
+      updatedObj,
+      ...currentSettings.slice(updatedSettingIndex + 1),
+    ];
+
+    setSettingsValues(updatedSettings);
   };
 
-  renderSettingValue = (type, key, value, onChange) =>
-    ({
-      boolean: () => (
+  const handleSubmit = () => {
+    setInSave(true);
+  };
+
+  const renderSettingValue = (type, key, value, onChange) => {
+    if (type === 'boolean') {
+      return (
         <ToggleSwitch
           id={key}
           toggled={value === 'true'}
-          onToggle={(id, toggled) => onChange({ key, value: `${toggled}` })}
+          onToggle={(_id, toggled) => onChange({ key, value: `${toggled}` })}
         />
-      ),
-      number: () => (
+      );
+    }
+
+    if (type === 'number') {
+      return (
         <input
           type="number"
           className="form-control"
           value={value}
           onChange={(event) => onChange({ key, value: parseInt(event.target.value, 10) })}
         />
-      ),
-      string: () => (
-        <input
-          type="text"
-          className="form-control"
-          value={value}
-          onChange={(event) => onChange({ key, value: event.target.value })}
-        />
-      ),
-    }[type]());
+      );
+    }
 
-  render() {
-    const { isAdmin } = this.props;
-    const { settings } = this.state;
+    return (
+      <input
+        type="text"
+        className="form-control"
+        value={value}
+        onChange={(event) => onChange({ key, value: event.target.value })}
+      />
+    );
+  };
+
+  if (settingsValues && settingsValues.length > 0) {
     return (
       <div className="UserSettings">
         <ListGroup>
-          {settings.length > 0 ? (
-            settings.map(({ _id, key, label, type, value }) => (
-              <Styles.Setting key={key} className="clearfix">
-                <p>{label}</p>
-                <div>
-                  {this.renderSettingValue(type, key, value, (update) =>
-                    this.handleUpdateSetting({ ...update, _id }),
-                  )}
-                </div>
-              </Styles.Setting>
-            ))
-          ) : (
-            <BlankState
-              icon={{ style: 'solid', symbol: 'cogs' }}
-              title={`No settings to manage ${isAdmin ? 'for this user' : 'yet'}.`}
-              subtitle={`${
-                isAdmin ? 'GDPR-specific settings intentionally excluded. ' : ''
-              } When there are settings to manage, they'll appear here.`}
-            />
-          )}
+          {settingsValues.map(({ _id, key, label, type, value }) => (
+            <Styles.Setting key={key} className="clearfix">
+              <p>{label}</p>
+              <div>
+                {renderSettingValue(type, key, value, (update) =>
+                  handleUpdateSetting({ ...update, _id }),
+                )}
+              </div>
+            </Styles.Setting>
+          ))}
         </ListGroup>
+        <Button bsStyle="primary" onClick={() => handleSubmit()}>
+          Save changes
+        </Button>
       </div>
     );
   }
-}
+
+  return (
+    <div className="UserSettings">
+      <ListGroup>
+        <BlankState
+          icon={{ style: 'solid', symbol: 'cogs' }}
+          title={`No settings to manage ${isAdmin ? 'for this user' : 'yet'}.`}
+          subtitle={`${
+            isAdmin ? 'GDPR-specific settings intentionally excluded. ' : ''
+          } When there are settings to manage, they'll appear here.`}
+        />
+      </ListGroup>
+    </div>
+  );
+};
 
 UserSettings.defaultProps = {
-  userId: null,
   isAdmin: false,
   settings: [],
   updateUser: null,
+  userId: null,
 };
 
 UserSettings.propTypes = {
-  userId: PropTypes.string,
   isAdmin: PropTypes.bool,
   settings: PropTypes.array,
   updateUser: PropTypes.func,
+  userId: PropTypes.string,
 };
 
 export default UserSettings;

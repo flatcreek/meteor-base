@@ -68,54 +68,51 @@ const AdminUserSettings = () => {
     setCurrentSetting(null);
   };
 
-  if (data) {
-    return (
-      <div className="AdminUserSettings">
-        <div className="page-header clearfix">
-          <h4 className="pull-left">User Settings</h4>
-          <Button bsStyle="success" className="pull-right" onClick={() => handleAddSetting()}>
-            Add Setting
-          </Button>
-        </div>
-        {data.userSettings && data.userSettings.length > 0 ? (
-          <ListGroup>
-            {data.userSettings.map((setting) => (
-              <Styles.Setting key={setting._id}>
-                <p>{setting.key}</p>
-                <div>
-                  <Button bsStyle="default" onClick={() => handleEditSetting(setting)}>
-                    Edit
-                  </Button>
-                  <Button bsStyle="danger" onClick={() => handleDeleteSetting(setting._id)}>
-                    Delete
-                  </Button>
-                </div>
-              </Styles.Setting>
-            ))}
-          </ListGroup>
-        ) : (
-          <BlankState
-            icon={{ style: 'solid', symbol: 'gear' }}
-            title="No user settings here, friend."
-            subtitle="Add your first setting by clicking the button below."
-            action={{
-              style: 'success',
-              onClick: () => handleAddSetting(),
-              label: 'Create Your First Setting',
-            }}
-          />
-        )}
-        <AdminUserSettingsModal
-          show={showSettingsModal}
-          onHide={() => handleHideModal()}
-          setting={currentSetting}
-          addUserSetting={addUserSetting}
-          updateUserSetting={updateUserSetting}
-        />
+  return (
+    <div className="AdminUserSettings">
+      <div className="page-header clearfix">
+        <h4 className="pull-left">User Settings</h4>
+        <Button bsStyle="success" className="pull-right" onClick={() => handleAddSetting()}>
+          Add Setting
+        </Button>
       </div>
-    );
-  }
-  return null;
+      {data && data.userSettings && data.userSettings.length > 0 ? (
+        <ListGroup>
+          {data.userSettings.map((setting) => (
+            <Styles.Setting key={setting._id}>
+              <p>{setting.label}</p>
+              <div>
+                <Button bsStyle="default" onClick={() => handleEditSetting(setting)}>
+                  Edit
+                </Button>
+                <Button bsStyle="danger" onClick={() => handleDeleteSetting(setting._id)}>
+                  Delete
+                </Button>
+              </div>
+            </Styles.Setting>
+          ))}
+        </ListGroup>
+      ) : (
+        <BlankState
+          icon={{ style: 'solid', symbol: 'gear' }}
+          title="No user settings here, friend."
+          subtitle="Add your first setting by clicking the button below."
+          action={{
+            style: 'success',
+            onClick: () => handleAddSetting(),
+            label: 'Create Your First Setting',
+          }}
+        />
+      )}
+      <AdminUserSettingsModal
+        show={showSettingsModal}
+        onHide={() => handleHideModal()}
+        setting={currentSetting}
+        addUserSetting={addUserSetting}
+        updateUserSetting={updateUserSetting}
+      />
+    </div>
+  );
 };
 
 export default AdminUserSettings;
