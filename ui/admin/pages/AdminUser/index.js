@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { Breadcrumb, Tab } from 'react-bootstrap';
+import { Breadcrumb, Tabs, Tab } from 'react-bootstrap';
 import { Redirect } from 'react-router';
+import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useParams, useHistory } from 'react-router-dom';
 import { Bert } from 'meteor/themeteorchef:bert';
 
@@ -74,9 +75,9 @@ const AdminUser = () => {
   return user ? (
     <div className="AdminUser">
       <Breadcrumb>
-        <li>
-          <Link to="/admin/users">Users</Link>
-        </li>
+        <LinkContainer to="/admin/users">
+          <Breadcrumb.Item href="#">Users</Breadcrumb.Item>
+        </LinkContainer>
         <Breadcrumb.Item active>{name ? `${name.first} ${name.last}` : username}</Breadcrumb.Item>
       </Breadcrumb>
       <Styles.AdminUserHeader className="page-header">
@@ -85,9 +86,9 @@ const AdminUser = () => {
           <span className={`label label-${user.oAuthProvider}`}>{user.oAuthProvider}</span>
         )}
       </Styles.AdminUserHeader>
-      <Styles.AdminUserTabs
-        animation={false}
+      <Tabs
         activeKey={activeTab}
+        defaultActiveKey="profile"
         onSelect={(selectedTab) => setActiveTab(selectedTab)}
         id="admin-user-tabs"
       >
@@ -106,7 +107,7 @@ const AdminUser = () => {
             updateUser={updateUser}
           />
         </Tab>
-      </Styles.AdminUserTabs>
+      </Tabs>
     </div>
   ) : (
     <BlankState

@@ -14,7 +14,7 @@ import { StyledDocuments, DocumentsList, Document } from './styles';
 const Documents = ({ data, mutate }) => (
   <StyledDocuments>
     <header className="clearfix">
-      <Button bsStyle="success" onClick={mutate}>
+      <Button variant="success" onClick={mutate}>
         New Document
       </Button>
     </header>

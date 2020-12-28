@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Row, Col, FormGroup, ControlLabel, Button } from 'react-bootstrap';
+import { Row, Col, FormGroup, FormLabel, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
@@ -61,7 +61,7 @@ const Login = () => {
           >
             <form ref={formRef} onSubmit={(event) => event.preventDefault()}>
               <FormGroup>
-                <ControlLabel>Email Address</ControlLabel>
+                <FormLabel>Email Address</FormLabel>
                 <input
                   type="email"
                   name="emailAddress"
@@ -71,9 +71,9 @@ const Login = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <ControlLabel className="clearfix">
+                <FormLabel className="clearfix">
                   <span className="pull-left">Password</span>
-                </ControlLabel>
+                </FormLabel>
                 <input
                   type="password"
                   name="password"
@@ -85,7 +85,7 @@ const Login = () => {
                   Forgot password?
                 </Link>
               </FormGroup>
-              <Button type="submit" bsStyle="success" block>
+              <Button type="submit" variant="success" block>
                 Log In
               </Button>
               <AccountPageFooter>

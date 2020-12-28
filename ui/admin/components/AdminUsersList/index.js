@@ -61,7 +61,7 @@ const AdminUsersList = (props) => {
                     <span className={`label label-${oAuthProvider}`}>{oAuthProvider}</span>
                   )}
                   {!emailVerified && (
-                    <Styles.AdminLabel bsStyle="danger">Email not verified</Styles.AdminLabel>
+                    <Styles.AdminLabel variant="danger">Email not verified</Styles.AdminLabel>
                   )}
                 </p>
               </Styles.AdminListGroupItem>

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, FormGroup, ControlLabel, Button } from 'react-bootstrap';
+import { Row, Col, FormGroup, FormLabel, Button } from 'react-bootstrap';
 
 import InputHint from '../../../global/components/InputHint';
 
@@ -11,7 +11,7 @@ const PasswordUser = ({ data }) => {
       <Row>
         <Col xs={6}>
           <FormGroup>
-            <ControlLabel>First Name</ControlLabel>
+            <FormLabel>First Name</FormLabel>
             <input
               type="text"
               name="firstName"
@@ -22,7 +22,7 @@ const PasswordUser = ({ data }) => {
         </Col>
         <Col xs={6}>
           <FormGroup>
-            <ControlLabel>Last Name</ControlLabel>
+            <FormLabel>Last Name</FormLabel>
             <input
               type="text"
               name="lastName"
@@ -33,7 +33,7 @@ const PasswordUser = ({ data }) => {
         </Col>
       </Row>
       <FormGroup>
-        <ControlLabel>Email Address</ControlLabel>
+        <FormLabel>Email Address</FormLabel>
         <input
           type="email"
           name="emailAddress"
@@ -42,15 +42,15 @@ const PasswordUser = ({ data }) => {
         />
       </FormGroup>
       <FormGroup>
-        <ControlLabel>Current Password</ControlLabel>
+        <FormLabel>Current Password</FormLabel>
         <input type="password" name="currentPassword" className="form-control" />
       </FormGroup>
       <FormGroup>
-        <ControlLabel>New Password</ControlLabel>
+        <FormLabel>New Password</FormLabel>
         <input type="password" name="newPassword" className="form-control" />
         <InputHint>Use at least six characters.</InputHint>
       </FormGroup>
-      <Button type="submit" bsStyle="success">
+      <Button type="submit" variant="success">
         Save Profile
       </Button>
     </div>

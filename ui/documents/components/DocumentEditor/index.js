@@ -2,7 +2,7 @@ import React, { Fragment, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from '@apollo/client';
 import { Bert } from 'meteor/themeteorchef:bert';
-import { ControlLabel, DropdownButton, MenuItem } from 'react-bootstrap';
+import { FormLabel, DropdownButton, Dropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
 import delay from '../../../../modules/delay';
@@ -87,7 +87,7 @@ const DocumentEditor = ({ doc }) => {
       <Styles.DocumentEditorHeader className="clearfix">
         <p>{saving ? <em>Saving...</em> : <span>Last edit was {timeago(doc.updatedAt)}</span>}</p>
         <DropdownButton
-          bsStyle="default"
+          variant="default"
           title={
             <span>
               <Icon iconStyle="solid" icon="gear" />
@@ -95,35 +95,35 @@ const DocumentEditor = ({ doc }) => {
           }
           id="set-document-public"
         >
-          <MenuItem href={`/documents/${doc._id}`} target="_blank" rel="noopener noreferrer">
+          <Dropdown.Item href={`/documents/${doc._id}`} target="_blank" rel="noopener noreferrer">
             <Icon iconStyle="solid" icon="external-link-alt" /> View Document
-          </MenuItem>
-          <MenuItem divider />
-          <MenuItem header>Visibility</MenuItem>
-          <MenuItem
+          </Dropdown.Item>
+          <Dropdown.Item divider />
+          <Dropdown.Item header>Visibility</Dropdown.Item>
+          <Dropdown.Item
             className={doc.isPublic && 'active'}
             eventKey="1"
             onClick={() => handleSetVisibility('public')}
           >
             <Icon iconStyle="solid" icon="unlock" /> Public
-          </MenuItem>
-          <MenuItem
+          </Dropdown.Item>
+          <Dropdown.Item
             className={!doc.isPublic && 'active'}
             eventKey="2"
             onClick={() => handleSetVisibility('private')}
           >
             <Icon iconStyle="solid" icon="lock" /> Private
-          </MenuItem>
-          <MenuItem divider />
-          <MenuItem onClick={() => handleRemoveDocument()}>
+          </Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={() => handleRemoveDocument()}>
             <span className="text-danger">Delete Document</span>
-          </MenuItem>
+          </Dropdown.Item>
         </DropdownButton>
       </Styles.DocumentEditorHeader>
       <Styles.StyledDocumentEditor>
         <form ref={formRef} onSubmit={(event) => event.preventDefault()}>
           <Styles.DocumentEditorTitle>
-            <ControlLabel>Title</ControlLabel>
+            <FormLabel>Title</FormLabel>
             <input
               type="text"
               className="form-control"
@@ -134,7 +134,7 @@ const DocumentEditor = ({ doc }) => {
             />
           </Styles.DocumentEditorTitle>
           <Styles.DocumentEditorBody>
-            <ControlLabel>Body</ControlLabel>
+            <FormLabel>Body</FormLabel>
             <textarea
               className="form-control"
               name="body"

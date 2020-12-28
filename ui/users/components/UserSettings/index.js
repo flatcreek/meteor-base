@@ -103,7 +103,7 @@ const UserSettings = (props) => {
             </Styles.Setting>
           ))}
         </ListGroup>
-        <Button bsStyle="primary" onClick={() => handleSubmit()}>
+        <Button variant="primary" onClick={() => handleSubmit()}>
           Save changes
         </Button>
       </div>

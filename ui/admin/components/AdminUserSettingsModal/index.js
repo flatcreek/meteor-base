@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button, Row, Col, FormGroup, ControlLabel } from 'react-bootstrap';
+import { Modal, Button, Row, Col, FormGroup, FormLabel } from 'react-bootstrap';
 import { camelCase } from 'lodash';
 
 import Validation from '../../../global/components/Validation';
@@ -136,7 +136,7 @@ const AdminUserSettingsModal = (props) => {
             <Row>
               <Col xs={12} sm={6}>
                 <FormGroup>
-                  <ControlLabel>Key Name</ControlLabel>
+                  <FormLabel>Key Name</FormLabel>
                   <input
                     type="text"
                     name="key"
@@ -149,7 +149,7 @@ const AdminUserSettingsModal = (props) => {
               </Col>
               <Col xs={12} sm={6}>
                 <FormGroup>
-                  <ControlLabel>Is this a GDPR setting?</ControlLabel>
+                  <FormLabel>Is this a GDPR setting?</FormLabel>
                   <ToggleSwitch
                     toggled={isGDPR}
                     onToggle={(id, toggled) => handleChangeToggle(toggled)}
@@ -158,7 +158,7 @@ const AdminUserSettingsModal = (props) => {
               </Col>
             </Row>
             <FormGroup>
-              <ControlLabel>Label</ControlLabel>
+              <FormLabel>Label</FormLabel>
               <input
                 type="text"
                 name="label"
@@ -171,7 +171,7 @@ const AdminUserSettingsModal = (props) => {
             </FormGroup>
             <Row>
               <Col xs={12} sm={6}>
-                <ControlLabel>Type</ControlLabel>
+                <FormLabel>Type</FormLabel>
                 <select name="type" value={type} onChange={handleChange} className="form-control">
                   <option value="boolean">Boolean (true/false)</option>
                   <option value="number">Number</option>
@@ -179,7 +179,7 @@ const AdminUserSettingsModal = (props) => {
                 </select>
               </Col>
               <Col xs={12} sm={6}>
-                <ControlLabel>Default Value</ControlLabel>
+                <FormLabel>Default Value</FormLabel>
                 {type === 'boolean' && (
                   <select
                     name="value"
@@ -215,7 +215,7 @@ const AdminUserSettingsModal = (props) => {
             </Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button type="submit" bsStyle="success">
+            <Button type="submit" variant="success">
               {setting ? 'Save' : 'Add'}
               {' Setting'}
             </Button>

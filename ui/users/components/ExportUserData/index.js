@@ -21,7 +21,7 @@ const ExportUserData = () => {
 
   return (
     <p>
-      <Button bsStyle="link" className="btn-export" onClick={() => handleExportData()}>
+      <Button variant="link" className="btn-export" onClick={() => handleExportData()}>
         Export my data
       </Button>
       {' - '}

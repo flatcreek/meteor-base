@@ -72,7 +72,7 @@ const AdminUserSettings = () => {
     <div className="AdminUserSettings">
       <div className="page-header clearfix">
         <h4 className="pull-left">User Settings</h4>
-        <Button bsStyle="success" className="pull-right" onClick={() => handleAddSetting()}>
+        <Button variant="success" className="pull-right" onClick={() => handleAddSetting()}>
           Add Setting
         </Button>
       </div>
@@ -82,10 +82,10 @@ const AdminUserSettings = () => {
             <Styles.Setting key={setting._id}>
               <p>{setting.label}</p>
               <div>
-                <Button bsStyle="default" onClick={() => handleEditSetting(setting)}>
+                <Button variant="default" onClick={() => handleEditSetting(setting)}>
                   Edit
                 </Button>
-                <Button bsStyle="danger" onClick={() => handleDeleteSetting(setting._id)}>
+                <Button variant="danger" onClick={() => handleDeleteSetting(setting._id)}>
                   Delete
                 </Button>
               </div>

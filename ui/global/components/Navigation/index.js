@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Navbar } from 'react-bootstrap';
+import { Container, Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../../context/Authentication';
@@ -14,17 +14,17 @@ const Navigation = () => {
   if (!loading) {
     return (
       <Styles.Navbar>
-        <Navbar collapseOnSelect>
-          <Navbar.Header>
+        <Container>
+          <Navbar bg="light" variant="light" expand="md">
             <Navbar.Brand>
               <Link to="/">{productName}</Link>
             </Navbar.Brand>
             <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-            {!userId ? <NavigationPublic /> : <NavigationAuthenticated />}
-          </Navbar.Collapse>
-        </Navbar>
+            <Navbar.Collapse>
+              {!userId ? <NavigationPublic /> : <NavigationAuthenticated />}
+            </Navbar.Collapse>
+          </Navbar>
+        </Container>
       </Styles.Navbar>
     );
   }

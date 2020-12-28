@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
-import { Row, Col, FormGroup, ControlLabel, Button } from 'react-bootstrap';
+import { Row, Col, FormGroup, FormLabel, Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
@@ -96,7 +96,7 @@ const Signup = () => {
               <Row>
                 <Col xs={6}>
                   <FormGroup>
-                    <ControlLabel>First Name</ControlLabel>
+                    <FormLabel>First Name</FormLabel>
                     <input
                       type="text"
                       name="firstName"
@@ -107,7 +107,7 @@ const Signup = () => {
                 </Col>
                 <Col xs={6}>
                   <FormGroup>
-                    <ControlLabel>Last Name</ControlLabel>
+                    <FormLabel>Last Name</FormLabel>
                     <input
                       type="text"
                       name="lastName"
@@ -118,7 +118,7 @@ const Signup = () => {
                 </Col>
               </Row>
               <FormGroup>
-                <ControlLabel>Email Address</ControlLabel>
+                <FormLabel>Email Address</FormLabel>
                 <input
                   type="email"
                   name="emailAddress"
@@ -127,7 +127,7 @@ const Signup = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <ControlLabel>Password</ControlLabel>
+                <FormLabel>Password</FormLabel>
                 <input
                   type="password"
                   name="password"
@@ -136,7 +136,7 @@ const Signup = () => {
                 />
                 <InputHint>Use at least six characters.</InputHint>
               </FormGroup>
-              <Button type="submit" bsStyle="success" block>
+              <Button type="submit" variant="success" block>
                 Sign Up
               </Button>
               <AccountPageFooter>

@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from '@apollo/client';
-import {
-  Button,
-  Checkbox,
-  Col,
-  ControlLabel,
-  FormGroup,
-  HelpBlock,
-  ListGroup,
-  ListGroupItem,
-  Row,
-} from 'react-bootstrap';
+import { Button, Col, Form, ListGroup, Row } from 'react-bootstrap';
 import { isEqual, union, without } from 'lodash';
 
 import Validation from '../../../global/components/Validation';
@@ -89,144 +79,138 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
     sendVerification({ variables: { userId: user._id } });
   };
 
-  return (
-    <div className="AdminUserProfile">
-      <Validation
-        rules={{
-          firstName: {
-            required: true,
-          },
-          lastName: {
-            required: true,
-          },
-          emailAddress: {
-            required: true,
-            email: true,
-          },
-        }}
-        messages={{
-          firstName: {
-            required: "What's the user's first name?",
-          },
-          lastName: {
-            required: "What's the user's last name?",
-          },
-          emailAddress: {
-            required: 'Need an email address here.',
-            email: 'Is this email address correct?',
-          },
-        }}
-        submitHandler={(form) => handleSubmit(form)}
-      >
-        <form onSubmit={(event) => event.preventDefault()}>
-          {user && (
+  if (user) {
+    return (
+      <div className="AdminUserProfile">
+        <Validation
+          rules={{
+            firstName: {
+              required: true,
+            },
+            lastName: {
+              required: true,
+            },
+            emailAddress: {
+              required: true,
+              email: true,
+            },
+          }}
+          messages={{
+            firstName: {
+              required: "What's the user's first name?",
+            },
+            lastName: {
+              required: "What's the user's last name?",
+            },
+            emailAddress: {
+              required: 'Need an email address here.',
+              email: 'Is this email address correct?',
+            },
+          }}
+          submitHandler={(form) => handleSubmit(form)}
+        >
+          <form onSubmit={(event) => event.preventDefault()}>
             <Row>
               <Col xs={12} md={6}>
                 <Row>
                   <Col xs={6}>
-                    <FormGroup>
-                      <ControlLabel>First Name</ControlLabel>
-                      <input
+                    <Form.Group>
+                      <Form.Label>First Name</Form.Label>
+                      <Form.Control
                         disabled={user && user.oAuthProvider}
                         type="text"
                         name="firstName"
-                        className="form-control"
                         defaultValue={(user && user.name && user.name.first) || ''}
                       />
-                    </FormGroup>
+                    </Form.Group>
                   </Col>
                   <Col xs={6}>
-                    <FormGroup>
-                      <ControlLabel>Last Name</ControlLabel>
-                      <input
+                    <Form.Group>
+                      <Form.Label>Last Name</Form.Label>
+                      <Form.Control
                         disabled={user && user.oAuthProvider}
                         type="text"
                         name="lastName"
-                        className="form-control"
                         defaultValue={(user && user.name && user.name.last) || ''}
                       />
-                    </FormGroup>
+                    </Form.Group>
                   </Col>
                 </Row>
                 {user && user.username && (
                   <Row>
                     <Col xs={12}>
-                      <FormGroup>
-                        <ControlLabel>Username</ControlLabel>
-                        <input
+                      <Form.Group>
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
                           disabled={user && user.oAuthProvider}
                           type="text"
                           name="username"
-                          className="form-control"
                           defaultValue={user && user.username}
                         />
-                      </FormGroup>
+                      </Form.Group>
                     </Col>
                   </Row>
                 )}
                 <Row>
                   <Col xs={12}>
-                    <FormGroup validationState={user.emailVerified ? null : 'error'}>
-                      <ControlLabel>Email Address</ControlLabel>
-                      <input
+                    <Form.Group isInvalid={user.emailVerified}>
+                      <Form.Label>Email Address</Form.Label>
+                      <Form.Control
                         type="email"
                         name="emailAddress"
                         autoComplete="off"
-                        className="form-control"
                         defaultValue={(user && user.emailAddress) || ''}
                       />
                       {user && !user.emailVerified && (
-                        <HelpBlock>
+                        <Form.Text className="text-muted">
                           This email is not verified yet.
                           <Button
-                            bsStyle="link"
+                            variant="link"
                             onClick={() => handleResendVerificationEmail()}
                             href="#"
                           >
                             Re-send verification email
                           </Button>
-                        </HelpBlock>
+                        </Form.Text>
                       )}
-                    </FormGroup>
+                    </Form.Group>
                   </Col>
                 </Row>
                 <Row>
                   <Col xs={12}>
-                    <FormGroup>
-                      <ControlLabel>Roles</ControlLabel>
+                    <Form.Group>
+                      <Form.Label>Roles</Form.Label>
                       <ListGroup>
-                        <ListGroupItem key="admin">
-                          <Checkbox
+                        <ListGroup.Item>
+                          <Form.Check
                             name="role"
                             value="admin"
+                            type="checkbox"
                             checked={userIsInRole('admin') || false}
                             onChange={handleCheckboxChange}
-                            inline
-                          >
-                            Admin
-                          </Checkbox>
-                        </ListGroupItem>
-                        <ListGroupItem key="user">
-                          <Checkbox
+                            label="Admin"
+                          />
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <Form.Check
                             name="role"
                             value="user"
-                            checked={userIsInRole('user')}
+                            type="checkbox"
+                            checked={userIsInRole('user') || false}
                             onChange={handleCheckboxChange}
-                            inline
-                          >
-                            User
-                          </Checkbox>
-                        </ListGroupItem>
+                            label="User"
+                          />
+                        </ListGroup.Item>
                       </ListGroup>
-                    </FormGroup>
+                    </Form.Group>
                   </Col>
                 </Row>
-                <Button type="submit" bsStyle="success">
+                <Button type="submit" variant="success">
                   {user ? 'Save Changes' : 'Create User'}
                 </Button>
                 {user && (
                   <Button
-                    bsStyle="danger"
+                    variant="danger"
                     className="pull-right"
                     onClick={() => handleDeleteUser()}
                   >
@@ -235,11 +219,12 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
                 )}
               </Col>
             </Row>
-          )}
-        </form>
-      </Validation>
-    </div>
-  );
+          </form>
+        </Validation>
+      </div>
+    );
+  }
+  return null;
 };
 
 AdminUserProfile.propTypes = {

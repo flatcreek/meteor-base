@@ -20,16 +20,16 @@ const VerifyEmailAlert = () => {
   if (!loading && userId && !emailVerified) {
     return (
       <Styles.VerifyEmailAlert>
-        <Alert bsStyle="info" className="text-center">
+        <Alert variant="info" className="text-center">
           {!emailVerified && (
             <p>
               Please <strong>verify your email address</strong> ({emailAddress}).
-              <Button bsStyle="link" onClick={() => handleResendVerification()} href="#">
+              <Button variant="link" onClick={() => handleResendVerification()} href="#">
                 Re-send verification email
               </Button>{' '}
               |
               <LinkContainer to="/settings">
-                <Button bsStyle="link">Update email</Button>
+                <Button variant="link">Update email</Button>
               </LinkContainer>
             </p>
           )}

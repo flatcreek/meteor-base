@@ -8,6 +8,8 @@ import { Accounts } from 'meteor/accounts-base';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import Authentication from '../../ui/global/context/Authentication';
 import App from '../../ui/layouts/App';
 import apolloClient from './apollo';

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Row, Col, Alert, FormGroup, ControlLabel, Button } from 'react-bootstrap';
+import { Row, Col, Alert, FormGroup, FormLabel, Button } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
@@ -26,7 +26,7 @@ const ResetPassword = () => {
       <Row>
         <Col xs={12}>
           <h4 className="page-header">Reset Password</h4>
-          <Alert bsStyle="info">
+          <Alert variant="info">
             To reset your password, enter a new one below. You will be logged in with your new
             password.
           </Alert>
@@ -58,7 +58,7 @@ const ResetPassword = () => {
           >
             <form ref={formRef} onSubmit={(event) => event.preventDefault()}>
               <FormGroup>
-                <ControlLabel>New Password</ControlLabel>
+                <FormLabel>New Password</FormLabel>
                 <input
                   type="password"
                   className="form-control"
@@ -67,7 +67,7 @@ const ResetPassword = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <ControlLabel>Repeat New Password</ControlLabel>
+                <FormLabel>Repeat New Password</FormLabel>
                 <input
                   type="password"
                   className="form-control"
@@ -75,7 +75,7 @@ const ResetPassword = () => {
                   placeholder="Repeat New Password"
                 />
               </FormGroup>
-              <Button type="submit" bsStyle="success" block>
+              <Button type="submit" variant="success" block>
                 Reset Password &amp; Login
               </Button>
               <AccountPageFooter>

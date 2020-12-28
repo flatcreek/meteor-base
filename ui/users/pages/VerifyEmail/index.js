@@ -29,7 +29,7 @@ const VerifyEmail = () => {
 
   return (
     <div className="VerifyEmail">
-      <Alert bsStyle={!verifyError ? 'info' : 'danger'}>
+      <Alert variant={!verifyError ? 'info' : 'danger'}>
         {!verifyError ? 'Verifying...' : verifyError}
       </Alert>
     </div>

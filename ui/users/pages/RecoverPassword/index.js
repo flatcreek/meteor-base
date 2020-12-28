@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Row, Col, Alert, FormGroup, ControlLabel, Button } from 'react-bootstrap';
+import { Row, Col, Alert, FormGroup, FormLabel, Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
@@ -30,7 +30,7 @@ const RecoverPassword = () => {
       <Row>
         <Col xs={12}>
           <h4 className="page-header">Recover Password</h4>
-          <Alert bsStyle="info">
+          <Alert variant="info">
             Enter your email address below to receive a link to reset your password.
           </Alert>
           <Validation
@@ -52,7 +52,7 @@ const RecoverPassword = () => {
           >
             <form ref={formRef} onSubmit={(event) => event.preventDefault()}>
               <FormGroup>
-                <ControlLabel>Email Address</ControlLabel>
+                <FormLabel>Email Address</FormLabel>
                 <input
                   type="email"
                   name="emailAddress"
@@ -60,7 +60,7 @@ const RecoverPassword = () => {
                   placeholder="Email Address"
                 />
               </FormGroup>
-              <Button type="submit" bsStyle="success" block>
+              <Button type="submit" variant="success" block>
                 Recover Password
               </Button>
               <AccountPageFooter>

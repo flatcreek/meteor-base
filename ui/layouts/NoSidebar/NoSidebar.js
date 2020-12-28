@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { Redirect, useLocation } from 'react-router-dom';
 
 import Loading from '../../global/components/Loading';
@@ -37,13 +37,13 @@ const NoSidebar = (props) => {
 
   // Otherwise -- show the page
   return (
-    <Grid>
+    <Container>
       <Row>
         <Col id="main-content" md={12}>
           {React.createElement(main, { ...props })}
         </Col>
       </Row>
-    </Grid>
+    </Container>
   );
 };
 

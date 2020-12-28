@@ -22,7 +22,7 @@ const DeleteAccount = () => {
   };
 
   return (
-    <Button bsStyle="danger" onClick={() => handleDeleteAccount()}>
+    <Button variant="danger" onClick={() => handleDeleteAccount()}>
       Delete My Account
     </Button>
   );

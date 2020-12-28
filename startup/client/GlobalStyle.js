@@ -45,13 +45,6 @@ const GlobalStyle = createGlobalStyle`
     display: none;
   }
 
-  .navbar {
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-  }
-
   form label {
     display: block;
   }

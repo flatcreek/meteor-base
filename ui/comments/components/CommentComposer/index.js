@@ -54,7 +54,7 @@ const CommentComposer = ({ documentId }) => {
             name="comment"
             placeholder="Have a comment about this?"
           />
-          <Button type="submit" bsStyle="success">
+          <Button type="submit" variant="success">
             Post Comment
           </Button>
         </form>

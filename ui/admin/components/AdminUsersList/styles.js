@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Label, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Badge, ListGroup, ListGroupItem } from 'react-bootstrap';
 
-const AdminLabel = styled(Label)`
+const AdminLabel = styled(Badge)`
   margin-left: 12px !important;
 `;
 
