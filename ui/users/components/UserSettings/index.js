@@ -1,9 +1,10 @@
-/* eslint-disable prefer-const */
 import React, { useEffect, useState } from 'react';
 import { Bert } from 'meteor/themeteorchef:bert';
 import PropTypes from 'prop-types';
 import { Button, ListGroup } from 'react-bootstrap';
 
+import AccountPageFooter from '../AccountPageFooter';
+import DeleteAccount from '../DeleteAccount';
 import ToggleSwitch from '../../../global/components/ToggleSwitch';
 import BlankState from '../../../global/components/BlankState';
 import Styles from './styles';
@@ -36,11 +37,11 @@ const UserSettings = (props) => {
   }, [inSave]);
 
   const handleUpdateSetting = (setting) => {
-    let currentSettings = settings;
-    let updatedSetting = setting;
+    const currentSettings = settings;
+    const updatedSetting = setting;
 
-    let { _id, value } = updatedSetting;
-    let updatedSettingIndex = currentSettings.findIndex((obj) => obj._id === _id);
+    const { _id, value } = updatedSetting;
+    const updatedSettingIndex = currentSettings.findIndex((obj) => obj._id === _id);
     const updatedObj = { ...currentSettings[updatedSettingIndex], value };
 
     const updatedSettings = [
@@ -103,9 +104,14 @@ const UserSettings = (props) => {
             </Styles.Setting>
           ))}
         </ListGroup>
-        <Button variant="primary" onClick={() => handleSubmit()}>
-          Save changes
-        </Button>
+        <div className="mt-3">
+          <Button variant="primary" onClick={() => handleSubmit()}>
+            Save changes
+          </Button>
+        </div>
+        <AccountPageFooter>
+          <DeleteAccount />
+        </AccountPageFooter>
       </div>
     );
   }

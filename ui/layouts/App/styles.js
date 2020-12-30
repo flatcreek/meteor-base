@@ -1,11 +1,6 @@
 import styled from 'styled-components';
 
 const App = styled.div`
-  > .container {
-    margin-bottom: 80px;
-    padding-bottom: 20px;
-  }
-
   .verify-email {
     margin-bottom: 0;
     padding: 0;

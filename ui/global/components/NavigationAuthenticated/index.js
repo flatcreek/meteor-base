@@ -18,7 +18,7 @@ const NavigationAuthenticated = () => {
 
   return (
     <Fragment>
-      <Nav>
+      <Nav className="mr-auto">
         <LinkContainer to="/documents">
           <Nav.Link href="/documents">Documents</Nav.Link>
         </LinkContainer>

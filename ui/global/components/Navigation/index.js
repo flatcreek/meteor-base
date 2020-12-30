@@ -13,19 +13,19 @@ const Navigation = () => {
   const { productName } = Meteor.settings.public;
   if (!loading) {
     return (
-      <Styles.Navbar>
+      <Styles.StyledNavbar bg="light" variant="light" expand="md">
         <Container>
-          <Navbar bg="light" variant="light" expand="md">
-            <Navbar.Brand>
-              <Link to="/">{productName}</Link>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-            <Navbar.Collapse>
-              {!userId ? <NavigationPublic /> : <NavigationAuthenticated />}
-            </Navbar.Collapse>
-          </Navbar>
+          <Navbar.Brand>
+            <Link to="/" className="navbar-brand">
+              {productName}
+            </Link>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+          <Navbar.Collapse>
+            {!userId ? <NavigationPublic /> : <NavigationAuthenticated />}
+          </Navbar.Collapse>
         </Container>
-      </Styles.Navbar>
+      </Styles.StyledNavbar>
     );
   }
 

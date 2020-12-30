@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import { LinkContainer } from 'react-router-bootstrap';
 
 import Loading from '../../../global/components/Loading';
 import { users as GET_USERS } from '../../queries/Admin.gql';
@@ -52,19 +52,20 @@ const AdminUsersList = (props) => {
           data.users.users &&
           data.users.users.map(
             ({ _id, emailAddress, name, username, oAuthProvider, emailVerified }) => (
-              <Styles.AdminListGroupItem key={_id}>
-                <Link to={`/admin/users/${_id}`} />
-                <p>
-                  {name ? `${name.first} ${name.last}` : username}
-                  <span>{emailAddress}</span>
-                  {oAuthProvider && (
-                    <span className={`label label-${oAuthProvider}`}>{oAuthProvider}</span>
-                  )}
-                  {!emailVerified && (
-                    <Styles.AdminLabel variant="danger">Email not verified</Styles.AdminLabel>
-                  )}
-                </p>
-              </Styles.AdminListGroupItem>
+              <LinkContainer to={`/admin/users/${_id}`} key={_id}>
+                <Styles.AdminListGroupItem>
+                  <div>
+                    {name ? `${name.first} ${name.last}` : username}
+                    <span className="list-email">{emailAddress}</span>
+                    {oAuthProvider && (
+                      <span className={`badge badget-${oAuthProvider}`}>{oAuthProvider}</span>
+                    )}
+                    {!emailVerified && (
+                      <Styles.AdminLabel variant="danger">Email not verified</Styles.AdminLabel>
+                    )}
+                  </div>
+                </Styles.AdminListGroupItem>
+              </LinkContainer>
             ),
           )}
       </Styles.AdminListGroup>
