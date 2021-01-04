@@ -82,39 +82,43 @@ const AdminUser = () => {
 
   if (loading) return <Loading />;
 
-  return user ? (
-    <Styles.AdminUser>
-      <Breadcrumb>
-        <LinkContainer to="/admin/users">
-          <Breadcrumb.Item href="#">Users</Breadcrumb.Item>
-        </LinkContainer>
-        <Breadcrumb.Item active>{name ? `${name.first} ${name.last}` : username}</Breadcrumb.Item>
-      </Breadcrumb>
-      <AdminPageHeader
-        title={name ? `${name.first} ${name.last}` : username}
-        badges={headerBadges()}
-      />
-      <Tabs>
-        <Tab eventKey="profile" title="Profile">
-          <AdminUserProfile
-            user={user}
-            updateUser={handleUpdateUser}
-            removeUser={handleRemoveUser}
-          />
-        </Tab>
-        <Tab eventKey="settings" title="Settings">
-          <UserSettings
-            isAdmin
-            userId={user._id}
-            settings={user.settings}
-            updateUser={updateUser}
-          />
-        </Tab>
-      </Tabs>
-    </Styles.AdminUser>
-  ) : (
+  if (user) {
+    return (
+      <Styles.AdminUser>
+        <Breadcrumb>
+          <LinkContainer to="/admin/users">
+            <Breadcrumb.Item href="#">Users</Breadcrumb.Item>
+          </LinkContainer>
+          <Breadcrumb.Item active>{name ? `${name.first} ${name.last}` : username}</Breadcrumb.Item>
+        </Breadcrumb>
+        <AdminPageHeader
+          title={name ? `${name.first} ${name.last}` : username}
+          badges={headerBadges()}
+        />
+        <Tabs>
+          <Tab eventKey="profile" title="Profile">
+            <AdminUserProfile
+              user={user}
+              updateUser={handleUpdateUser}
+              removeUser={handleRemoveUser}
+            />
+          </Tab>
+          <Tab eventKey="settings" title="Settings">
+            <UserSettings
+              isAdmin
+              userId={user._id}
+              settings={user.settings}
+              updateUser={updateUser}
+            />
+          </Tab>
+        </Tabs>
+      </Styles.AdminUser>
+    );
+  }
+
+  return (
     <BlankState
-      icon={{ style: 'solid', symbol: 'gear' }}
+      icon={{ color: 'warning', symbol: 'frown' }}
       title="No user here, boss."
       subtitle="This user has been removed."
       action={{

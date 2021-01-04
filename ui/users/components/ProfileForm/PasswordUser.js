@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, FormGroup, FormLabel, Button } from 'react-bootstrap';
+import { Row, Col, Form, Button } from 'react-bootstrap';
 
 import InputHint from '../../../global/components/InputHint';
 
@@ -10,46 +10,46 @@ const PasswordUser = ({ data }) => {
     <div>
       <Row>
         <Col xs={6}>
-          <FormGroup>
-            <FormLabel>First Name</FormLabel>
+          <Form.Group>
+            <Form.Label>First Name</Form.Label>
             <input
               type="text"
               name="firstName"
               defaultValue={thisUser.name && thisUser.name.first}
               className="form-control"
             />
-          </FormGroup>
+          </Form.Group>
         </Col>
         <Col xs={6}>
-          <FormGroup>
-            <FormLabel>Last Name</FormLabel>
+          <Form.Group>
+            <Form.Label>Last Name</Form.Label>
             <input
               type="text"
               name="lastName"
               defaultValue={thisUser.name && thisUser.name.last}
               className="form-control"
             />
-          </FormGroup>
+          </Form.Group>
         </Col>
       </Row>
-      <FormGroup>
-        <FormLabel>Email Address</FormLabel>
+      <Form.Group>
+        <Form.Label>Email Address</Form.Label>
         <input
           type="email"
           name="emailAddress"
           defaultValue={thisUser.emailAddress}
           className="form-control"
         />
-      </FormGroup>
-      <FormGroup>
-        <FormLabel>Current Password</FormLabel>
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Current Password</Form.Label>
         <input type="password" name="currentPassword" className="form-control" />
-      </FormGroup>
-      <FormGroup>
-        <FormLabel>New Password</FormLabel>
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>New Password</Form.Label>
         <input type="password" name="newPassword" className="form-control" />
         <InputHint>Use at least six characters.</InputHint>
-      </FormGroup>
+      </Form.Group>
       <Button type="submit" variant="success">
         Save Profile
       </Button>

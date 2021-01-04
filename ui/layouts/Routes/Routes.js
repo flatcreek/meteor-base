@@ -36,7 +36,12 @@ import Terms from '../../global/pages/Terms';
 
 const Routes = () => (
   <Switch>
-    <Route exact name="index" path="/" component={Index} />
+    <Route
+      exact
+      name="index"
+      path="/"
+      render={(routeProps) => <NoGrid main={Index} {...routeProps} />}
+    />
 
     {/* ----- DOCUMENT ROUTES ----- */}
 
@@ -48,7 +53,7 @@ const Routes = () => (
     <Route
       exact
       path="/documents/:_id"
-      render={(routeProps) => <NoSidebar main={ViewDocument} authRequired {...routeProps} />}
+      render={(routeProps) => <NoSidebar main={ViewDocument} {...routeProps} />}
     />
     <Route
       exact

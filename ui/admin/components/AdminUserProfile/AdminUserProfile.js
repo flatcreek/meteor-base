@@ -6,6 +6,7 @@ import { isEqual, union, without } from 'lodash';
 
 import Validation from '../../../global/components/Validation';
 import { sendVerificationEmail as SEND_VERIFICATION } from '../../../users/mutations/Users.gql';
+import Styles from './styles';
 
 const AdminUserProfile = ({ user, updateUser, removeUser }) => {
   const [sendVerification] = useMutation(SEND_VERIFICATION);
@@ -111,9 +112,9 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
         >
           <form onSubmit={(event) => event.preventDefault()}>
             <Row>
-              <Col xs={12} md={6}>
+              <Col md={6}>
                 <Row>
-                  <Col xs={6}>
+                  <Col>
                     <Form.Group>
                       <Form.Label>First Name</Form.Label>
                       <Form.Control
@@ -124,7 +125,7 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
                       />
                     </Form.Group>
                   </Col>
-                  <Col xs={6}>
+                  <Col>
                     <Form.Group>
                       <Form.Label>Last Name</Form.Label>
                       <Form.Control
@@ -138,7 +139,7 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
                 </Row>
                 {user && user.username && (
                   <Row>
-                    <Col xs={12}>
+                    <Col>
                       <Form.Group>
                         <Form.Label>Username</Form.Label>
                         <Form.Control
@@ -152,9 +153,10 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
                   </Row>
                 )}
                 <Row>
-                  <Col xs={12}>
-                    <Form.Group isInvalid={user.emailVerified}>
+                  <Col>
+                    <Form.Group>
                       <Form.Label>Email Address</Form.Label>
+                      {/* NOTE: Need to add validation to this field if the email is not verified */}
                       <Form.Control
                         type="email"
                         name="emailAddress"
@@ -164,16 +166,19 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
                       {user && !user.emailVerified && (
                         <Form.Text className="text-muted">
                           This email is not verified yet.
-                          <Button onClick={() => handleResendVerificationEmail()}>
+                          <Styles.LinkButton
+                            variant="link"
+                            onClick={() => handleResendVerificationEmail()}
+                          >
                             Re-send verification email
-                          </Button>
+                          </Styles.LinkButton>
                         </Form.Text>
                       )}
                     </Form.Group>
                   </Col>
                 </Row>
                 <Row>
-                  <Col xs={12}>
+                  <Col>
                     <Form.Group>
                       <Form.Label>Roles</Form.Label>
                       <ListGroup>
