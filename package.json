@@ -1,6 +1,6 @@
 {
   "name": "meteor-base",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "A foundation for Meteor, React, Apollo GraphQL projects based on Clever Beagle's Pup base.",
   "private": true,
   "repository": {
