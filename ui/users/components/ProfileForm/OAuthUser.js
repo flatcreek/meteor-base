@@ -1,6 +1,6 @@
 import React from 'react';
 import { capitalize } from 'lodash';
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 
 const oAuthUser = (user) => (
   <div className="OAuthProfile">

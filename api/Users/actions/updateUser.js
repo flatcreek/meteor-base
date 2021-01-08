@@ -45,10 +45,12 @@ const updateUserEmail = ({ _id, email }) => {
   }
 };
 
-const updateUserRoles = ({ _id, roles }) => {
+const updateUserRoles = async ({ _id, roles }) => {
   try {
-    return Roles.setUserRoles(_id, roles);
+    return Roles.setUserRoles(_id, roles, Roles.GLOBAL_GROUP);
   } catch (exception) {
+    console.warn('updateUserRoles error:');
+    console.warn(exception);
     throw new Error(`[updateUserRoles] ${exception.message}`);
   }
 };

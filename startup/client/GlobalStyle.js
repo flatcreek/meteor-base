@@ -18,77 +18,24 @@ const GlobalStyle = createGlobalStyle`
     --google: #ea4335;
     --github: var(--gray-dark);
 
-    --cb-blue: #4285F4;
-    --cb-green: #00D490;
-    --cb-yellow: #FFCF50;
-    --cb-red: #DA5847;
+    --mb-blue: #4285F4;
+    --mb-green: #00D490;
+    --mb-yellow: #FFCF50;
+    --mb-red: #DA5847;
   }
 
-  html {
-    position: relative;
-    min-height: 100%;
-  }
-
-  body {
-    margin: 0;
-    margin-bottom: 80px;
-    padding: 0;
-    font-size: 14px;
-    line-height: 20px;
-  }
-
-  body.isViewDocument {
-    padding-top: 20px;
-  }
-
-  body.isViewDocument .navbar {
-    display: none;
-  }
-
-  .navbar {
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-  }
-
-  form label {
-    display: block;
-  }
-
-  form .control-label {
-    display: block;
-    margin-bottom: 7px;
-  }
-
-  form label.error {
-    display: block;
-    margin-top: 8px;
-    font-size: 13px;
-    font-weight: normal;
-    color: var(--danger);
-  }
-
-  .page-header {
-    margin-top: 0;
+  .tab-pane {
+    padding: 1rem!important;
   }
 
   .table tr td {
     vertical-align: middle !important;
   }
 
-  /* Removes unnecessary bottom padding on .container */
-  body > #react-root > div > .container {
-    padding-bottom: 0;
-  }
-
   @media screen and (min-width: 768px) {
-    body.isViewDocument {
-      padding-top: 40px;
-    }
-
     .page-header {
       margin-top: 20px;
+      margin-bottom: 20px;
     }
   }
 `;

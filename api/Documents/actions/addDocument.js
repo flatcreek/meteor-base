@@ -1,7 +1,7 @@
 import sanitizeHtml from 'sanitize-html';
 import Documents from '../Documents';
 
-const addDocument = (_, args, context) => {
+const addDocument = async (_, args, context) => {
   try {
     if (!context.user) throw new Error('Sorry, you must be logged in to add a new document.');
     const date = new Date().toISOString();
@@ -20,6 +20,8 @@ const addDocument = (_, args, context) => {
     const doc = Documents.findOne(documentId);
     return doc;
   } catch (exception) {
+    console.warn('[addDocument] error:');
+    console.warn(exception);
     throw new Error(`[addDocument] ${exception.message}`);
   }
 };

@@ -1,22 +1,8 @@
 import styled from 'styled-components';
+import Alert from 'react-bootstrap/Alert';
 
-const VerifyEmailAlert = styled.div`
-  .alert {
-    border-top: none;
-    border-radius: 0;
-    padding: 0;
-
-    p {
-      padding: 19px;
-    }
-
-    .btn {
-      padding: 0;
-      text-decoration: underline;
-      margin-left: 5px;
-      margin-top: -2px;
-    }
-  }
+const VerifyEmailAlert = styled(Alert)`
+  margin-bottom: 0;
 `;
 
 export default {

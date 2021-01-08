@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 
 const Profile = styled.div`
-  .nav.nav-tabs {
-    margin-bottom: 20px;
-  }
-
   .LoggedInWith {
     padding: 20px;
     border-radius: 3px;
@@ -46,10 +42,6 @@ const Profile = styled.div`
         color: #fff;
       }
     }
-  }
-
-  .btn-export {
-    padding: 0;
   }
 `;
 

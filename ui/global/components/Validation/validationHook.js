@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import validate from '../../../../modules/validate';
 
 const Validation = ({ children, ...rest }) => {
-  console.log('Validation starting');
-  console.log(children);
-  console.log({ ...rest });
+  // console.log('Validation starting');
+  // console.log(children);
+  // console.log({ ...rest });
   const formRef = useRef();
 
   useEffect(() => {

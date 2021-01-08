@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 
-// eslint-disable-next-line import/prefer-default-export
-export const StyledComments = styled.div`
+const StyledComments = styled.div`
   max-width: 750px;
   margin: 0 auto 20px;
 `;
 
-export const CommentsList = styled.ol`
+const CommentsList = styled.ol`
   margin-top: 40px;
   padding: 0;
   list-style: none;
@@ -17,7 +16,7 @@ export const CommentsList = styled.ol`
   }
 `;
 
-export const CommentsListHeader = styled.header`
+const CommentsListHeader = styled.header`
   display: flex;
   align-items: center;
   margin-bottom: 30px;
@@ -34,7 +33,7 @@ export const CommentsListHeader = styled.header`
   }
 `;
 
-export const Comment = styled.li`
+const Comment = styled.li`
   border: 1px solid var(--gray-lighter);
   padding: 20px;
   border-radius: 3px;
@@ -57,3 +56,10 @@ export const Comment = styled.li`
     margin-bottom: 20px;
   }
 `;
+
+export default {
+  StyledComments,
+  CommentsList,
+  CommentsListHeader,
+  Comment,
+};
