@@ -1,3 +1,30 @@
+## v4.0.0, January 7, 2021
+
+- Replace Bootstrap 3 with Bootstrap 4 stying
+- Remove custom styling in favor of default Bootstrap styles so it is easier for new users to get started.
+- Add FontAwesome directly from NPM
+- Import FontAwesome solid library in `startup/client/index.js`
+- Remove FontAwesome import in `client/main.html`
+- Refactor Document queries to use separate files for actions
+- Update Document query to handle `isPublic` documents as literally public -- no login required
+- Update Document query to allow admins to retrieve any document for editing or viewing
+- Refactor Footer to use Bootstrap styles to make it sticky
+- Update global styles to reflect new name
+- Update AdminUserProfile styling
+- Update all components to use component name for file name, then import from default `index.js`. This makes the developer experience much better because you can quickly see the component name in your code editor
+- Update BlankState to use new FontAwesome icons
+- Update components to use consistent pattern to render if data, and `BlankState` or null if no data.
+- Remove all Apollo HOC implementations and replace with Apollo hooks
+- WIP: Reorganize GraphQL files into a single folder instead of separate folders for queries, mutations, and fragments
+- Convert Documents list to use Bootstrap cards instead of custom styling
+- Remove Icon component since now using FontAwesomeIcon directly
+- Update NavigationAuthenticated to use Bootstrap styling
+- Update SEO to add `html` and `body` styling
+- Refactor main page to use default Bootstrap styles
+- Update App.js to add Loading icon, and remove from individual layouts
+- Refactor Logout page to use default Bootstrap styles
+- Add new linter settings
+
 ## v3.0.0, November 22, 2020
 
 - Branch from Clever Beagle's Pup template
