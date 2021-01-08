@@ -1,26 +1,24 @@
 import { Meteor } from 'meteor/meteor';
-import checkIfAuthorized from './checkIfAuthorized';
+import { Roles } from 'meteor/alanning:roles';
 import mapMeteorUserToSchema from './mapMeteorUserToSchema';
 
-/* eslint-disable consistent-return */
-
-let action;
+const validateOptions = (options) => {
+  try {
+    if (!options) throw new Error('options object is required.');
+    if (!options.currentUser) throw new Error('options.currentUser is required.');
+    if (!Roles.userIsInRole(options.currentUser._id, 'admin')) {
+      throw new Error('You must be an administrator to perform this action.');
+    }
+  } catch (exception) {
+    throw new Error(`[validateOptions] ${exception.message}`);
+  }
+};
 
 const getTotalUserCount = (currentUserId) => {
   try {
     return Meteor.users.find({ _id: { $ne: currentUserId } }).count();
   } catch (exception) {
-    throw new Error(`[queryUsers.getTotalUserCount] ${exception.message}`);
-  }
-};
-
-const getProjection = (options) => {
-  try {
-    return options.search
-      ? { sort: options.sort }
-      : { limit: options.limit, skip: options.skip, sort: options.sort };
-  } catch (exception) {
-    throw new Error(`[queryUsers.getProjection] ${exception.message}`);
+    throw new Error(`[getTotalUserCount] ${exception.message}`);
   }
 };
 
@@ -44,7 +42,17 @@ const getQuery = (options) => {
         }
       : { _id: { $ne: options.currentUser._id } };
   } catch (exception) {
-    throw new Error(`[queryUsers.getQuery] ${exception.message}`);
+    throw new Error(`[getQuery] ${exception.message}`);
+  }
+};
+
+const getProjection = (options) => {
+  try {
+    return options.search
+      ? { sort: options.sort }
+      : { limit: options.limit, skip: options.skip, sort: options.sort };
+  } catch (exception) {
+    throw new Error(`[getProjection] ${exception.message}`);
   }
 };
 
@@ -57,35 +65,23 @@ const getUsers = (options) => {
       .fetch()
       .map((user) => mapMeteorUserToSchema({ user }));
   } catch (exception) {
-    throw new Error(`[queryUsers.getUsers] ${exception.message}`);
-  }
-};
-
-const validateOptions = (options) => {
-  try {
-    if (!options) throw new Error('options object is required.');
-    if (!options.currentUser) throw new Error('options.currentUser is required.');
-  } catch (exception) {
-    throw new Error(`[queryUsers.validateOptions] ${exception.message}`);
+    throw new Error(`[getUsers] ${exception.message}`);
   }
 };
 
 const queryUsers = (options) => {
   try {
     validateOptions(options);
-    checkIfAuthorized({ as: ['admin'], userId: options.currentUser._id });
 
-    action.resolve({
-      total: getTotalUserCount(options.currentUser._id),
-      users: getUsers(options),
-    });
+    return {
+      total: () => getTotalUserCount(options.currentUser._id),
+      users: () => getUsers(options),
+    };
   } catch (exception) {
-    action.reject(`[queryUsers] ${exception.message}`);
+    console.warn('[queryUsers] error:');
+    console.warn(exception);
+    throw new Error(`[queryUsers] ${exception.message}`);
   }
 };
 
-export default (options) =>
-  new Promise((resolve, reject) => {
-    action = { resolve, reject };
-    queryUsers(options);
-  });
+export default queryUsers;

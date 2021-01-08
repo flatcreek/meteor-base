@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ListGroupItem } from 'react-bootstrap';
+import ListGroupItem from 'react-bootstrap/ListGroupItem';
 
 const Setting = styled(ListGroupItem)`
   display: flex;

@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-export const DocumentEditorHeader = styled.div`
+const DocumentEditor = styled.div``;
+
+const DocumentEditorHeader = styled.div`
+  font-size: 0.875rem;
+
   p {
     float: right;
     margin-top: 6px;
@@ -10,21 +14,9 @@ export const DocumentEditorHeader = styled.div`
   .dropdown {
     float: left;
   }
-
-  .dropdown > button i,
-  .dropdown-menu > li > a > i {
-    display: inline-block;
-    margin-right: 5px;
-    color: var(--gray-light);
-  }
-
-  .dropdown-menu > li.active > a > i {
-    color: #fff;
-  }
 `;
 
-export const StyledDocumentEditor = styled.div`
-  border: 1px solid var(--gray-lighter);
+const StyledDocumentEditor = styled.div`
   height: calc(100vh - 207px);
   border-radius: 3px;
   margin-top: 20px;
@@ -34,8 +26,6 @@ export const StyledDocumentEditor = styled.div`
   }
 
   .form-control {
-    border: none;
-    box-shadow: none;
     padding: 25px;
   }
 
@@ -49,7 +39,7 @@ export const StyledDocumentEditor = styled.div`
   }
 `;
 
-export const DocumentEditorTitle = styled.div`
+const DocumentEditorTitle = styled.div`
   border-bottom: 1px solid var(--gray-lighter);
 
   .form-control {
@@ -59,12 +49,12 @@ export const DocumentEditorTitle = styled.div`
   }
 `;
 
-export const DocumentEditorBody = styled.div`
-  height: calc(100% - 60px);
+const DocumentEditorBody = styled.div`
+  height: calc(100% - 120px);
   overflow: hidden;
 
   .form-control {
-    height: calc(100% - 1px);
+    height: calc(100% - 32px);
     font-size: 16px;
     line-height: 26px;
     resize: none;
@@ -72,11 +62,10 @@ export const DocumentEditorBody = styled.div`
   }
 `;
 
-export const DocumentEditorFooter = styled.div`
+const DocumentEditorFooter = styled.div`
   padding: 15px 25px;
-  border: 1px solid var(--gray-lighter);
-  border-top: none;
-  border-radius: 0 0 3px 3px;
+  border: none;
+  font-size: 0.8rem;
 
   svg {
     float: left;
@@ -97,3 +86,12 @@ export const DocumentEditorFooter = styled.div`
     color: var(--gray-light);
   }
 `;
+
+export default {
+  DocumentEditor,
+  DocumentEditorHeader,
+  StyledDocumentEditor,
+  DocumentEditorTitle,
+  DocumentEditorBody,
+  DocumentEditorFooter,
+};

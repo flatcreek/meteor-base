@@ -8,7 +8,7 @@ import { useLazyQuery } from '@apollo/client';
 import isEmpty from 'lodash/isEmpty';
 import { Bert } from 'meteor/themeteorchef:bert';
 
-import { user as GET_USER } from '../../../users/queries/Users.gql';
+import { user as GET_USER } from '../../users/queries/Users.gql';
 
 const initialAuthState = {
   emailAddress: '',
@@ -79,12 +79,12 @@ const Authentication = ({ children }) => {
         } else {
           console.warn('Authentication.updateContext -- user ID mismatch');
           console.warn(`currentUser ID: ${currentUser._id}`);
-          console.warn(`userData ID: ${userData.thisUser._id}`);
+          console.warn(`userData ID: ${userData && userData.thisUser._id}`);
         }
       } else {
         console.warn('Authentication.updateContext -- No thisUser');
         console.warn(`currentUser ID: ${currentUser._id}`);
-        console.warn(`userData ID: ${userData.thisUser._id}`);
+        console.warn(`userData ID: ${userData && userData.thisUser._id}`);
       }
     }
   };

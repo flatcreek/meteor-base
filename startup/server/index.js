@@ -6,3 +6,4 @@ import './email';
 import './sitemap';
 import './graphql';
 import './ssr';
+import './meteor';

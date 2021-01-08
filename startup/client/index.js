@@ -7,6 +7,10 @@ import { ApolloProvider } from '@apollo/client';
 import { Accounts } from 'meteor/accounts-base';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
+import { library as fontAwesomeLibrary } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Authentication from '../../ui/global/context/Authentication';
 import App from '../../ui/layouts/App';
@@ -17,6 +21,8 @@ Bert.defaults = {
   hideDelay: 5500,
   style: 'growl-bottom-right',
 };
+
+fontAwesomeLibrary.add(fas);
 
 Accounts.onLogout(() => apolloClient.resetStore());
 

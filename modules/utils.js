@@ -5,7 +5,6 @@ import { isPlainObject } from 'lodash';
  * @param {Object} obj The object to remove null values from.
  */
 export default (obj) => {
-  console.log('removeNullValuesFromObj starting');
   if (!isPlainObject(obj)) return obj;
   const newObj = obj;
   Object.keys(obj).forEach((key) => newObj[key] === null && delete newObj[key]);

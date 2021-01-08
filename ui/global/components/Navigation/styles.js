@@ -1,10 +1,8 @@
 import styled from 'styled-components';
+import Navbar from 'react-bootstrap/Navbar';
 
-const Navbar = styled.div`
-  .navbar {
-  }
-`;
+const StyledNavbar = styled(Navbar)``;
 
 export default {
-  Navbar,
+  StyledNavbar,
 };

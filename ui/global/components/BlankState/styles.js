@@ -9,9 +9,9 @@ const BlankState = styled.div`
     margin-bottom: 20px;
   }
 
-  i {
-    font-size: 100px;
+  svg {
     color: var(--gray-lighter);
+    color: ${(props) => (props.iconColor ? `var(--${props.iconColor})` : '#ccc')};
     margin-bottom: 20px;
   }
 

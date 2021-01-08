@@ -31,7 +31,7 @@ const schema = {
 
     type Query {
       documents: [Document]
-      document(_id: String): Document
+      document(_id: String, isEdit: Boolean): Document
       user(_id: String): User
       users(currentPage: Int, perPage: Int, search: String): Users
       userSettings: [UserSetting]
@@ -51,7 +51,7 @@ const schema = {
       addUserSetting(setting: UserSettingInput): UserSetting
       updateUserSetting(setting: UserSettingInput): UserSetting
       removeUserSetting(_id: String!): UserSetting
-      sendVerificationEmail: User
+      sendVerificationEmail(userId: String): User
       sendWelcomeEmail: User
     }
 
