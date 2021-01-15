@@ -4,27 +4,27 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
+import { useForm } from 'react-hook-form';
 
-import InputHint from '../../../global/components/InputHint';
-import Validation from '../../../global/components/Validation';
+import { isEmailAddress } from '../../../../modules/isEmailAddress';
 import AccountPageFooter from '../../components/AccountPageFooter';
-import OAuthLoginButtons from '../../components/OAuthLoginButtons';
-import { sendVerificationEmail as SEND_VERIFICATION } from '../../mutations/Users.gql';
+import { sendVerificationEmail as SEND_VERIFICATION } from '../../graphql/mutations.gql';
 import Styles from './styles';
 
 const Signup = () => {
   const [sendVerification] = useMutation(SEND_VERIFICATION);
   const history = useHistory();
+  const { register, handleSubmit, errors } = useForm();
 
-  const handleSubmit = (form) => {
+  const onSubmit = (data) => {
     Accounts.createUser(
       {
-        email: form.emailAddress.value,
-        password: form.password.value,
+        email: data.emailAddress,
+        password: data.password,
         profile: {
           name: {
-            first: form.firstName.value,
-            last: form.lastName.value,
+            first: data.firstName,
+            last: data.lastName,
           },
         },
       },
@@ -41,111 +41,82 @@ const Signup = () => {
   };
 
   return (
-    <Styles.Signup>
+    <Styles.Signup className="mt-4">
       <Row>
         <Col xs={12}>
           <h4 className="page-header">Sign Up</h4>
-          <Row>
-            <Col xs={12}>
-              <OAuthLoginButtons
-                emailMessage={{
-                  offset: 97,
-                  text: 'Sign Up with an Email Address',
-                }}
+          <Form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <Row>
+              <Col xs={6}>
+                <Form.Group>
+                  <Form.Label>First Name</Form.Label>
+                  <Form.Control
+                    name="firstName"
+                    type="text"
+                    placeholder="First Name"
+                    ref={register({ required: "What's your first name?" })}
+                  />
+                  {errors.firstName && (
+                    <span className="error-text">{errors.firstName.message}</span>
+                  )}
+                </Form.Group>
+              </Col>
+              <Col xs={6}>
+                <Form.Group>
+                  <Form.Label>Last Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="lastName"
+                    className="form-control"
+                    placeholder="Last Name"
+                    ref={register({ required: "What's your last name?" })}
+                  />
+                  {errors.lastName && <span className="error-text">{errors.lastName.message}</span>}
+                </Form.Group>
+              </Col>
+            </Row>
+            <Form.Group>
+              <Form.Label>Email Address</Form.Label>
+              <Form.Control
+                type="email"
+                name="emailAddress"
+                className="form-control"
+                placeholder="Email Address"
+                ref={register({
+                  required: "What's your email address?",
+                  validate: (value) => isEmailAddress(value) || 'Is this email address correct?',
+                })}
               />
-            </Col>
-          </Row>
-          <Validation
-            rules={{
-              firstName: {
-                required: true,
-              },
-              lastName: {
-                required: true,
-              },
-              emailAddress: {
-                required: true,
-                email: true,
-              },
-              password: {
-                required: true,
-                minlength: 6,
-              },
-            }}
-            messages={{
-              firstName: {
-                required: "What's your first name?",
-              },
-              lastName: {
-                required: "What's your last name?",
-              },
-              emailAddress: {
-                required: 'Need an email address here.',
-                email: 'Is this email address correct?',
-              },
-              password: {
-                required: 'Need a password here.',
-                minlength: 'Please use at least six characters.',
-              },
-            }}
-            submitHandler={(form) => {
-              handleSubmit(form);
-            }}
-          >
-            <form onSubmit={(event) => event.preventDefault()}>
-              <Row>
-                <Col xs={6}>
-                  <Form.Group>
-                    <Form.Label>First Name</Form.Label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      className="form-control"
-                      placeholder="First Name"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col xs={6}>
-                  <Form.Group>
-                    <Form.Label>Last Name</Form.Label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      className="form-control"
-                      placeholder="Last Name"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Form.Group>
-                <Form.Label>Email Address</Form.Label>
-                <input
-                  type="email"
-                  name="emailAddress"
-                  className="form-control"
-                  placeholder="Email Address"
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Password</Form.Label>
-                <input
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  placeholder="Password"
-                />
-                <InputHint>Use at least six characters.</InputHint>
-              </Form.Group>
-              <Button type="submit" variant="success" block>
-                Sign Up
-              </Button>
-              <AccountPageFooter>
-                <p>
-                  Already have an account? <Link to="/login">Log In</Link>.
-                </p>
-              </AccountPageFooter>
-            </form>
-          </Validation>
+              {errors.emailAddress && (
+                <span className="error-text">{errors.emailAddress.message}</span>
+              )}
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                className="form-control"
+                placeholder="Password"
+                ref={register({
+                  required: 'Need a password here.',
+                  minLength: { value: 6, message: 'Please use at least six characters.' },
+                })}
+              />
+              <Form.Text id="passwordHelpBlock" muted>
+                Use at least six characters.
+              </Form.Text>
+              {errors.password && <span className="error-text">{errors.password.message}</span>}
+            </Form.Group>
+            <Button type="submit" variant="success" block>
+              Sign Up
+            </Button>
+          </Form>
+          <AccountPageFooter>
+            <p>
+              Already have an account? <Link to="/login">Log In</Link>.
+            </p>
+          </AccountPageFooter>
         </Col>
       </Row>
     </Styles.Signup>
