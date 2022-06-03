@@ -54,7 +54,7 @@
     "handlebars": "^4.7.6",
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.5.1",
-    "jquery-validation": "^1.19.1",
+    "jquery-validation": "^1.19.4",
     "jszip": "^3.2.2",
     "juice": "^5.2.0",
     "lodash": "^4.17.20",
