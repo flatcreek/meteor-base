@@ -43,7 +43,7 @@
     "b64-to-blob": "^1.2.19",
     "babel-plugin-lodash": "^3.3.4",
     "bcrypt": "^5.0.0",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "bootstrap": "^4.5.3",
     "commonmark": "^0.29.0",
     "core-js": "^3.1.4",
