@@ -76,7 +76,7 @@ const Documents = () => {
           subtitle="Add your first document by clicking the button below."
           action={{
             style: 'success',
-            onClick: addDocument(),
+            onClick: () => handleAddDocument(),
             label: 'Create Your First Document',
           }}
         />
