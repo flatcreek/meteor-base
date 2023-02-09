@@ -1,6 +1,8 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
     }
@@ -15,6 +17,7 @@
   ],
   "extends": [
     "airbnb",
+    "@meteorjs/eslint-config-meteor",
     "plugin:prettier/recommended",
     "plugin:meteor/recommended",
     "plugin:react/recommended",
@@ -32,8 +35,6 @@
       2,
       "always"
     ],
-    "camelcase": "off",
-    "consistent-return": "off",
     "no-plusplus": "off",
     "import/no-unresolved": 0,
     "import/no-extraneous-dependencies": 0,
@@ -51,6 +52,12 @@
       }
     ],
     "max-len": 0,
+    "meteor/eventmap-params": [
+      2,
+      {
+        "templateInstanceParamName": "template"
+      }
+    ],
     "no-alert": 0,
     "no-console": 0,
     "no-restricted-globals": 0,
@@ -58,13 +65,27 @@
       "error",
       "except-parens"
     ],
-    "no-underscore-dangle": "off",
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": [
+          "_id",
+          "_ensureIndex",
+          "_verifyEmailToken",
+          "_resetPasswordToken",
+          "_name"
+        ]
+      }
+    ],
     "class-methods-use-this": 0,
-    "import/prefer-default-export": "off",
+    "prefer-regex-literals": 0,
     "prettier/prettier": 2,
     "react/jsx-filename-extension": 0,
-    "react/jsx-indent": 0,
     "react/forbid-prop-types": 0,
+    "react/function-component-definition": [2, {
+      "namedComponents": "arrow-function",
+      "unnamedComponents": "arrow-function"
+    }],
     "react/jsx-props-no-spreading": 0,
     "react/jsx-one-expression-per-line": 0,
     "react/jsx-fragments": [
@@ -74,8 +95,7 @@
     "react/destructuring-assignment": 0,
     "react/sort-comp": 0,
     "react/jsx-wrap-multilines": 0,
-    "no-use-before-define": 0,
-    "react/no-unescaped-entities": 0
+    "no-use-before-define": 0
   },
   "settings": {
     "import/resolver": "meteor"

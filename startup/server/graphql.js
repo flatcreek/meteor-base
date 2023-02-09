@@ -1,4 +1,4 @@
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer } from '@apollo/server';
 import { WebApp } from 'meteor/webapp';
 import { getUser } from 'meteor/apollo';
 import schema from './api';
