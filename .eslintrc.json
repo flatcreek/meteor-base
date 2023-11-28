@@ -1,20 +1,25 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
+    "allowImportExportEverywhere": true,
+    "ecmaVersion": 6,
+    "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
     }
   },
   "plugins": [
-    "babel",
+    "@babel",
     "jest",
     "meteor",
     "prettier",
     "react",
-    "testcafe"
+    "testcafe",
+    "@typescript-eslint"
   ],
   "extends": [
     "airbnb",
+    "@meteorjs/eslint-config-meteor",
     "plugin:prettier/recommended",
     "plugin:meteor/recommended",
     "plugin:react/recommended",
@@ -22,7 +27,8 @@
     "plugin:jest/recommended"
   ],
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true
   },
   "globals": {
     "expect": false
@@ -32,9 +38,7 @@
       2,
       "always"
     ],
-    "camelcase": "off",
-    "consistent-return": "off",
-    "no-plusplus": "off",
+    "import/no-absolute-path": 0,
     "import/no-unresolved": 0,
     "import/no-extraneous-dependencies": 0,
     "import/extensions": 0,
@@ -51,19 +55,43 @@
       }
     ],
     "max-len": 0,
+    "meteor/eventmap-params": [
+      2,
+      {
+        "templateInstanceParamName": "template"
+      }
+    ],
     "no-alert": 0,
     "no-console": 0,
     "no-restricted-globals": 0,
+    "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement"],
     "no-return-assign": [
       "error",
       "except-parens"
     ],
-    "no-underscore-dangle": "off",
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": [
+          "_id",
+          "_ensureIndex",
+          "_name",
+          "_resetPasswordToken",
+          "_verifyEmailToken"
+        ]
+      }
+    ],
+    "no-use-before-define": 2,
     "class-methods-use-this": 0,
-    "import/prefer-default-export": "off",
+    "object-shorthand": [
+      "error",
+      "always",
+      {
+        "avoidQuotes": false
+      }
+    ],
     "prettier/prettier": 2,
     "react/jsx-filename-extension": 0,
-    "react/jsx-indent": 0,
     "react/forbid-prop-types": 0,
     "react/jsx-props-no-spreading": 0,
     "react/jsx-one-expression-per-line": 0,
@@ -73,9 +101,7 @@
     ],
     "react/destructuring-assignment": 0,
     "react/sort-comp": 0,
-    "react/jsx-wrap-multilines": 0,
-    "no-use-before-define": 0,
-    "react/no-unescaped-entities": 0
+    "react/jsx-wrap-multilines": 0
   },
   "settings": {
     "import/resolver": "meteor"
