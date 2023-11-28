@@ -16,7 +16,7 @@ export default (options) => {
         normalizedMeteorUserData.service !== 'password' ? normalizedMeteorUserData.service : null,
       settings: normalizedMeteorUserData.settings,
     };
-  } catch (exception) {
-    throw new Error(`[mapMeteorUserToSchema] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[mapMeteorUserToSchema] ${error.message}`);
   }
 };

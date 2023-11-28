@@ -1,20 +1,19 @@
 /* eslint-disable consistent-return */
-
 import { Roles } from 'meteor/alanning:roles';
 
 export const isUser = (userId) => {
   try {
     return Roles.userIsInRole(userId, 'user');
-  } catch (exception) {
-    throw new Error(`[checkIfAuthorized.isUser] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[checkIfAuthorized.isUser] ${error.message}`);
   }
 };
 
 export const isAdmin = (userId) => {
   try {
     return Roles.userIsInRole(userId, 'admin');
-  } catch (exception) {
-    throw new Error(`[checkIfAuthorized.isAdmin] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[checkIfAuthorized.isAdmin] ${error.message}`);
   }
 };
 
@@ -41,8 +40,8 @@ const getAuthorizationMethods = (methods) => {
     });
 
     return authorizationMethods;
-  } catch (exception) {
-    throw new Error(`[checkIfAuthorized.getAuthorizationMethods] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[checkIfAuthorized.getAuthorizationMethods] ${error.message}`);
   }
 };
 
@@ -54,8 +53,8 @@ const validateOptions = (options) => {
       throw new Error('options.as must be passed as an array of strings or functions.');
     }
     if (!options.userId) throw new Error('options.userId is required.');
-  } catch (exception) {
-    throw new Error(`[checkIfAuthorized.validateOptions] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[checkIfAuthorized.validateOptions] ${error.message}`);
   }
 };
 
@@ -78,7 +77,7 @@ export default (options) => {
     }
 
     return true;
-  } catch (exception) {
-    throw new Error(`[checkIfAuthorized] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[checkIfAuthorized] ${error.message}`);
   }
 };

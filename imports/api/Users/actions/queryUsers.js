@@ -9,16 +9,16 @@ const validateOptions = (options) => {
     if (!Roles.userIsInRole(options.currentUser._id, 'admin')) {
       throw new Error('You must be an administrator to perform this action.');
     }
-  } catch (exception) {
-    throw new Error(`[validateOptions] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[validateOptions] ${error.message}`);
   }
 };
 
 const getTotalUserCount = (currentUserId) => {
   try {
     return Meteor.users.find({ _id: { $ne: currentUserId } }).count();
-  } catch (exception) {
-    throw new Error(`[getTotalUserCount] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[getTotalUserCount] ${error.message}`);
   }
 };
 
@@ -41,8 +41,8 @@ const getQuery = (options) => {
           ],
         }
       : { _id: { $ne: options.currentUser._id } };
-  } catch (exception) {
-    throw new Error(`[getQuery] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[getQuery] ${error.message}`);
   }
 };
 
@@ -51,8 +51,8 @@ const getProjection = (options) => {
     return options.search
       ? { sort: options.sort }
       : { limit: options.limit, skip: options.skip, sort: options.sort };
-  } catch (exception) {
-    throw new Error(`[getProjection] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[getProjection] ${error.message}`);
   }
 };
 
@@ -64,8 +64,8 @@ const getUsers = (options) => {
       .find(query, projection)
       .fetch()
       .map((user) => mapMeteorUserToSchema({ user }));
-  } catch (exception) {
-    throw new Error(`[getUsers] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[getUsers] ${error.message}`);
   }
 };
 
@@ -77,10 +77,10 @@ const queryUsers = (options) => {
       total: () => getTotalUserCount(options.currentUser._id),
       users: () => getUsers(options),
     };
-  } catch (exception) {
+  } catch (error) {
     console.warn('[queryUsers] error:');
-    console.warn(exception);
-    throw new Error(`[queryUsers] ${exception.message}`);
+    console.warn(error);
+    throw new Error(`[queryUsers] ${error.message}`);
   }
 };
 

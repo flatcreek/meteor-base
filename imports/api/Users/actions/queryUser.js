@@ -4,8 +4,8 @@ import mapMeteorUserToSchema from './mapMeteorUserToSchema';
 const getUser = (userId) => {
   try {
     return Meteor.users.findOne(userId);
-  } catch (exception) {
-    throw new Error(exception);
+  } catch (error) {
+    throw new Error(error);
   }
 };
 
@@ -13,8 +13,8 @@ const validateOptions = (options) => {
   try {
     if (!options) throw new Error('options object is required.');
     if (!options.userIdToQuery) throw new Error('options.userIdToQuery is required.');
-  } catch (exception) {
-    throw new Error(exception);
+  } catch (error) {
+    throw new Error(error);
   }
 };
 
@@ -23,8 +23,8 @@ const queryUser = async (options) => {
     validateOptions(options);
     const user = getUser(options.userIdToQuery);
     return mapMeteorUserToSchema({ user });
-  } catch (exception) {
-    throw new Error(`[queryUser] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[queryUser] ${error.message}`);
   }
 };
 

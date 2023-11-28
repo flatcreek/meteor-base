@@ -12,8 +12,8 @@ const normalizeGoogleData = (service) => {
         },
       },
     };
-  } catch (exception) {
-    throw new Error(`[normalizeMeteorUserData.normalizeGoogleData] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[normalizeMeteorUserData.normalizeGoogleData] ${error.message}`);
   }
 };
 
@@ -24,8 +24,8 @@ const normalizeGithubData = (service) => {
       emails: [{ address: service.email }],
       username: service.username,
     };
-  } catch (exception) {
-    throw new Error(`[normalizeMeteorUserData.normalizeGithubData] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[normalizeMeteorUserData.normalizeGithubData] ${error.message}`);
   }
 };
 
@@ -41,8 +41,8 @@ const normalizeFacebookData = (service) => {
         },
       },
     };
-  } catch (exception) {
-    throw new Error(`[normalizeMeteorUserData.normalizeFacebookData] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[normalizeMeteorUserData.normalizeFacebookData] ${error.message}`);
   }
 };
 
@@ -52,8 +52,8 @@ const normalizeOAuthUserData = (services) => {
     if (services.github) return normalizeGithubData(services.github);
     if (services.google) return normalizeGoogleData(services.google);
     return {};
-  } catch (exception) {
-    throw new Error(`[normalizeMeteorUserData.normalizeOAuthUserData] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[normalizeMeteorUserData.normalizeOAuthUserData] ${error.message}`);
   }
 };
 
@@ -62,8 +62,8 @@ const getNormalizedMeteorUserData = (isOAuthUser, user) => {
     return isOAuthUser
       ? { _id: user._id, ...normalizeOAuthUserData(user.services), settings: user.settings }
       : { service: 'password', ...user };
-  } catch (exception) {
-    throw new Error(`[normalizeMeteorUserData.getNormalizedMeteorUserData] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[normalizeMeteorUserData.getNormalizedMeteorUserData] ${error.message}`);
   }
 };
 
@@ -71,17 +71,21 @@ const checkIfOAuthUser = (services) => {
   try {
     // NOTE: If services does not exist, we assume it's the current user being passed on the client.
     return !services ? false : !services.password;
-  } catch (exception) {
-    throw new Error(`[normalizeMeteorUserData.checkIfOAuthUser] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[normalizeMeteorUserData.checkIfOAuthUser] ${error.message}`);
   }
 };
 
 const validateOptions = (options) => {
   try {
-    if (!options) throw new Error('options object is required.');
-    if (!options.user) throw new Error('options.user is required.');
-  } catch (exception) {
-    throw new Error(`[normalizeMeteorUserData.validateOptions] ${exception.message}`);
+    if (!options) {
+      throw new Error('options object is required.');
+    }
+    if (!options.user) {
+      throw new Error('options.user is required.');
+    }
+  } catch (error) {
+    throw new Error(`[normalizeMeteorUserData.validateOptions] ${error.message}`);
   }
 };
 
@@ -93,7 +97,7 @@ export default (options) => {
     const normalizedMeteorUserData = getNormalizedMeteorUserData(isOAuthUser, options.user);
 
     return normalizedMeteorUserData;
-  } catch (exception) {
-    throw new Error(`[normalizeMeteorUserData] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[normalizeMeteorUserData] ${error.message}`);
   }
 };

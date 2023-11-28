@@ -9,8 +9,8 @@ const queryRoles = (parent, args, context) => {
   console.log(context);
   try {
     return Roles.getAllRoles();
-  } catch (exception) {
-    throw new Error(`[queryRoles] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[queryRoles] ${error.message}`);
   }
 };
 

@@ -5,4 +5,3 @@ import './fixtures';
 import './email';
 // import './sitemap';
 // import './ssr';
-import './meteor';

@@ -1,5 +1,4 @@
 /* eslint-disable consistent-return */
-
 import { Meteor } from 'meteor/meteor';
 import normalizeMeteorUserData from './normalizeMeteorUserData';
 import sendEmail from '../../../modules/server/sendEmail';
@@ -22,30 +21,22 @@ const getEmailOptions = (user) => {
         welcomeUrl: Meteor.absoluteUrl('documents'), // e.g., returns http://localhost:3000/documents
       },
     };
-  } catch (exception) {
-    throw new Error(`[sendWelcomeEmail.getEmailOptions] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[sendWelcomeEmail.getEmailOptions] ${error.message}`);
   }
 };
 
-const validateOptions = (options) => {
+const sendWelcomeEmail = () => {
   try {
-    if (!options) throw new Error('options object is required.');
-    if (!options.user) throw new Error('options.user is required.');
-  } catch (exception) {
-    throw new Error(`[sendWelcomeEmail.validateOptions] ${exception.message}`);
-  }
-};
-
-export default (options) => {
-  try {
-    validateOptions(options);
-    const user = normalizeMeteorUserData({ user: options.user });
+    const user = normalizeMeteorUserData({ user: Meteor.user() });
     const emailOptions = getEmailOptions(user);
 
     sendEmail(emailOptions).catch((error) => {
       throw new Error(error);
     });
-  } catch (exception) {
-    throw new Error(`[sendWelcomeEmail] ${exception.message}`);
+  } catch (error) {
+    throw new Meteor.Error(500, `[sendWelcomeEmail] ${error.message}`);
   }
 };
+
+export default sendWelcomeEmail;

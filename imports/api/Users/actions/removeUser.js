@@ -1,24 +1,21 @@
 /* eslint-disable consistent-return */
-
 import { Meteor } from 'meteor/meteor';
 import Documents from '../../Documents/Documents';
 import checkIfAuthorized, { isAdmin } from './checkIfAuthorized';
 
-let action;
-
 const deleteUser = ({ _id }) => {
   try {
     return Meteor.users.remove(_id);
-  } catch (exception) {
-    throw new Error(`[removeUser.deleteUser] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[removeUser.deleteUser] ${error.message}`);
   }
 };
 
 const deleteDocuments = ({ _id }) => {
   try {
     return Documents.remove({ owner: _id });
-  } catch (exception) {
-    throw new Error(`[removeUser.deleteDocuments] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[removeUser.deleteDocuments] ${error.message}`);
   }
 };
 
@@ -27,8 +24,8 @@ const validateOptions = (options) => {
     if (!options) throw new Error('options object is required.');
     if (!options.currentUser) throw new Error('options.currentUser is required.');
     if (!options.user) throw new Error('options.user is required.');
-  } catch (exception) {
-    throw new Error(`[removeUser.validateOptions] ${exception.message}`);
+  } catch (error) {
+    throw new Error(`[removeUser.validateOptions] ${error.message}`);
   }
 };
 
@@ -43,7 +40,9 @@ const removeUser = (options) => {
 
     const userToRemove = options.user;
 
-    if (!userToRemove._id) userToRemove._id = options.currentUser._id;
+    if (!userToRemove._id) {
+      userToRemove._id = options.currentUser._id;
+    }
 
     if (userToRemove && !userToRemove._id && !isAdmin(options.currentUser._id)) {
       // NOTE: If passed user doesn't have an _id, we know we're updating the
@@ -53,15 +52,10 @@ const removeUser = (options) => {
 
     deleteDocuments(userToRemove);
     deleteUser(userToRemove);
-
-    action.resolve();
-  } catch (exception) {
-    action.reject(`[removeUser] ${exception.message}`);
+    return true;
+  } catch (error) {
+    throw new Meteor.Error(500, `[removeUser] ${error.message}`);
   }
 };
 
-export default (options) =>
-  new Promise((resolve, reject) => {
-    action = { resolve, reject };
-    removeUser(options);
-  });
+export default removeUser;

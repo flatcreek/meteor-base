@@ -1,6 +1,7 @@
 // Domain-specific methods
 import '../../api/Comments/methods';
 import '../../api/Documents/methods';
+import '../../api/Users/methods';
 
 // Integration methods
 

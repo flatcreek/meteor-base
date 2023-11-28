@@ -1,4 +1,6 @@
 import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
+import { check } from 'meteor/check';
 
 import { Documents } from '../Documents';
 
@@ -8,12 +10,17 @@ Meteor.publish('document', function (args) {
     console.log(args);
   }
 
+  check(args, {
+    documentId: String,
+    isEdit: Boolean,
+  });
+
   const { documentId, isEdit } = args || {};
 
   if (!documentId) {
     throw new Error('Must provide a document ID');
   }
-  const userId = this.userId;
+  const { userId } = this;
 
   // If the user is not logged in, only return public documents
   // Note: by placing this condition first, we know that all following
