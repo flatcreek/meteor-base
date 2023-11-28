@@ -6,6 +6,7 @@ import { check } from 'meteor/check';
 import updateUser from './actions/updateUser';
 import removeUser from './actions/removeUser';
 import sendWelcomeEmail from './actions/sendWelcomeEmail';
+import exportUserData from './actions/exportUserData';
 
 Meteor.methods({
   updateUser,
@@ -26,4 +27,5 @@ Meteor.methods({
     };
   },
   sendWelcomeEmail,
+  exportUserData,
 });

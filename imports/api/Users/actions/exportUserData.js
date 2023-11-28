@@ -1,13 +1,14 @@
 /* eslint-disable consistent-return */
-
+import { Meteor } from 'meteor/meteor';
 import JSZip from 'jszip';
-import Documents from '../../Documents/Documents';
 
-let action;
+import { Documents } from '../../Documents/Documents';
 
 const generateZip = (zip) => {
   try {
-    zip.generateAsync({ type: 'base64' }).then((content) => action.resolve({ zip: content }));
+    zip.generateAsync({ type: 'base64' }).then((content) => {
+      return { zip: content };
+    });
   } catch (error) {
     throw new Error(`[exportUserData.generateZip] ${error.message}`);
   }
@@ -31,29 +32,26 @@ const getDocuments = ({ _id }) => {
   }
 };
 
-const validateOptions = (options) => {
+const validateOptions = () => {
   try {
-    if (!options) throw new Error('options object is required.');
-    if (!options.user) throw new Error('options.user is required.');
+    if (!Meteor.userId()) {
+      throw new Error('You must be logged in to do this.');
+    }
   } catch (error) {
     throw new Error(`[exportUserData.validateOptions] ${error.message}`);
   }
 };
 
-const exportUserData = (options) => {
+const exportUserData = async (options) => {
   try {
-    validateOptions(options);
+    validateOptions();
     const zip = new JSZip();
     const documents = getDocuments(options.user);
     addDocumentsToZip(documents, zip);
-    generateZip(zip);
+    return generateZip(zip);
   } catch (error) {
-    action.reject(`[exportUserData] ${error.message}`);
+    throw new Meteor.Error(500, `[exportUserData] ${error.message}`);
   }
 };
 
-export default (options) =>
-  new Promise((resolve, reject) => {
-    action = { resolve, reject };
-    exportUserData(options);
-  });
+export default exportUserData;

@@ -1,18 +1,15 @@
 import React from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Row, Col, Tabs, Tab } from 'react-bootstrap';
 
 import AccountPageFooter from '../../components/AccountPageFooter';
 import ExportUserData from '../../components/ExportUserData';
 import ProfileForm from '../../components/ProfileForm';
-import UserSettings from '../../components/UserSettings';
 import { user as GET_USER } from '../../queries/Users.gql';
-import { updateUser as UPDATE_USER } from '../../mutations/Users.gql';
 import Styles from './styles';
 
 const Profile = () => {
   const { data } = useQuery(GET_USER);
-  const [updateUser] = useMutation(UPDATE_USER);
 
   if (data && data.user) {
     const thisUser = data && data.user;
@@ -31,9 +28,6 @@ const Profile = () => {
                 </AccountPageFooter>
               </Col>
             </Row>
-          </Tab>
-          <Tab eventKey="settings" title="Settings">
-            <UserSettings settings={thisUser.settings} updateUser={updateUser} />
           </Tab>
         </Tabs>
       </Styles.Profile>

@@ -1,20 +1,19 @@
+import { Meteor } from 'meteor/meteor';
 import React, { useContext } from 'react';
 import { Bert } from 'meteor/themeteorchef:bert';
-import { useMutation } from '@apollo/client';
 import Button from 'react-bootstrap/Button';
 import { LinkContainer } from 'react-router-bootstrap';
 
 import { AuthContext } from '../../../global/context/Authentication';
-import { sendVerificationEmail as SEND_VERIFICATION } from '../../mutations/Users.gql';
 import Styles from './styles';
 
 const VerifyEmailAlert = () => {
   const { emailAddress, emailVerified, userId } = useContext(AuthContext);
-  const [sendVerification] = useMutation(SEND_VERIFICATION);
 
   const handleResendVerification = () => {
-    sendVerification();
-    Bert.alert(`Check ${emailAddress} for a verification link!`, 'success');
+    Meteor.callAsync('sendVerificationEmail').then(() => {
+      Bert.alert(`Check ${emailAddress} for a verification link!`, 'success');
+    });
   };
 
   if (userId && !emailVerified) {

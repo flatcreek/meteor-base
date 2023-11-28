@@ -1,15 +1,13 @@
+import { Meteor } from 'meteor/meteor';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useMutation } from '@apollo/client';
 import { Button, Col, Form, ListGroup, Row } from 'react-bootstrap';
 import { isEqual, union, without } from 'lodash';
 
 import Validation from '../../../global/components/Validation';
-import { sendVerificationEmail as SEND_VERIFICATION } from '../../../users/mutations/Users.gql';
 import Styles from './styles';
 
 const AdminUserProfile = ({ user, updateUser, removeUser }) => {
-  const [sendVerification] = useMutation(SEND_VERIFICATION);
   const [activeRoles, setActiveRoles] = useState(user.roles && user.roles.__global_roles__);
 
   useEffect(() => {
@@ -77,7 +75,7 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
   };
 
   const handleResendVerificationEmail = () => {
-    sendVerification({ variables: { userId: user._id } });
+    Meteor.callAsync('sendVerificationEmail', { userId: user._id });
   };
 
   if (user) {

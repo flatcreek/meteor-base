@@ -1,24 +1,24 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { Meteor } from 'meteor/meteor';
 import React, { Fragment } from 'react';
+import { useFind, useSubscribe } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import { useQuery } from '@apollo/client';
 import { LinkContainer } from 'react-router-bootstrap';
 
 import Loading from '../../../global/components/Loading';
-import { users as GET_USERS } from '../../queries/Admin.gql';
-
 import Styles from './styles';
 
 const AdminUsersList = (props) => {
   const { perPage, currentPage, onChangePage, search } = props;
-  const { data, loading } = useQuery(GET_USERS, {
-    variables: {
-      perPage,
-      currentPage,
-      search,
-    },
-    fetchPolicy: 'no-cache',
+  const isLoading = useSubscribe('precincts', {
+    perPage,
+    currentPage,
+    search,
   });
+  const data = useFind(() => Meteor.users.find());
+
+  console.log('AdminUsersList.data:');
+  console.log(data);
 
   const renderPagination = () => {
     const pages = [];
@@ -43,7 +43,9 @@ const AdminUsersList = (props) => {
     return <ul className="pagination pagination-md">{pages}</ul>;
   };
 
-  if (loading) return <Loading />;
+  if (isLoading()) {
+    return <Loading />;
+  }
 
   return (
     <Fragment>

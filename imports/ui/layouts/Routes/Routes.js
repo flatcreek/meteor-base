@@ -27,7 +27,6 @@ import VerifyEmail from '../../users/pages/VerifyEmail';
 // Admin pages
 import AdminUsers from '../../admin/pages/AdminUsers';
 import AdminUser from '../../admin/pages/AdminUser';
-import AdminUserSettings from '../../admin/pages/AdminUserSettings';
 
 // Misc pages
 import ExamplePage from '../../global/pages/ExamplePage';
@@ -124,14 +123,6 @@ const Routes = () => (
       path="/admin/users"
       render={(routeProps) => (
         <NoSidebar main={AdminUsers} authRequired allowedRoles={['admin']} {...routeProps} />
-      )}
-    />
-
-    <Route
-      exact
-      path="/admin/users/settings"
-      render={(routeProps) => (
-        <NoSidebar main={AdminUserSettings} authRequired allowedRoles={['admin']} {...routeProps} />
       )}
     />
 

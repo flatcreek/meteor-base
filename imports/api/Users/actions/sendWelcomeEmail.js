@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { Meteor } from 'meteor/meteor';
 import normalizeMeteorUserData from './normalizeMeteorUserData';
-import sendEmail from '../../../modules/server/sendEmail';
+import sendEmail from '../../../../modules/server/sendEmail';
 
 const getEmailOptions = (user) => {
   try {

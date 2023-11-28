@@ -24,10 +24,6 @@ export default {
       userIdToQuery: userIdFromParentQuery || args._id || context.user._id,
     });
   },
-  exportUserData: (parent, args, { user }) => {
-    return exportUserData({
-      user,
-    });
-  },
+  exportUserData,
   queryRoles,
 };

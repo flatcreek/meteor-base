@@ -2,18 +2,6 @@ import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import mapMeteorUserToSchema from './mapMeteorUserToSchema';
 
-const validateOptions = (options) => {
-  try {
-    if (!options) throw new Error('options object is required.');
-    if (!options.currentUser) throw new Error('options.currentUser is required.');
-    if (!Roles.userIsInRole(options.currentUser._id, 'admin')) {
-      throw new Error('You must be an administrator to perform this action.');
-    }
-  } catch (error) {
-    throw new Error(`[validateOptions] ${error.message}`);
-  }
-};
-
 const getTotalUserCount = (currentUserId) => {
   try {
     return Meteor.users.find({ _id: { $ne: currentUserId } }).count();
@@ -66,6 +54,18 @@ const getUsers = (options) => {
       .map((user) => mapMeteorUserToSchema({ user }));
   } catch (error) {
     throw new Error(`[getUsers] ${error.message}`);
+  }
+};
+
+const validateOptions = (options) => {
+  try {
+    if (!options) throw new Error('options object is required.');
+    if (!options.currentUser) throw new Error('options.currentUser is required.');
+    if (!Roles.userIsInRole(options.currentUser._id, 'admin')) {
+      throw new Error('You must be an administrator to perform this action.');
+    }
+  } catch (error) {
+    throw new Error(`[validateOptions] ${error.message}`);
   }
 };
 

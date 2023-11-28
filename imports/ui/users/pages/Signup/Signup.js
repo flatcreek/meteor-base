@@ -1,5 +1,5 @@
+import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { useMutation } from '@apollo/client';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
@@ -9,11 +9,9 @@ import InputHint from '../../../global/components/InputHint';
 import Validation from '../../../global/components/Validation';
 import AccountPageFooter from '../../components/AccountPageFooter';
 import OAuthLoginButtons from '../../components/OAuthLoginButtons';
-import { sendVerificationEmail as SEND_VERIFICATION } from '../../mutations/Users.gql';
 import Styles from './styles';
 
 const Signup = () => {
-  const [sendVerification] = useMutation(SEND_VERIFICATION);
   const history = useHistory();
 
   const handleSubmit = (form) => {
@@ -32,9 +30,10 @@ const Signup = () => {
         if (error) {
           Bert.alert(error.reason, 'danger');
         } else {
-          sendVerification();
-          Bert.alert('Welcome!', 'success');
-          history.push('/');
+          Meteor.callAsync('sendVerificationEmail').then(() => {
+            Bert.alert('Welcome!', 'success');
+            history.push('/');
+          });
         }
       },
     );
