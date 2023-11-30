@@ -5,14 +5,10 @@ import Nav from 'react-bootstrap/Nav';
 const NavigationPublic = () => (
   <Nav>
     <LinkContainer to="/signup">
-      <Nav.Link eventKey={1} href="/signup">
-        Sign Up
-      </Nav.Link>
+      <Nav.Link>Sign Up</Nav.Link>
     </LinkContainer>
     <LinkContainer to="/login">
-      <Nav.Link eventKey={2} href="/login">
-        Log In
-      </Nav.Link>
+      <Nav.Link>Log In</Nav.Link>
     </LinkContainer>
   </Nav>
 );

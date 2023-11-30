@@ -1,33 +1,26 @@
+import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useMutation } from '@apollo/client';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 
 import Validation from '../../../global/components/Validation';
-import { user as GET_USER } from '../../queries/Users.gql';
-import { updateUser as UPDATE_USER } from '../../mutations/Users.gql';
-// import oAuthUser from '../../pages/Profile/OAuthUser';
 import PasswordUser from './PasswordUser';
 
 const ProfileForm = ({ user }) => {
-  const [updateUser] = useMutation(UPDATE_USER);
-
   const handleSubmit = (form) => {
-    updateUser({
-      variables: {
-        user: {
-          email: form.emailAddress.value,
-          profile: {
-            name: {
-              first: form.firstName.value,
-              last: form.lastName.value,
-            },
+    const dataObj = {
+      user: {
+        email: form.emailAddress.value,
+        profile: {
+          name: {
+            first: form.firstName.value,
+            last: form.lastName.value,
           },
         },
       },
-      refetchQueries: [{ query: GET_USER }],
-    })
+    };
+    Meteor.callAsync('updateUser', dataObj)
       .then(() => {
         Bert.alert('Profile updated!', 'success');
       })

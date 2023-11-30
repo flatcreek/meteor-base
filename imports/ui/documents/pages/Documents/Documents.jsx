@@ -1,31 +1,28 @@
+import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useMutation, useQuery } from '@apollo/client';
-import { useHistory } from 'react-router-dom';
+import { useFind, useSubscribe } from 'meteor/react-meteor-data';
+import { redirect } from 'react-router-dom';
 import { Bert } from 'meteor/themeteorchef:bert';
 
-import { timeago } from '../../../../modules/dates';
+import { Documents } from '../../../../api/Documents/Documents';
+import { timeago } from '../../../../../modules/dates';
 import BlankState from '../../../global/components/BlankState';
 import Loading from '../../../global/components/Loading';
-import { documents as GET_DOCUMENTS } from '../../queries/Documents.gql';
-import { addDocument as ADD_DOCUMENT } from '../../mutations/Documents.gql';
 import Styles from './styles';
 
-const Documents = () => {
-  const history = useHistory();
-  const { data, loading } = useQuery(GET_DOCUMENTS);
-  const [addDocument] = useMutation(ADD_DOCUMENT);
+const DocumentList = () => {
+  const isLoading = useSubscribe('documents');
+  const data = useFind(() => Documents.find());
 
   const handleAddDocument = () => {
-    addDocument({
-      refetchQueries: [{ query: GET_DOCUMENTS }],
-    })
+    Meteor.callAsync('addDocument')
       .then((response) => {
         const docId =
           response && response.data && response.data.addDocument && response.data.addDocument._id;
         Bert.alert('New document ready!', 'success');
-        history.push(`/documents/${docId}/edit`);
+        redirect(`/documents/${docId}/edit`);
       })
       .catch((error) => {
         console.warn('addDocument error:');
@@ -34,7 +31,7 @@ const Documents = () => {
       });
   };
 
-  if (loading) {
+  if (isLoading()) {
     return <Loading />;
   }
 
@@ -85,4 +82,4 @@ const Documents = () => {
   );
 };
 
-export default Documents;
+export default DocumentList;

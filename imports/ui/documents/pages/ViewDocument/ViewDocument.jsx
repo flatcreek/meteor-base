@@ -1,35 +1,24 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { useQuery } from '@apollo/client';
+import { useFind, useSubscribe } from 'meteor/react-meteor-data';
 import { Link, useParams } from 'react-router-dom';
 
-import parseMarkdown from '../../../../modules/parseMarkdown';
+import parseMarkdown from '../../../../../modules/parseMarkdown';
+import { Documents } from '../../../../api/Documents/Documents';
 import BlankState from '../../../global/components/BlankState';
 import Loading from '../../../global/components/Loading';
 import SEO from '../../../global/components/SEO';
-import { document as GET_DOCUMENT } from '../../queries/Documents.gql';
 import Styles from './styles';
 
 const { twitterUsername } = Meteor.settings.public;
 
 const ViewDocument = () => {
   const { _id } = useParams();
-  const { data, loading, error } = useQuery(GET_DOCUMENT, {
-    variables: { _id },
-  });
+  const isLoading = useSubscribe('document');
+  const data = useFind(() => Documents.find({ _id }));
 
-  if (loading) {
+  if (isLoading()) {
     return <Loading />;
-  }
-
-  if (error) {
-    return (
-      <BlankState
-        icon={{ color: 'danger', symbol: 'exclamation-triangle' }}
-        title="Whoops! We hit a snag."
-        subtitle={error.message}
-      />
-    );
   }
 
   if (data && data.document) {

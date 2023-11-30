@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Row, Col, Alert, Form, Button } from 'react-bootstrap';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 
@@ -9,7 +9,6 @@ import AccountPageFooter from '../../components/AccountPageFooter';
 import Styles from './styles';
 
 const RecoverPassword = () => {
-  const { history } = useHistory();
   const formRef = useRef();
 
   const handleSubmit = (form) => {
@@ -20,7 +19,7 @@ const RecoverPassword = () => {
         Bert.alert(error.reason, 'danger');
       } else {
         Bert.alert(`Check ${email} for a reset link!`, 'success');
-        history.push('/login');
+        redirect('/login');
       }
     });
   };

@@ -1,15 +1,17 @@
+import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { useQuery } from '@apollo/client';
+import { useFind, useSubscribe } from 'meteor/react-meteor-data';
 import { Row, Col, Tabs, Tab } from 'react-bootstrap';
 
 import AccountPageFooter from '../../components/AccountPageFooter';
 import ExportUserData from '../../components/ExportUserData';
 import ProfileForm from '../../components/ProfileForm';
-import { user as GET_USER } from '../../queries/Users.gql';
 import Styles from './styles';
 
 const Profile = () => {
-  const { data } = useQuery(GET_USER);
+  useSubscribe('user');
+  const userId = Meteor.userId();
+  const data = useFind(() => Meteor.users.find({ _id: userId }));
 
   if (data && data.user) {
     const thisUser = data && data.user;

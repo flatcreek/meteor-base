@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 import Alert from 'react-bootstrap/Alert';
-import { useHistory, useParams } from 'react-router-dom';
+import { redirect, useParams } from 'react-router-dom';
 
 import { AuthContext } from '../../../global/context/Authentication';
 
@@ -10,7 +10,6 @@ const VerifyEmail = () => {
   const { login } = useContext(AuthContext);
   const [verifyError, setVerifyError] = useState(null);
   const { token } = useParams();
-  const history = useHistory();
 
   useEffect(() => {
     Accounts.verifyEmail(token, async (error) => {
@@ -22,7 +21,7 @@ const VerifyEmail = () => {
       } else {
         await login();
         Bert.alert('All set, thanks!', 'success');
-        history.push('/');
+        redirect('/');
       }
     });
   }, [verifyError]);

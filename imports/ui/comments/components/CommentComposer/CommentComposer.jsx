@@ -1,27 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useMutation } from '@apollo/client';
 import Button from 'react-bootstrap/Button';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 
 import Validation from '../../../global/components/Validation';
-import { document as GET_DOCUMENT } from '../../../documents/queries/Documents.gql';
-import addCommentMutation from '../../mutations/Comments.gql';
 import StyledCommentComposer from './styles';
 
 const CommentComposer = ({ documentId }) => {
-  const [addComment] = useMutation(addCommentMutation);
   const handleSubmit = (form) => {
     if (Meteor.userId()) {
-      addComment({
-        variables: {
-          documentId,
-          comment: form.comment.value.trim(),
-        },
-        refetchQueries: [
-          { query: GET_DOCUMENT, variables: { _id: documentId, sortBy: 'newestFirst' } },
-        ],
+      Meteor.callAsync('addComment', {
+        documentId,
+        comment: form.comment.value.trim(),
       });
 
       document.querySelector('[name="comment"]').value = '';

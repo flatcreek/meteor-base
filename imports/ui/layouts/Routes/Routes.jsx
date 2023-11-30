@@ -1,13 +1,14 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 // Layouts
+import Layout from '../Layout/Layout';
 import NoGrid from '../NoGrid';
 import NoSidebar from '../NoSidebar';
 // import WithSidebar from '../WithSidebar';
 
 // Global pages
-import Index from '../../global/pages/Index';
+import Home from '../../global/pages/Home';
 import NotFound from '../../global/pages/NotFound';
 
 // Document pages
@@ -33,113 +34,121 @@ import ExamplePage from '../../global/pages/ExamplePage';
 import Privacy from '../../global/pages/Privacy';
 import Terms from '../../global/pages/Terms';
 
-const Routes = () => (
-  <Switch>
-    <Route
-      exact
-      name="index"
-      path="/"
-      render={(routeProps) => <NoGrid main={Index} {...routeProps} />}
-    />
+/*
+<Route path="/" element={<NoGrid />}>
+  <Route index element={<Home />} />
+</Route>
+*/
 
-    {/* ----- DOCUMENT ROUTES ----- */}
+const Routing = () => (
+  <Routes>
+    <Route element={<Layout />}>
+      <Route
+        exact
+        name="home"
+        path="/"
+        render={(routeProps) => <NoGrid main={Home} {...routeProps} />}
+      />
 
-    <Route
-      exact
-      path="/documents"
-      render={(routeProps) => <NoSidebar main={Documents} authRequired {...routeProps} />}
-    />
-    <Route
-      exact
-      path="/documents/:_id"
-      render={(routeProps) => <NoSidebar main={ViewDocument} {...routeProps} />}
-    />
-    <Route
-      exact
-      path="/documents/:_id/edit"
-      render={(routeProps) => <NoSidebar main={EditDocument} authRequired {...routeProps} />}
-    />
+      {/* ----- DOCUMENT ROUTES ----- */}
 
-    {/* ----- USER ROUTES ----- */}
+      <Route
+        exact
+        path="/documents"
+        render={(routeProps) => <NoSidebar main={Documents} authRequired {...routeProps} />}
+      />
+      <Route
+        exact
+        path="/documents/:_id"
+        render={(routeProps) => <NoSidebar main={ViewDocument} {...routeProps} />}
+      />
+      <Route
+        exact
+        path="/documents/:_id/edit"
+        render={(routeProps) => <NoSidebar main={EditDocument} authRequired {...routeProps} />}
+      />
 
-    <Route
-      exact
-      path="/users/:userProfileId"
-      render={(routeProps) => <NoSidebar main={Profile} authRequired {...routeProps} />}
-    />
+      {/* ----- USER ROUTES ----- */}
 
-    <Route
-      exact
-      path={['/profile', '/account', '/settings']}
-      render={(routeProps) => <NoSidebar main={Profile} authRequired {...routeProps} />}
-    />
+      <Route
+        exact
+        path="/users/:userProfileId"
+        render={(routeProps) => <NoSidebar main={Profile} authRequired {...routeProps} />}
+      />
 
-    <Route
-      exact
-      path="/signup"
-      render={(routeProps) => <NoGrid main={Signup} isPublic {...routeProps} />}
-    />
+      <Route
+        exact
+        path={['/profile', '/account', '/settings']}
+        render={(routeProps) => <NoSidebar main={Profile} authRequired {...routeProps} />}
+      />
 
-    <Route
-      exact
-      path="/login"
-      render={(routeProps) => <NoGrid main={Login} isPublic {...routeProps} />}
-    />
+      <Route
+        exact
+        path="/signup"
+        render={(routeProps) => <NoGrid main={Signup} isPublic {...routeProps} />}
+      />
 
-    <Route
-      exact
-      path="/logout"
-      render={(routeProps) => <NoSidebar main={Logout} {...routeProps} />}
-    />
+      <Route
+        exact
+        path="/login"
+        render={(routeProps) => <NoGrid main={Login} isPublic {...routeProps} />}
+      />
 
-    <Route
-      exact
-      path="/verify-email/:token"
-      render={(routeProps) => <NoSidebar main={VerifyEmail} {...routeProps} />}
-    />
+      <Route
+        exact
+        path="/logout"
+        render={(routeProps) => <NoSidebar main={Logout} {...routeProps} />}
+      />
 
-    <Route
-      exact
-      path="/recover-password"
-      render={(routeProps) => <NoSidebar main={RecoverPassword} isPublic {...routeProps} />}
-    />
+      <Route
+        exact
+        path="/verify-email/:token"
+        render={(routeProps) => <NoSidebar main={VerifyEmail} {...routeProps} />}
+      />
 
-    <Route
-      exact
-      path="/reset-password/:token"
-      render={(routeProps) => <NoSidebar main={ResetPassword} isPublic {...routeProps} />}
-    />
+      <Route
+        exact
+        path="/recover-password"
+        render={(routeProps) => <NoSidebar main={RecoverPassword} isPublic {...routeProps} />}
+      />
 
-    {/* ----- MISC PAGES ----- */}
+      <Route
+        exact
+        path="/reset-password/:token"
+        render={(routeProps) => <NoSidebar main={ResetPassword} isPublic {...routeProps} />}
+      />
 
-    <Route name="terms" path="/terms" component={Terms} />
-    <Route name="privacy" path="/privacy" component={Privacy} />
-    <Route name="examplePage" path="/example-page" component={ExamplePage} />
+      {/* ----- MISC PAGES ----- */}
 
-    {/* ----- ADMIN PAGES ----- */}
+      <Route name="terms" path="/terms" component={Terms} />
+      <Route name="privacy" path="/privacy" component={Privacy} />
+      <Route name="examplePage" path="/example-page" component={ExamplePage} />
 
-    <Route
-      exact
-      path="/admin/users"
-      render={(routeProps) => (
-        <NoSidebar main={AdminUsers} authRequired allowedRoles={['admin']} {...routeProps} />
-      )}
-    />
+      {/* ----- ADMIN PAGES ----- */}
 
-    <Route
-      exact
-      path="/admin/users/:_id"
-      render={(routeProps) => (
-        <NoSidebar main={AdminUser} authRequired allowedRoles={['admin']} {...routeProps} />
-      )}
-    />
+      <Route
+        exact
+        path="/admin/users"
+        render={(routeProps) => (
+          <NoSidebar main={AdminUsers} authRequired allowedRoles={['admin']} {...routeProps} />
+        )}
+      />
 
-    {/* ----- NOT FOUND ROUTE ----- */}
+      <Route
+        exact
+        path="/admin/users/:_id"
+        render={(routeProps) => (
+          <NoSidebar main={AdminUser} authRequired allowedRoles={['admin']} {...routeProps} />
+        )}
+      />
 
-    <Route render={(routeProps) => <NoSidebar main={NotFound} {...routeProps} />} />
+      {/* ----- NOT FOUND ROUTE ----- */}
 
-    {/* ----- LEGACY ROUTES TO BE REFACTORED ----- */}
-  </Switch>
+      <Route render={(routeProps) => <NoSidebar main={NotFound} {...routeProps} />} />
+
+      {/* ----- LEGACY ROUTES TO BE REFACTORED ----- */}
+    </Route>
+  </Routes>
 );
 
-export default Routes;
+export default Routing;

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-const Index = styled.div``;
+const Home = styled.div``;
 
 export default {
-  Index,
+  Home,
 };

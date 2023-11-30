@@ -1,69 +1,45 @@
-import React, { useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { Meteor } from 'meteor/meteor';
+import React from 'react';
+import { useFind, useSubscribe } from 'meteor/react-meteor-data';
 import { Breadcrumb, Tabs, Tab } from 'react-bootstrap';
-import { Redirect } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, redirect } from 'react-router-dom';
 import { Bert } from 'meteor/themeteorchef:bert';
 
 import AdminPageHeader from '../../components/AdminPageHeader';
 import AdminUserProfile from '../../components/AdminUserProfile';
 import BlankState from '../../../global/components/BlankState';
 import Loading from '../../../global/components/Loading';
-import UserSettings from '../../../users/components/UserSettings';
-import { user as GET_USER } from '../../../users/queries/Users.gql';
-import {
-  updateUser as UPDATE_USER,
-  removeUser as REMOVE_USER,
-} from '../../../users/mutations/Users.gql';
-import { users as GET_USERS } from '../../queries/Admin.gql';
 import Styles from './styles';
 
 const AdminUser = () => {
-  const [redirect, setRedirect] = useState(false);
   const { _id } = useParams();
-  const history = useHistory();
-  const { data, loading, refetch } = useQuery(GET_USER, {
-    variables: { _id },
-    fetchPolicy: 'no-cache',
-  });
+  const isLoading = useSubscribe('user', { _id });
+  const data = useFind(() => Meteor.users.find({ _id }));
 
   const user = data && data.user;
-
   const name = user && user.name;
   const username = user && user.username;
 
-  const [updateUser] = useMutation(UPDATE_USER, {
-    refetchQueries: [{ query: GET_USER, variables: { _id } }],
-    onCompleted: () => {
-      Bert.alert('User updated!', 'success');
-    },
-    onError: (error) => {
-      Bert.alert(error.message, 'danger');
-    },
-  });
-
-  const [removeUser] = useMutation(REMOVE_USER, {
-    refetchQueries: [{ query: GET_USERS }],
-    onCompleted: () => {
-      Bert.alert('User deleted!', 'success');
-      history.push('/admin/users');
-    },
-    onError: (error) => {
-      Bert.alert(error.message, 'danger');
-    },
-  });
-
   const handleUpdateUser = (userObj) => {
-    updateUser({ variables: { user: userObj } }).then(() => {
-      refetch();
-    });
+    Meteor.callAsync('updateUser', { user: userObj })
+      .then(() => {
+        Bert.alert('User updated!', 'success');
+      })
+      .catch((error) => {
+        Bert.alert(error.message, 'danger');
+      });
   };
 
   const handleRemoveUser = () => {
-    removeUser({
-      variables: { _id },
-    });
+    Meteor.callAsync('removeUser', { _id })
+      .then(() => {
+        Bert.alert('User deleted!', 'success');
+        history.push('/admin/users');
+      })
+      .catch((error) => {
+        Bert.alert(error.message, 'danger');
+      });
   };
 
   // Function to format an array of badges to send to the admin header.
@@ -76,11 +52,7 @@ const AdminUser = () => {
     ];
   };
 
-  if (redirect) {
-    return <Redirect push to="/admin/users" />;
-  }
-
-  if (loading) return <Loading />;
+  if (isLoading()) return <Loading />;
 
   if (user) {
     return (
@@ -103,14 +75,6 @@ const AdminUser = () => {
               removeUser={handleRemoveUser}
             />
           </Tab>
-          <Tab eventKey="settings" title="Settings">
-            <UserSettings
-              isAdmin
-              userId={user._id}
-              settings={user.settings}
-              updateUser={updateUser}
-            />
-          </Tab>
         </Tabs>
       </Styles.AdminUser>
     );
@@ -123,7 +87,7 @@ const AdminUser = () => {
       subtitle="This user has been removed."
       action={{
         style: 'success',
-        onClick: () => setRedirect({ redirect: true }),
+        onClick: () => redirect('/admin/users'),
         label: 'Return to user list',
       }}
     />

@@ -22,7 +22,7 @@ const Authentication = ({ children }) => {
   const [authState, setAuthState] = useState(initialAuthState);
   const [userRoles, setUserRoles] = useState(null);
   const [loading, setLoading] = useState(true);
-  const queryLoading = useSubscribe('currentUser');
+  const queryLoading = useSubscribe('app');
 
   // currentUser is the user returned from Meteor's tracker. It is a reactive data source.
   // However, it does not include all user fields.

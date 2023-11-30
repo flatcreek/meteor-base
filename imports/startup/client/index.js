@@ -1,7 +1,5 @@
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
 import React from 'react';
-import { hydrate, render } from 'react-dom';
-import { BrowserRouter, Switch } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from 'styled-components';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
@@ -11,8 +9,8 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Authentication from '../../ui/global/context/Authentication';
-import App from '../../ui/layouts/App';
 import GlobalStyle from './GlobalStyle';
+import App from '../../ui/layouts/App';
 
 Bert.defaults = {
   hideDelay: 5500,
@@ -21,20 +19,17 @@ Bert.defaults = {
 
 fontAwesomeLibrary.add(fas);
 
+const target = document.getElementById('react-root');
+const root = createRoot(target);
+
 Meteor.startup(() => {
-  const target = document.getElementById('react-root');
   const app = (
     <ThemeProvider theme={{}}>
       <Authentication>
         <GlobalStyle />
-        <BrowserRouter>
-          <Switch>
-            <App />
-          </Switch>
-        </BrowserRouter>
+        <App />
       </Authentication>
     </ThemeProvider>
   );
-
-  return !window.noSSR ? hydrate(app, target) : render(app, target);
+  root.render(app);
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactMarkdown from 'react-markdown';
+import Markdown from 'react-markdown';
 import { Meteor } from 'meteor/meteor';
 import PageHeader from '../../components/PageHeader';
 import Styles from './styles';
@@ -11,7 +11,7 @@ const Page = ({ title, subtitle, content }) => {
     <Styles.Page>
       <PageHeader title={title} subtitle={subtitle} />
       <Styles.Content>
-        <ReactMarkdown source={content} />
+        <Markdown>{content}</Markdown>
       </Styles.Content>
     </Styles.Page>
   );

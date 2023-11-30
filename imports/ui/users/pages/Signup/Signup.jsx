@@ -1,19 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 
 import InputHint from '../../../global/components/InputHint';
 import Validation from '../../../global/components/Validation';
 import AccountPageFooter from '../../components/AccountPageFooter';
-import OAuthLoginButtons from '../../components/OAuthLoginButtons';
 import Styles from './styles';
 
 const Signup = () => {
-  const history = useHistory();
-
   const handleSubmit = (form) => {
     Accounts.createUser(
       {
@@ -32,7 +29,7 @@ const Signup = () => {
         } else {
           Meteor.callAsync('sendVerificationEmail').then(() => {
             Bert.alert('Welcome!', 'success');
-            history.push('/');
+            redirect('/');
           });
         }
       },
@@ -44,16 +41,6 @@ const Signup = () => {
       <Row>
         <Col xs={12}>
           <h4 className="page-header">Sign Up</h4>
-          <Row>
-            <Col xs={12}>
-              <OAuthLoginButtons
-                emailMessage={{
-                  offset: 97,
-                  text: 'Sign Up with an Email Address',
-                }}
-              />
-            </Col>
-          </Row>
           <Validation
             rules={{
               firstName: {

@@ -7,8 +7,8 @@ import Col from 'react-bootstrap/Col';
 
 import Styles from './styles';
 
-const Index = () => (
-  <Styles.Index>
+const Home = () => (
+  <Styles.Home>
     <Jumbotron fluid>
       <Container>
         <Row className="justify-content-md-center">
@@ -38,7 +38,7 @@ const Index = () => (
         </Col>
       </Row>
     </Container>
-  </Styles.Index>
+  </Styles.Home>
 );
 
-export default Index;
+export default Home;

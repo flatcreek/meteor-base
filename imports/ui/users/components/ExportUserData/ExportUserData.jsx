@@ -1,22 +1,19 @@
+import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { useLazyQuery } from '@apollo/client';
 import FileSaver from 'file-saver';
 import base64ToBlob from 'b64-to-blob';
 import Button from 'react-bootstrap/Button';
-import { Meteor } from 'meteor/meteor';
-
-import { exportUserData as GET_USERDATAEXPORT } from '../../queries/Users.gql';
+import { Bert } from 'meteor/themeteorchef:bert';
 
 const ExportUserData = () => {
-  const [exportUserData] = useLazyQuery(GET_USERDATAEXPORT, {
-    fetchPolicy: 'network-only',
-    onCompleted: (data) => {
-      FileSaver.saveAs(base64ToBlob(data.exportUserData.zip), `${Meteor.userId()}.zip`);
-    },
-  });
-
-  const handleExportData = async () => {
-    await exportUserData();
+  const handleExportData = () => {
+    Meteor.callAsync('exportUserData')
+      .then((response) => {
+        FileSaver.saveAs(base64ToBlob(response.exportUserData.zip), `${Meteor.userId()}.zip`);
+      })
+      .catch((error) => {
+        Bert.alert(error.message, 'danger');
+      });
   };
 
   return (

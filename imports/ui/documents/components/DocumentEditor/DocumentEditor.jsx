@@ -1,85 +1,65 @@
+import { Meteor } from 'meteor/meteor';
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useMutation } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 
-import delay from '../../../../modules/delay';
-import { timeago } from '../../../../modules/dates';
-import {
-  editDocument as GET_DOCUMENT,
-  documents as GET_DOCUMENTS,
-} from '../../queries/Documents.gql';
-import {
-  updateDocument as UPDATE_DOCUMENT,
-  removeDocument as REMOVE_DOCUMENT,
-} from '../../mutations/Documents.gql';
+import delay from '../../../../../modules/delay';
+import { timeago } from '../../../../../modules/dates';
 import Styles from './styles';
 
 const DocumentEditor = ({ doc }) => {
-  const history = useHistory();
   const [saving, setSaving] = useState(false);
   const formRef = useRef();
-
-  const [updateDocument] = useMutation(UPDATE_DOCUMENT, {
-    awaitRefetchQueries: true,
-    ignoreResults: true,
-    onCompleted: () => {
-      // NOTE: Delay setSaving to false so UI changes aren't jarring.
-      setTimeout(() => setSaving(false), 1000);
-    },
-    onError: (error) => {
-      Bert.alert(error.message, 'danger');
-    },
-  });
-
-  const [removeDocument] = useMutation(REMOVE_DOCUMENT, {
-    refetchQueries: [{ query: GET_DOCUMENTS }],
-    awaitRefetchQueries: true,
-    ignoreResults: true,
-    onCompleted: () => {
-      history.push('/documents');
-      Bert.alert('Document removed!', 'success');
-    },
-    onError: (error) => {
-      Bert.alert(error.message, 'danger');
-    },
-  });
 
   const handleUpdateDocument = () => {
     setSaving(true);
     delay(() => {
       console.log('handleUpdateDocument.doc._id', doc._id);
-      updateDocument({
-        variables: {
-          _id: doc._id,
-          title: formRef.current.title.value.trim(),
-          body: formRef.current.body.value.trim(),
-        },
-        refetchQueries: [{ query: GET_DOCUMENT, variables: { _id: doc._id } }],
-      });
+      const dataObj = {
+        _id: doc._id,
+        title: formRef.current.title.value.trim(),
+        body: formRef.current.body.value.trim(),
+      };
+      Meteor.callAsync('updateDocument', dataObj)
+        .then(() => {
+          // NOTE: Delay setSaving to false so UI changes aren't jarring.
+          setTimeout(() => setSaving(false), 1000);
+        })
+        .catch((error) => {
+          Bert.alert(error.message, 'danger');
+        });
     }, 300);
   };
 
   const handleSetVisibility = (isPublic) => {
     setSaving(true);
-    updateDocument({
-      variables: {
-        _id: doc._id,
-        isPublic: isPublic === 'public',
-      },
-    });
+    const dataObj = {
+      _id: doc._id,
+      isPublic: isPublic === 'public',
+    };
+    Meteor.callAsync('updateDocument', dataObj)
+      .then(() => {
+        // NOTE: Delay setSaving to false so UI changes aren't jarring.
+        setTimeout(() => setSaving(false), 1000);
+      })
+      .catch((error) => {
+        Bert.alert(error.message, 'danger');
+      });
   };
 
   const handleRemoveDocument = () => {
     if (confirm('Are you sure? This is permanent!')) {
-      removeDocument({
-        variables: {
-          _id: doc._id,
-        },
-      });
+      Meteor.callAsync('removeDocument', { _id: doc._id })
+        .then(() => {
+          redirect('/documents');
+          Bert.alert('Document removed!', 'success');
+        })
+        .catch((error) => {
+          Bert.alert(error.message, 'danger');
+        });
     }
   };
 

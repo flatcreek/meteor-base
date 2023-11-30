@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Container, Navbar, Nav } from 'react-bootstrap';
 
-import { year } from '../../../../modules/dates';
+import { year } from '../../../../../modules/dates';
 // import Styles from './styles';
 
 const { productName, copyrightStartYear } = Meteor.settings.public;

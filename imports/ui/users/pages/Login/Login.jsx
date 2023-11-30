@@ -5,7 +5,6 @@ import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 
 import Validation from '../../../global/components/Validation';
-import OAuthLoginButtons from '../../components/OAuthLoginButtons';
 import AccountPageFooter from '../../components/AccountPageFooter';
 import Styles from './styles';
 
@@ -26,16 +25,6 @@ const Login = () => {
       <Row>
         <Col xs={12}>
           <h4 className="page-header">Log In</h4>
-          <Row>
-            <Col xs={12}>
-              <OAuthLoginButtons
-                emailMessage={{
-                  offset: 100,
-                  text: 'Log In with an Email Address',
-                }}
-              />
-            </Col>
-          </Row>
           <Validation
             rules={{
               emailAddress: {

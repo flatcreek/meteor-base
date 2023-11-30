@@ -1,36 +1,31 @@
-import React, { useContext, useState } from 'react';
-import { useQuery } from '@apollo/client';
+import React, { useContext } from 'react';
+import { useFind, useSubscribe } from 'meteor/react-meteor-data';
 import { Redirect } from 'react-router';
-import { useHistory, useParams } from 'react-router-dom';
+import { redirect, useParams } from 'react-router-dom';
 
+import { Documents } from '../../../../api/Documents/Documents';
 import BlankState from '../../../global/components/BlankState';
 import Loading from '../../../global/components/Loading';
 import { AuthContext } from '../../../global/context/Authentication';
 import DocumentEditor from '../../components/DocumentEditor';
-import { editDocument as GET_DOCUMENT } from '../../graphql/queries.gql';
 
 const EditDocument = () => {
   const { userId, isInRole } = useContext(AuthContext);
-  const [redirect, setRedirect] = useState(false);
   const { _id } = useParams();
-  const history = useHistory();
-  const { data, loading } = useQuery(GET_DOCUMENT, {
-    variables: {
-      _id,
-    },
-  });
+  const isLoading = useSubscribe('documents');
+  const data = useFind(() => Documents.find({ _id }));
 
   if (redirect) {
     return <Redirect push to="/documents" />;
   }
 
-  if (loading) {
+  if (isLoading()) {
     return <Loading />;
   }
 
   if (data && data.document) {
     if (data.document.owner === userId || isInRole('admin')) {
-      return <DocumentEditor doc={data.document} history={history} />;
+      return <DocumentEditor doc={data.document} />;
     }
   }
 
@@ -40,7 +35,7 @@ const EditDocument = () => {
       title="No document found here."
       action={{
         style: 'success',
-        onClick: () => setRedirect({ redirect: true }),
+        onClick: () => redirect('/documents'),
         label: 'Return to document list',
       }}
     />
