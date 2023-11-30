@@ -15,28 +15,26 @@ const copyrightYear = () => {
 };
 
 const Footer = () => (
-  <footer className="footer mt-auto pt-3">
-    <Navbar expand="lg" variant="light" bg="light">
+  <Navbar expand variant="light" bg="light" fixed="bottom">
+    <Container>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
-        <Container>
-          <Nav className="mr-auto">
-            <Navbar.Text>
-              &copy; {copyrightYear()} {productName}
-            </Navbar.Text>
-          </Nav>
-          <Nav>
-            <LinkContainer to="/terms">
-              <Nav.Link>Terms</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/privacy">
-              <Nav.Link>Privacy</Nav.Link>
-            </LinkContainer>
-          </Nav>
-        </Container>
+        <Nav className="me-auto">
+          <Navbar.Text>
+            &copy; {copyrightYear()} {productName}
+          </Navbar.Text>
+        </Nav>
+        <Nav>
+          <LinkContainer to="/terms">
+            <Nav.Link active={false}>Terms</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/privacy">
+            <Nav.Link active={false}>Privacy</Nav.Link>
+          </LinkContainer>
+        </Nav>
       </Navbar.Collapse>
-    </Navbar>
-  </footer>
+    </Container>
+  </Navbar>
 );
 
 export default Footer;

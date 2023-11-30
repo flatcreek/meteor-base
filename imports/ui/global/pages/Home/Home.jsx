@@ -1,30 +1,24 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 
 import Styles from './styles';
 
 const Home = () => (
   <Styles.Home>
-    <Jumbotron fluid>
-      <Container>
-        <Row className="justify-content-md-center">
-          <Col md={8}>
-            <h1>Hello, world!</h1>
-            <p>
-              This is a simple hero unit, a simple jumbotron-style component for calling extra
-              attention to featured content or information.
-            </p>
-            <p>
-              <Button variant="primary">Learn more</Button>
-            </p>
-          </Col>
-        </Row>
-      </Container>
-    </Jumbotron>
+    <Container>
+      <div className="p-5 my-4 bg-light rounded-3">
+        <div className="py-5 justify-content-md-center">
+          <h1 className="display-5 fw-bold">Hello, world!</h1>
+          <p className="col-md-8 fs-4">
+            This is a simple hero unit, a simple jumbotron-style component for calling extra
+            attention to featured content or information.
+          </p>
+          <Button variant="primary" size="lg">
+            Learn more
+          </Button>
+        </div>
+      </div>
+    </Container>
     <Container className="mt-4">
       <Row>
         <Col>

@@ -29,7 +29,9 @@ const Layout = () => {
       <main>
         <Outlet />
       </main>
-      <Footer />
+      <footer>
+        <Footer />
+      </footer>
     </Styles.App>
   );
 };

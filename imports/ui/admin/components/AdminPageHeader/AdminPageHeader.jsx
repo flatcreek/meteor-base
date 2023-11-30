@@ -8,7 +8,7 @@ const AdminPageHeader = ({ title, badges }) => (
     {title}{' '}
     {badges &&
       badges.map(({ label }) => (
-        <Badge key={label} variant="primary" className={`badge badge-${label}`}>
+        <Badge key={label} bg="primary" className={`badge badge-${label}`}>
           {label}
         </Badge>
       ))}

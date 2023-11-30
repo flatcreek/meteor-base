@@ -51,9 +51,9 @@ const DocumentList = () => {
                   <Card.Body>
                     <Card.Subtitle>
                       {isPublic ? (
-                        <Badge variant="secondary">Secondary</Badge>
+                        <Badge bg="secondary">Secondary</Badge>
                       ) : (
-                        <Badge variant="secondary">Private</Badge>
+                        <Badge bg="secondary">Private</Badge>
                       )}
                     </Card.Subtitle>
                     <Card.Title className="mt-2">{title}</Card.Title>
