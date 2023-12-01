@@ -96,30 +96,26 @@ const router = createBrowserRouter([
           {
             path: '/admin',
             element: <NoSidebar main={AdminUsers} authRequired allowedRoles={['admin']} />,
-            children: [
-              {
-                path: '/admin/users',
-                element: <NoSidebar main={AdminUsers} authRequired allowedRoles={['admin']} />,
-              },
-              {
-                path: '/admin/users/:_id',
-                element: <NoSidebar main={AdminUser} authRequired allowedRoles={['admin']} />,
-              },
-            ],
+          },
+          {
+            path: '/admin/users',
+            element: <NoSidebar main={AdminUsers} authRequired allowedRoles={['admin']} />,
+          },
+          {
+            path: '/admin/users/:_id',
+            element: <NoSidebar main={AdminUser} authRequired allowedRoles={['admin']} />,
           },
           {
             path: '/documents',
             element: <NoSidebar main={Documents} authRequired />,
-            children: [
-              {
-                path: '/documents/:_id',
-                element: <NoSidebar main={ViewDocument} />,
-              },
-              {
-                path: '/documents/:_id/edit',
-                element: <NoSidebar main={EditDocument} authRequired />,
-              },
-            ],
+          },
+          {
+            path: '/documents/:documentId',
+            element: <NoSidebar main={ViewDocument} />,
+          },
+          {
+            path: '/documents/:documentId/edit',
+            element: <NoSidebar main={EditDocument} authRequired />,
           },
           {
             path: '*',

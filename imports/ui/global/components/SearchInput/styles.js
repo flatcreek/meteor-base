@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const SearchInput = styled.div`
   position: relative;
 
-  i {
+  svg {
     position: absolute;
     left: 12px;
     top: 10px;
@@ -11,7 +11,7 @@ const SearchInput = styled.div`
   }
 
   .form-control {
-    padding-left: 30px;
+    padding-left: 36px;
   }
 `;
 

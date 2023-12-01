@@ -1,26 +1,49 @@
-import moment from 'moment';
-import 'moment-timezone';
+import { DateTime } from 'luxon';
 
-export const monthDayYear = (timestamp, timezone) =>
-  !timezone
-    ? moment(timestamp).format('MMMM Do, YYYY')
-    : moment(timestamp).tz(timezone).format('MMMM Do, YYYY');
+export const monthDayYear = (timestamp, timezone) => {
+  if (timezone) {
+    return DateTime.fromJSDate(timestamp).toLocaleString(DateTime.DATE_FULL);
+  }
+  return DateTime.fromJSDate(timestamp).toLocaleString(DateTime.DATE_FULL);
+};
 
-export const monthDayYearAtTime = (timestamp, timezone) =>
-  !timezone
-    ? moment(timestamp).format('MMMM Do, YYYY [at] hh:mm a')
-    : moment(timestamp).tz(timezone).format('MMMM Do, YYYY [at] hh:mm a');
+export const monthDayYearAtTime = (timestamp, timezone) => {
+  if (timezone) {
+    return DateTime.fromJSDate(timestamp, { zone: timezone }).toLocaleString(
+      DateTime.DATETIME_FULL,
+    );
+  }
+  return DateTime.fromJSDate(timestamp).toLocaleString(DateTime.DATETIME_FULL);
+};
 
-export const timeago = (timestamp, timezone) =>
-  !timezone ? moment(timestamp).fromNow() : moment(timestamp).tz(timezone).fromNow();
+export const timeago = (timestamp, timezone) => {
+  if (timezone) {
+    return DateTime.fromJSDate(timestamp, { zone: timezone }).toRelative();
+  }
+  return DateTime.fromJSDate(timestamp).toRelative();
+};
 
-export const add = (timestamp, amount, range, timezone) =>
-  !timezone
-    ? moment(timestamp).add(amount, range).format()
-    : moment(timestamp).tz(timezone).add(amount, range).format();
+export const timeAdd = (timestamp, amount, range, timezone) => {
+  if (timezone) {
+    return DateTime.fromJSDate(timestamp, { zone: timezone })
+      .plus({ [range]: amount })
+      .toLocaleString();
+  }
+  return DateTime.fromJSDate(timestamp)
+    .plus({ [range]: amount })
+    .toLocaleString();
+};
 
-export const year = (timestamp, timezone) =>
-  !timezone ? moment(timestamp).format('YYYY') : moment(timestamp).tz(timezone).format('YYYY');
+export const year = (timestamp, timezone) => {
+  if (timezone) {
+    return DateTime.fromJSDate(timestamp, { zone: timezone }).toFormat('yyyy');
+  }
+  return DateTime.fromJSDate(timestamp).toFormat('yyyy');
+};
 
-export const iso = (timestamp, timezone) =>
-  !timezone ? moment(timestamp).format() : moment(timestamp).tz(timezone).format();
+export const iso = (timestamp, timezone) => {
+  if (timezone) {
+    return DateTime.fromJSDate(timestamp, { zone: timezone }).toISO();
+  }
+  return DateTime.fromJSDate(timestamp).toISO();
+};

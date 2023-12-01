@@ -13,7 +13,7 @@ const deleteUser = ({ _id }) => {
 
 const deleteDocuments = ({ _id }) => {
   try {
-    return Documents.remove({ owner: _id });
+    return Documents.remove({ createdBy: _id });
   } catch (error) {
     throw new Error(`[removeUser.deleteDocuments] ${error.message}`);
   }

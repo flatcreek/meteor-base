@@ -9,27 +9,28 @@ import Loading from '../../../global/components/Loading';
 import Styles from './styles';
 
 const AdminUsersList = (props) => {
-  const { perPage, currentPage, onChangePage, search } = props;
-  const isLoading = useSubscribe('precincts', {
-    perPage,
-    currentPage,
+  const { limit, skip, onChangePage, search } = props;
+  const isLoading = useSubscribe('users', {
+    limit,
+    skip,
     search,
   });
-  const data = useFind(() => Meteor.users.find());
+  const users = useFind(() => Meteor.users.find());
 
-  console.log('AdminUsersList.data:');
-  console.log(data);
+  console.log('AdminUsersList.users:');
+  console.log('loading', isLoading());
+  console.log(users);
 
   const renderPagination = () => {
     const pages = [];
-    const pagesToGenerate = Math.ceil(data.users.total / perPage);
+    const pagesToGenerate = Math.ceil(users.total / limit);
 
     for (let pageNumber = 1; pageNumber <= pagesToGenerate; pageNumber += 1) {
       pages.push(
         <li
           role="presentation"
           key={`pagination_${pageNumber}`}
-          className={pageNumber === currentPage ? 'active' : ''}
+          className={pageNumber === skip ? 'active' : ''}
           onClick={() => onChangePage(pageNumber)}
           onKeyDown={() => onChangePage(pageNumber)}
         >
@@ -50,32 +51,39 @@ const AdminUsersList = (props) => {
   return (
     <Fragment>
       <Styles.AdminListGroup>
-        {data.users &&
-          data.users.users &&
-          data.users.users.map(
-            ({ _id, emailAddress, name, username, oAuthProvider, emailVerified }) => (
-              <LinkContainer to={`/admin/users/${_id}`} key={_id}>
+        {users &&
+          users.map((user) => {
+            const { _id: userId, emails, profile, roles } = user || {};
+            const emailAddress = emails[0].address;
+            const emailVerified = emails[0].verified;
+            const firstName = profile?.name?.first;
+            const lastName = profile?.name?.last;
+            const name = firstName ? `${firstName} ${lastName}` : emailAddress;
+            console.log('roles', roles);
+            // eslint-disable-next-line no-underscore-dangle
+            const roleNames = roles?.__global_roles__;
+            return (
+              <LinkContainer to={`/admin/users/${userId}`} key={userId}>
                 <Styles.AdminListGroupItem>
                   <div>
-                    {name ? `${name.first} ${name.last}` : username}
+                    {name}
                     <span className="list-email">{emailAddress}</span>
-                    {oAuthProvider && (
-                      <span className={`badge badget-${oAuthProvider}`}>{oAuthProvider}</span>
-                    )}
                     {!emailVerified && (
-                      <Styles.AdminLabel variant="danger">Email not verified</Styles.AdminLabel>
+                      <Styles.AdminLabel bg="danger">Email not verified</Styles.AdminLabel>
                     )}
+                    {roleNames &&
+                      roleNames.map((role) => (
+                        <Styles.AdminLabel key={role} bg="secondary">
+                          {role}
+                        </Styles.AdminLabel>
+                      ))}
                   </div>
                 </Styles.AdminListGroupItem>
               </LinkContainer>
-            ),
-          )}
+            );
+          })}
       </Styles.AdminListGroup>
-      {data.users &&
-        data.users.total &&
-        search.trim() === '' &&
-        data.users.total > perPage &&
-        renderPagination()}
+      {users && users.total && search.trim() === '' && users.total > limit && renderPagination()}
     </Fragment>
   );
 };
@@ -86,8 +94,8 @@ AdminUsersList.defaultProps = {
 
 AdminUsersList.propTypes = {
   search: PropTypes.string,
-  perPage: PropTypes.number.isRequired,
-  currentPage: PropTypes.number.isRequired,
+  limit: PropTypes.number.isRequired,
+  skip: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
 };
 

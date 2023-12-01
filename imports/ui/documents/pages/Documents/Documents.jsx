@@ -19,6 +19,8 @@ const DocumentList = () => {
   const handleAddDocument = () => {
     Meteor.callAsync('addDocument')
       .then((response) => {
+        console.log('DocumentList.handleAddDocument.response');
+        console.log(response);
         const docId =
           response && response.data && response.data.addDocument && response.data.addDocument._id;
         Bert.alert('New document ready!', 'success');
@@ -35,6 +37,9 @@ const DocumentList = () => {
     return <Loading />;
   }
 
+  console.log('DocumentList.data:');
+  console.log(data);
+
   return (
     <Styles.StyledDocuments>
       <header className="clearfix">
@@ -42,18 +47,18 @@ const DocumentList = () => {
           New Document
         </Button>
       </header>
-      {data.documents && data.documents.length ? (
+      {data && data.length ? (
         <Row>
-          {data.documents.map(({ _id, isPublic, title, updatedAt }) => (
+          {data.map(({ _id, isPublic, title, updatedAt }) => (
             <Col key={_id} sm={6} md={4} lg={3} className="align-self-stretch p-3">
-              <LinkContainer to={`/documents/${_id}/edit`}>
+              <LinkContainer to={`/documents/${_id}`}>
                 <Styles.StyledCard>
                   <Card.Body>
                     <Card.Subtitle>
                       {isPublic ? (
-                        <Badge bg="secondary">Secondary</Badge>
+                        <Badge bg="info">Public</Badge>
                       ) : (
-                        <Badge bg="secondary">Private</Badge>
+                        <Badge bg="warning">Private</Badge>
                       )}
                     </Card.Subtitle>
                     <Card.Title className="mt-2">{title}</Card.Title>

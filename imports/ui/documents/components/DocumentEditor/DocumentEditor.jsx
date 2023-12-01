@@ -19,7 +19,7 @@ const DocumentEditor = ({ doc }) => {
     delay(() => {
       console.log('handleUpdateDocument.doc._id', doc._id);
       const dataObj = {
-        _id: doc._id,
+        documentId: doc._id,
         title: formRef.current.title.value.trim(),
         body: formRef.current.body.value.trim(),
       };
@@ -37,7 +37,7 @@ const DocumentEditor = ({ doc }) => {
   const handleSetVisibility = (isPublic) => {
     setSaving(true);
     const dataObj = {
-      _id: doc._id,
+      documentId: doc._id,
       isPublic: isPublic === 'public',
     };
     Meteor.callAsync('updateDocument', dataObj)
@@ -52,7 +52,7 @@ const DocumentEditor = ({ doc }) => {
 
   const handleRemoveDocument = () => {
     if (confirm('Are you sure? This is permanent!')) {
-      Meteor.callAsync('removeDocument', { _id: doc._id })
+      Meteor.callAsync('removeDocument', { documentId: doc._id })
         .then(() => {
           redirect('/documents');
           Bert.alert('Document removed!', 'success');
@@ -75,7 +75,7 @@ const DocumentEditor = ({ doc }) => {
           <Dropdown.Item href={`/documents/${doc._id}`} target="_blank" rel="noopener noreferrer">
             <FontAwesomeIcon icon="external-link-alt" fixedWidth /> View Document
           </Dropdown.Item>
-          <Dropdown.Item divider />
+          <Dropdown.Divider />
           <Dropdown.Header>Visibility</Dropdown.Header>
           <Dropdown.Item
             className={doc.isPublic && 'active'}

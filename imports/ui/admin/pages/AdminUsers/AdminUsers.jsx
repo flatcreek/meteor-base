@@ -5,7 +5,7 @@ import AdminUsersList from '../../components/AdminUsersList';
 import Styles from './styles';
 
 const AdminUsers = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [skip, setSkip] = useState(0);
   const [search, setSearch] = useState('');
 
   return (
@@ -20,9 +20,9 @@ const AdminUsers = () => {
       </Styles.AdminUsersHeader>
       <AdminUsersList
         search={search}
-        currentPage={currentPage}
-        perPage={10}
-        onChangePage={(newPage) => setCurrentPage(newPage)}
+        skip={skip}
+        limit={10}
+        onChangePage={(newPage) => setSkip(newPage)}
       />
     </div>
   );

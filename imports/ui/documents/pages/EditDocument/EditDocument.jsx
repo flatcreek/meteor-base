@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { useFind, useSubscribe } from 'meteor/react-meteor-data';
-import { Redirect } from 'react-router';
 import { redirect, useParams } from 'react-router-dom';
 
 import { Documents } from '../../../../api/Documents/Documents';
@@ -11,21 +10,17 @@ import DocumentEditor from '../../components/DocumentEditor';
 
 const EditDocument = () => {
   const { userId, isInRole } = useContext(AuthContext);
-  const { _id } = useParams();
-  const isLoading = useSubscribe('documents');
-  const data = useFind(() => Documents.find({ _id }));
-
-  if (redirect) {
-    return <Redirect push to="/documents" />;
-  }
+  const { documentId } = useParams();
+  const isLoading = useSubscribe('document', { documentId });
+  const document = useFind(() => Documents.find({ _id: documentId }));
 
   if (isLoading()) {
     return <Loading />;
   }
 
-  if (data && data.document) {
-    if (data.document.owner === userId || isInRole('admin')) {
-      return <DocumentEditor doc={data.document} />;
+  if (document) {
+    if (document.createdBy === userId || isInRole('admin')) {
+      return <DocumentEditor doc={document[0]} />;
     }
   }
 

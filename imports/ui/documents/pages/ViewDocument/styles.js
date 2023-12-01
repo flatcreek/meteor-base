@@ -1,17 +1,12 @@
 import styled from 'styled-components';
+import Alert from 'react-bootstrap/Alert';
 
-export const StyledViewDocument = styled.div`
+const StyledViewDocument = styled.div`
   border: 1px solid var(--gray-lighter);
   padding: 25px;
   border-radius: 3px;
   max-width: 750px;
   margin: 0 auto 20px;
-
-  h1 {
-    margin: 0 0 25px;
-    font-size: 22px;
-    line-height: 28px;
-  }
 
   @media screen and (min-width: 768px) {
     margin-top: 20px;
@@ -19,7 +14,13 @@ export const StyledViewDocument = styled.div`
   }
 `;
 
-export const DocumentBody = styled.div`
+const StyledAlert = styled(Alert)`
+  svg {
+    margin-right: 12px;
+  }
+`;
+
+const DocumentBody = styled.div`
   font-size: 16px;
   line-height: 22px;
 
@@ -36,3 +37,9 @@ export const DocumentBody = styled.div`
     margin-bottom: 0;
   }
 `;
+
+export default {
+  StyledAlert,
+  StyledViewDocument,
+  DocumentBody,
+};

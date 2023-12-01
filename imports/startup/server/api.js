@@ -9,6 +9,7 @@ import '../../api/Users/methods';
 import '../../api/App/server/publications';
 import '../../api/Comments/server/publications';
 import '../../api/Documents/server/publications';
+import '../../api/Users/server/publications';
 
 // Public API
 import '../../api/Documents/server/indexes';

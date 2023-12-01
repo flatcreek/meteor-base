@@ -1,4 +1,5 @@
-/* eslint-disable consistent-return */
+/* eslint-disable consistent-return, import/prefer-default-export */
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
@@ -58,11 +59,7 @@ Documents.schema = new SimpleSchema({
     label: 'Updated At',
     optional: true,
     autoValue() {
-      if (this.isInsert) {
-        this.unset();
-      } else {
-        return new Date();
-      }
+      return new Date();
     },
   },
 });

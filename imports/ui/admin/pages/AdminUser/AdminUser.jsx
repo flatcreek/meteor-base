@@ -42,6 +42,10 @@ const AdminUser = () => {
       });
   };
 
+  const handleReturnToList = () => {
+    redirect('/admin/users');
+  };
+
   // Function to format an array of badges to send to the admin header.
   // Set parameter for AdminPageHeader as badges={headerBadges()}
   const headerBadges = () => {
@@ -87,7 +91,7 @@ const AdminUser = () => {
       subtitle="This user has been removed."
       action={{
         style: 'success',
-        onClick: () => redirect('/admin/users'),
+        onClick: () => handleReturnToList(),
         label: 'Return to user list',
       }}
     />

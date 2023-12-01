@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 
 import { Documents } from '../Documents';
 
@@ -12,7 +12,7 @@ Meteor.publish('document', function (args) {
 
   check(args, {
     documentId: String,
-    isEdit: Boolean,
+    isEdit: Match.Maybe(Boolean),
   });
 
   const { documentId, isEdit } = args || {};
@@ -37,14 +37,14 @@ Meteor.publish('document', function (args) {
   // If the user is fetching this document to edit it, only return if the
   // current user is the document owner.
   if (isEdit) {
-    return Documents.find({ _id: documentId, owner: userId });
+    return Documents.find({ _id: documentId, createdBy: userId });
   }
 
   return Documents.find({ _id: documentId });
 
   // If the user is logged in, return the document if it is public or the user owns it
   // return Documents.findOne({
-  //   $or: [{ _id: documentId, owner: userId }, { _id: documentId, isPublic: true }],
+  //   $or: [{ _id: documentId, createdBy: userId }, { _id: documentId, isPublic: true }],
   // });
 });
 

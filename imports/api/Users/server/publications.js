@@ -20,12 +20,13 @@ Meteor.publish('user', function (args) {
 Meteor.publish('users', function (args) {
   if (Meteor.isDevelopment) {
     console.log('queryUsers starting');
+    console.log(args);
   }
   check(args, {
-    sort: String,
+    sort: Match.Maybe(String),
     limit: Number,
     skip: Number,
-    search: String,
+    search: Match.Maybe(String),
   });
   if (!this.userId) {
     this.error('Must be logged in!');

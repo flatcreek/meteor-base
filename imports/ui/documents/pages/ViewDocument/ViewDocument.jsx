@@ -1,8 +1,11 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Meteor } from 'meteor/meteor';
 import { useFind, useSubscribe } from 'meteor/react-meteor-data';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
 
+import { monthDayYearAtTime, iso } from '../../../../../modules/dates';
 import parseMarkdown from '../../../../../modules/parseMarkdown';
 import { Documents } from '../../../../api/Documents/Documents';
 import BlankState from '../../../global/components/BlankState';
@@ -13,35 +16,57 @@ import Styles from './styles';
 const { twitterUsername } = Meteor.settings.public;
 
 const ViewDocument = () => {
-  const { _id } = useParams();
-  const isLoading = useSubscribe('document');
-  const data = useFind(() => Documents.find({ _id }));
+  const { documentId } = useParams();
+  console.log('ViewDocument.documentId:', documentId);
+
+  const isLoading = useSubscribe('document', { documentId });
+  const document = useFind(() => Documents.find({ _id: documentId }));
 
   if (isLoading()) {
     return <Loading />;
   }
 
-  if (data && data.document) {
+  console.log('ViewDocument.document:');
+  console.log(document);
+
+  if (document) {
+    const { title, body, createdAt, createdBy, updatedAt } = document[0] || {};
+    const isOwner = () => {
+      return createdBy === Meteor.userId();
+    };
+
     return (
       <Styles.StyledViewDocument>
         <SEO
-          title={data.document && data.document.title}
-          description={data.document && data.document.body}
-          path={`documents/${data.document && data.document._id}`}
+          title={title}
+          description={body}
+          path={`documents/${documentId}`}
           contentType="article"
-          published={data.document && data.document.createdAt}
-          updated={data.document && data.document.updatedAt}
+          published={iso(createdAt)}
+          updated={iso(updatedAt)}
           twitter={`${twitterUsername}`}
         />
-        <h1>{data.document && data.document.title}</h1>
+        <h2>{title}</h2>
+        <p className="fs-6 fw-lighter">Published {monthDayYearAtTime(createdAt)}</p>
         <Styles.DocumentBody
           dangerouslySetInnerHTML={{
-            __html: parseMarkdown(data.document && data.document.body),
+            __html: parseMarkdown(body),
           }}
         />
-        <div>
-          <Link to="/documents">Return to documents</Link>
-        </div>
+        {isOwner && (
+          <Styles.StyledAlert variant="light" className="mt-4">
+            <FontAwesomeIcon icon="chevron-right" />
+            <LinkContainer to="edit">
+              <Styles.StyledAlert.Link>Edit document</Styles.StyledAlert.Link>
+            </LinkContainer>
+          </Styles.StyledAlert>
+        )}
+        <Styles.StyledAlert variant="light" className="mt-4">
+          <FontAwesomeIcon icon="chevron-left" />
+          <LinkContainer to="/documents">
+            <Styles.StyledAlert.Link>Return to documents</Styles.StyledAlert.Link>
+          </LinkContainer>
+        </Styles.StyledAlert>
       </Styles.StyledViewDocument>
     );
   }

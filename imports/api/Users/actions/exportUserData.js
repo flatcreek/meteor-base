@@ -26,7 +26,7 @@ const addDocumentsToZip = (documents, zip) => {
 
 const getDocuments = ({ _id }) => {
   try {
-    return Documents.find({ owner: _id }).fetch();
+    return Documents.find({ createdBy: _id }).fetch();
   } catch (error) {
     throw new Error(`[exportUserData.getDocuments] ${error.message}`);
   }
