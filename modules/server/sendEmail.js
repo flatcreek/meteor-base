@@ -10,8 +10,8 @@ const sendEmail = (options, { resolve, reject }) => {
       Email.send(options);
       resolve();
     });
-  } catch (exception) {
-    reject(exception);
+  } catch (error) {
+    reject(error);
   }
 };
 
