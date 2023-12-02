@@ -46,7 +46,7 @@ const createUsers = () => {
     let count = 1;
     times(fixtureCount, () => {
       const createObj = {
-        email: `user${count}@flatcreek.com`,
+        email: `user${count}@test.com`,
         password: 'password',
       };
 
@@ -67,7 +67,7 @@ const createUsers = () => {
 
       Roles.addUsersToRoles(userId, 'user', Roles.GLOBAL_GROUP);
 
-      console.log(`[Startup] created user user${count}@flatcreek.com`);
+      console.log(`[Startup] created user user${count}@test.com`);
 
       count += 1;
 

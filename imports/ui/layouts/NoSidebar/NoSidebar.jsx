@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'react-bootstrap';
-import { Redirect, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '../../global/context/Authentication';
 
@@ -11,22 +11,23 @@ const NoSidebar = (props) => {
   const reqRole = allowedRoles && allowedRoles.length > 0;
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   // If the user should be logged in, and they are not logged in -- redirect to the login page
   if (authRequired && !userId) {
-    return <Redirect to={`/login${`?redirect=${location.pathname}` || ''}`} />;
+    return navigate(`/login${`?redirect=${location.pathname}` || ''}`);
   }
 
   // If this is a public page and the user is logged in -- redirect to the index page
   if (isPublic && userId) {
-    return <Redirect to="/" />;
+    return navigate('/');
   }
 
   // If this page requires a role, check that the user is in that role
   if (authRequired && userId && reqRole) {
     const hasRole = isInRole(allowedRoles);
     if (!hasRole) {
-      return <Redirect to="/" />;
+      return navigate('/');
     }
   }
 
