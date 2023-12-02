@@ -1,3 +1,0 @@
-query oAuthServices($services: [String]) {
-  oAuthServices(services: $services)
-}

@@ -13,10 +13,8 @@ const ProfileForm = ({ user }) => {
       user: {
         email: form.emailAddress.value,
         profile: {
-          name: {
-            first: form.firstName.value,
-            last: form.lastName.value,
-          },
+          firstName: form.firstName.value,
+          lastName: form.lastName.value,
         },
       },
     };

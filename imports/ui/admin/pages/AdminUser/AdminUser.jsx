@@ -15,11 +15,11 @@ import Styles from './styles';
 const AdminUser = () => {
   const { _id } = useParams();
   const isLoading = useSubscribe('user', { _id });
-  const data = useFind(() => Meteor.users.find({ _id }));
+  const user = useFind(() => Meteor.users.find({ _id }));
 
-  const user = data && data.user;
-  const name = user && user.name;
-  const username = user && user.username;
+  const { profile, emails } = user;
+  const { firstName, lastName } = profile || {};
+  const emailAddress = emails[0].address;
 
   const handleUpdateUser = (userObj) => {
     Meteor.callAsync('updateUser', { user: userObj })
@@ -65,10 +65,12 @@ const AdminUser = () => {
           <LinkContainer to="/admin/users">
             <Breadcrumb.Item href="#">Users</Breadcrumb.Item>
           </LinkContainer>
-          <Breadcrumb.Item active>{name ? `${name.first} ${name.last}` : username}</Breadcrumb.Item>
+          <Breadcrumb.Item active>
+            {profile ? `${firstName} ${lastName}` : emailAddress}
+          </Breadcrumb.Item>
         </Breadcrumb>
         <AdminPageHeader
-          title={name ? `${name.first} ${name.last}` : username}
+          title={profile ? `${firstName} ${lastName}` : emailAddress}
           badges={headerBadges()}
         />
         <Tabs>

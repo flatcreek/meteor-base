@@ -11,20 +11,21 @@ import Styles from './styles';
 const Profile = () => {
   useSubscribe('user');
   const userId = Meteor.userId();
-  const data = useFind(() => Meteor.users.find({ _id: userId }));
+  const user = useFind(() => Meteor.users.find({ _id: userId }));
 
-  if (data && data.user) {
-    const thisUser = data && data.user;
+  if (user) {
+    const { profile, emails } = user || {};
+    const { firstName, lastName } = profile || {};
+    const emailAddress = emails[0].address;
+
     return (
       <Styles.Profile>
-        <h4 className="page-header">
-          {thisUser.name ? `${thisUser.name.first} ${thisUser.name.last}` : thisUser.username}
-        </h4>
+        <h4 className="page-header">{profile ? `${firstName} ${lastName}` : emailAddress}</h4>
         <Tabs>
           <Tab eventKey="profile" title="Profile">
             <Row>
               <Col xs={12} sm={6} md={4}>
-                <ProfileForm user={data} />
+                <ProfileForm user={user} />
                 <AccountPageFooter>
                   <ExportUserData />
                 </AccountPageFooter>

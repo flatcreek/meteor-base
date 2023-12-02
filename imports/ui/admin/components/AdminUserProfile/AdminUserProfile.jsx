@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { Meteor } from 'meteor/meteor';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -34,10 +35,8 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
         _id: existingUser._id,
         email: form.emailAddress.value,
         profile: {
-          name: {
-            first: form.firstName.value,
-            last: form.lastName.value,
-          },
+          firstName: form.firstName.value,
+          lastName: form.lastName.value,
         },
         roles,
       };
@@ -119,7 +118,7 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
                         disabled={user && user.oAuthProvider}
                         type="text"
                         name="firstName"
-                        defaultValue={(user && user.name && user.name.first) || ''}
+                        defaultValue={(user && user.name && user.firstName) || ''}
                       />
                     </Form.Group>
                   </Col>
@@ -130,26 +129,11 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
                         disabled={user && user.oAuthProvider}
                         type="text"
                         name="lastName"
-                        defaultValue={(user && user.name && user.name.last) || ''}
+                        defaultValue={(user && user.name && user.lastName) || ''}
                       />
                     </Form.Group>
                   </Col>
                 </Row>
-                {user && user.username && (
-                  <Row>
-                    <Col>
-                      <Form.Group>
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control
-                          disabled={user && user.oAuthProvider}
-                          type="text"
-                          name="username"
-                          defaultValue={user && user.username}
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                )}
                 <Row>
                   <Col>
                     <Form.Group>

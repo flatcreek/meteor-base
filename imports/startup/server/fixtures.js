@@ -20,10 +20,8 @@ const createAdmin = () => {
     const updateObj = {
       'emails.0.verified': true,
       profile: {
-        name: {
-          first: 'Admin',
-          last: 'McAdmin',
-        },
+        firstName: 'Admin',
+        lastName: 'McAdmin',
       },
       isFixture: true,
     };
@@ -57,10 +55,8 @@ const createUsers = () => {
       const updateObj = {
         'emails.0.verified': faker.datatype.boolean(),
         profile: {
-          name: {
-            first: faker.person.firstName(),
-            last: faker.person.lastName(),
-          },
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
         },
         isFixture: true,
       };
