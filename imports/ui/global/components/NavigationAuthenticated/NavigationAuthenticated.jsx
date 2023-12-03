@@ -22,7 +22,7 @@ const NavigationAuthenticated = () => {
         </LinkContainer>
         {isInRole('admin') && (
           <NavDropdown title="Admin" id="admin-nav-dropdown">
-            <LinkContainer exact to="/admin/users">
+            <LinkContainer to="/admin/users">
               <NavDropdown.Item>Users</NavDropdown.Item>
             </LinkContainer>
           </NavDropdown>

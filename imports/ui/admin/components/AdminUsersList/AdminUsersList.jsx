@@ -94,7 +94,7 @@ const AdminUsersList = (props) => {
           })}
       </Styles.AdminListGroup>
       {/* {users && users.total && search.trim() === '' && users.total > limit && renderPagination()} */}
-      <Pagination pages={pageCount} />
+      {pageCount > 1 && <Pagination pages={pageCount} />}
     </Fragment>
   );
 };

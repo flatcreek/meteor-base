@@ -5,7 +5,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Pagination from 'react-bootstrap/Pagination';
 
 const PaginationComponent = ({ pageCount }) => {
-  console.log('pageCount', pageCount);
+  console.log('PaginationComponent.pageCount', pageCount);
   const active = 2;
   const items = [];
   for (let number = 1; number <= pageCount; number++) {
