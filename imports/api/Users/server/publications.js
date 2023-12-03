@@ -6,6 +6,7 @@ import { isAdmin } from '../actions/checkIfAuthorized';
 Meteor.publish('user', function (args) {
   if (Meteor.isDevelopment) {
     console.log('queryUser starting');
+    console.log(args);
   }
   check(args, {
     userId: Match.Maybe(String),

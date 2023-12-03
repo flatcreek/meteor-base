@@ -1,6 +1,9 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+// Loaders
+// import publicLoader from './loaders/publicLoader';
+
 // Layouts
 import Layout from '../Layout/Layout';
 import NoGrid from '../NoGrid';
@@ -102,7 +105,7 @@ const router = createBrowserRouter([
             element: <NoSidebar main={AdminUsers} authRequired allowedRoles={['admin']} />,
           },
           {
-            path: '/admin/users/:_id',
+            path: '/admin/users/:userId',
             element: <NoSidebar main={AdminUser} authRequired allowedRoles={['admin']} />,
           },
           {

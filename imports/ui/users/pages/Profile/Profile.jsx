@@ -9,11 +9,12 @@ import ProfileForm from '../../components/ProfileForm';
 import Styles from './styles';
 
 const Profile = () => {
-  useSubscribe('user');
   const userId = Meteor.userId();
-  const user = useFind(() => Meteor.users.find({ _id: userId }));
+  useSubscribe('user', { userId });
+  const users = useFind(() => Meteor.users.find({ _id: userId }));
 
-  if (user) {
+  if (users && users.length > 0) {
+    const user = users[0];
     const { profile, emails } = user || {};
     const { firstName, lastName } = profile || {};
     const emailAddress = emails[0].address;

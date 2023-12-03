@@ -3,13 +3,15 @@ import { Roles } from 'meteor/alanning:roles';
 import { Accounts } from 'meteor/accounts-base';
 import { check } from 'meteor/check';
 
-import updateUser from './actions/updateUser';
+import exportUserData from './actions/exportUserData';
+import getUserCount from './actions/getUserCount';
 import removeUser from './actions/removeUser';
 import sendWelcomeEmail from './actions/sendWelcomeEmail';
-import exportUserData from './actions/exportUserData';
+import updateUser from './actions/updateUser';
 
 Meteor.methods({
-  updateUser,
+  exportUserData,
+  getUserCount,
   removeUser,
   sendVerificationEmail: (args) => {
     check(args, {
@@ -27,5 +29,5 @@ Meteor.methods({
     };
   },
   sendWelcomeEmail,
-  exportUserData,
+  updateUser,
 });
