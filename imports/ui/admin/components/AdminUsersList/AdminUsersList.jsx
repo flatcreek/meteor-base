@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Meteor } from 'meteor/meteor';
 import React, { Fragment, useEffect, useState } from 'react';
-import { useFind, useSubscribe } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 
@@ -10,53 +9,20 @@ import Pagination from '../../../global/components/Pagination';
 import Styles from './styles';
 
 const AdminUsersList = (props) => {
-  const { limit, skip, onChangePage, search } = props;
+  const { isLoading, limit, skip, onChangePage, users } = props;
   const [pageCount, setPageCount] = useState(1);
-  const isLoading = useSubscribe('users', {
-    limit,
-    skip,
-    search,
-  });
-  const users = useFind(() => Meteor.users.find());
+  const [skipCount, setSkipCount] = useState(0);
 
   useEffect(() => {
     Meteor.callAsync('getUserCount').then((response) => {
-      console.log('itemCount', response);
-      console.log('limit', limit);
       const pagesToGenerate = Math.ceil(response / limit);
-      console.log('pagesToGenerate', pagesToGenerate);
+      const currentPage = Math.ceil(skip / limit) + 1;
       setPageCount(pagesToGenerate);
+      setSkipCount(currentPage);
     });
-  }, []);
+  }, [skip, limit]);
 
-  console.log('AdminUsersList.users:');
-  console.log('loading', isLoading());
-  console.log(users);
-
-  const renderPagination = () => {
-    const pages = [];
-    const pagesToGenerate = Math.ceil(users.total / limit);
-
-    for (let pageNumber = 1; pageNumber <= pagesToGenerate; pageNumber += 1) {
-      pages.push(
-        <li
-          role="presentation"
-          key={`pagination_${pageNumber}`}
-          className={pageNumber === skip ? 'active' : ''}
-          onClick={() => onChangePage(pageNumber)}
-          onKeyDown={() => onChangePage(pageNumber)}
-        >
-          <a href="#" onClick={(event) => event.preventDefault()}>
-            {pageNumber}
-          </a>
-        </li>,
-      );
-    }
-
-    return <ul className="pagination pagination-md">{pages}</ul>;
-  };
-
-  if (isLoading()) {
+  if (isLoading) {
     return <Loading />;
   }
 
@@ -94,20 +60,28 @@ const AdminUsersList = (props) => {
           })}
       </Styles.AdminListGroup>
       {/* {users && users.total && search.trim() === '' && users.total > limit && renderPagination()} */}
-      {pageCount > 1 && <Pagination pages={pageCount} />}
+      {pageCount > 1 && (
+        <Pagination
+          skipCount={skipCount}
+          pageCount={pageCount}
+          onChangePage={(e) => onChangePage(e)}
+        />
+      )}
     </Fragment>
   );
 };
 
 AdminUsersList.defaultProps = {
-  search: '',
+  isLoading: true,
+  users: null,
 };
 
 AdminUsersList.propTypes = {
-  search: PropTypes.string,
+  isLoading: PropTypes.bool,
   limit: PropTypes.number.isRequired,
   skip: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
+  users: PropTypes.array,
 };
 
 export default AdminUsersList;

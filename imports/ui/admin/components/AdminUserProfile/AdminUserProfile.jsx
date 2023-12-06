@@ -115,10 +115,9 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
                     <Form.Group>
                       <Form.Label>First Name</Form.Label>
                       <Form.Control
-                        disabled={user && user.oAuthProvider}
                         type="text"
                         name="firstName"
-                        defaultValue={(user && user.name && user.firstName) || ''}
+                        defaultValue={(user && user.profile && user.profile.firstName) || ''}
                       />
                     </Form.Group>
                   </Col>
@@ -129,7 +128,7 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
                         disabled={user && user.oAuthProvider}
                         type="text"
                         name="lastName"
-                        defaultValue={(user && user.name && user.lastName) || ''}
+                        defaultValue={(user && user.profile && user.profile.lastName) || ''}
                       />
                     </Form.Group>
                   </Col>

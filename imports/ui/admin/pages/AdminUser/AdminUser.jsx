@@ -49,10 +49,17 @@ const AdminUser = () => {
     const { roles } = thisUser || {};
     // eslint-disable-next-line no-underscore-dangle
     const userRoles = roles && roles.__global_roles__;
+    console.log('AdminUser.userRoles:');
+    console.log(userRoles);
     return userRoles;
   };
 
-  if (isLoading()) return <Loading />;
+  if (isLoading()) {
+    return <Loading />;
+  }
+
+  console.log('AdminUser.user:');
+  console.log(users);
 
   if (users && users.length > 0) {
     const user = users[0];

@@ -1,34 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Pagination from 'react-bootstrap/Pagination';
 
-const PaginationComponent = ({ pageCount }) => {
-  console.log('PaginationComponent.pageCount', pageCount);
-  const active = 2;
+import Styles from './styles';
+
+const PaginationComponent = ({ onChangePage, pageCount, skipCount }) => {
+  const active = skipCount;
   const items = [];
+  // eslint-disable-next-line no-plusplus
   for (let number = 1; number <= pageCount; number++) {
     items.push(
-      <Pagination.Item key={number} active={number === active}>
+      <Pagination.Item key={number} active={number === active} onClick={() => onChangePage(number)}>
         {number}
       </Pagination.Item>,
     );
   }
 
   return (
-    <div>
-      <Pagination>{items}</Pagination>
-    </div>
+    <Styles.Pagination>
+      <Pagination>
+        <Pagination.Prev onClick={() => onChangePage(active - 1)} />
+        {items}
+        <Pagination.Next onClick={() => onChangePage(active + 1)} />
+      </Pagination>
+    </Styles.Pagination>
   );
 };
 
-PaginationComponent.defaultProps = {
-  pageCount: 1,
-};
-
 PaginationComponent.propTypes = {
-  pageCount: PropTypes.number,
+  onChangePage: PropTypes.func.isRequired,
+  pageCount: PropTypes.number.isRequired,
+  skipCount: PropTypes.number.isRequired,
 };
 
 export default PaginationComponent;

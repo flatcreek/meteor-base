@@ -7,9 +7,9 @@ const AdminPageHeader = ({ title, badges }) => (
   <Styles.AdminUserHeader className="pb-2 mt-4 mb-4 border-bottom">
     {title}{' '}
     {badges &&
-      badges.map(({ label }) => (
-        <Badge key={label} bg="primary" className={`badge badge-${label}`}>
-          {label}
+      badges.map((badge) => (
+        <Badge key={badge} bg="info" style={{ fontSize: 12 }}>
+          {badge}
         </Badge>
       ))}
   </Styles.AdminUserHeader>
