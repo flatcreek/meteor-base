@@ -1,17 +1,18 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
+import { useForm } from 'react-hook-form';
 
-import Validation from '../../../global/components/Validation';
 import AccountPageFooter from '../../components/AccountPageFooter';
 import Styles from './styles';
 
 const Login = () => {
-  const formRef = useRef();
-  const handleSubmit = (form) => {
-    Meteor.loginWithPassword(form.emailAddress.value, form.password.value, (error) => {
+  const { register, handleSubmit, errors } = useForm();
+
+  const onSubmit = (form) => {
+    Meteor.loginWithPassword(form.emailAddress, form.password, (error) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
@@ -25,65 +26,49 @@ const Login = () => {
       <Row>
         <Col xs={12}>
           <h4 className="page-header">Log In</h4>
-          <Validation
-            rules={{
-              emailAddress: {
-                required: true,
-                email: true,
-              },
-              password: {
-                required: true,
-              },
-            }}
-            messages={{
-              emailAddress: {
-                required: 'Need an email address here.',
-                email: 'Is this email address correct?',
-              },
-              password: {
-                required: 'Need a password here.',
-              },
-            }}
-            submitHandler={(form) => {
-              handleSubmit(form);
-            }}
-          >
-            <form ref={formRef} onSubmit={(event) => event.preventDefault()}>
-              <Form.Group>
-                <Form.Label>Email Address</Form.Label>
-                <input
-                  type="email"
-                  name="emailAddress"
-                  className="form-control"
-                  placeholder="Email Address"
-                  data-test="emailAddress"
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label className="clearfix">
-                  <span className="pull-left">Password</span>
-                </Form.Label>
-                <input
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  placeholder="Password"
-                  data-test="password"
-                />
-                <Link className="text-right" to="/recover-password">
-                  Forgot password?
-                </Link>
-              </Form.Group>
-              <Button type="submit" variant="success" block>
+          <Form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <Form.Group>
+              <Form.Label>Email Address</Form.Label>
+              <Form.Control
+                type="email"
+                name="emailAddress"
+                className="form-control"
+                placeholder="Email Address"
+                {...register('emailAddress', {
+                  required: "What's your email address?",
+                })}
+              />
+              {errors?.emailAddress && (
+                <span className="error-text">{errors?.emailAddress?.message}</span>
+              )}
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                className="form-control"
+                placeholder="Password"
+                {...register('password', {
+                  required: 'Need a password here.',
+                  minLength: { value: 6, message: 'Please use at least six characters.' },
+                })}
+              />
+            </Form.Group>
+            <div className="d-grid gap-2">
+              <Button type="submit" variant="success">
                 Log In
               </Button>
-              <AccountPageFooter>
-                <p>
-                  {"Don't have an account? "} <Link to="/signup">Sign Up</Link>.
-                </p>
-              </AccountPageFooter>
-            </form>
-          </Validation>
+            </div>
+          </Form>
+          <AccountPageFooter>
+            <Link className="text-right" to="/recover-password">
+              Forgot password?
+            </Link>
+            <p>
+              {"Don't have an account? "} <Link to="/signup">Sign Up</Link>.
+            </p>
+          </AccountPageFooter>
         </Col>
       </Row>
     </Styles.Login>

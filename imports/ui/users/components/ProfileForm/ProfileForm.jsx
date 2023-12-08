@@ -3,19 +3,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
+import { useForm } from 'react-hook-form';
 
 import Validation from '../../../global/components/Validation';
 import PasswordUser from './PasswordUser';
 
 const ProfileForm = ({ user }) => {
-  const handleSubmit = (form) => {
+  const { register, handleSubmit, errors } = useForm();
+
+  const onSubmit = (form) => {
     const dataObj = {
-      user: {
-        email: form.emailAddress.value,
-        profile: {
-          firstName: form.firstName.value,
-          lastName: form.lastName.value,
-        },
+      email: form.emailAddress,
+      profile: {
+        firstName: form.firstName,
+        lastName: form.lastName,
       },
     };
     Meteor.callAsync('updateUser', dataObj)
@@ -26,7 +27,7 @@ const ProfileForm = ({ user }) => {
         Bert.alert(error.message, 'danger');
       });
 
-    if (form.newPassword.value) {
+    if (form.newPassword) {
       Accounts.changePassword(form.currentPassword.value, form.newPassword.value, (error) => {
         if (error) {
           Bert.alert(error.reason, 'danger');
