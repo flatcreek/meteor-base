@@ -17,17 +17,12 @@ const { twitterUsername } = Meteor.settings.public;
 
 const ViewDocument = () => {
   const { documentId } = useParams();
-  console.log('ViewDocument.documentId:', documentId);
-
   const isLoading = useSubscribe('document', { documentId });
   const document = useFind(() => Documents.find({ _id: documentId }));
 
   if (isLoading()) {
     return <Loading />;
   }
-
-  console.log('ViewDocument.document:');
-  console.log(document);
 
   if (document) {
     const { title, body, createdAt, createdBy, updatedAt } = document[0] || {};

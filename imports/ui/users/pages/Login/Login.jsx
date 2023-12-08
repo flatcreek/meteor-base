@@ -5,11 +5,16 @@ import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { useForm } from 'react-hook-form';
 
+import { isEmailAddress } from '../../../../../modules/isEmailAddress';
 import AccountPageFooter from '../../components/AccountPageFooter';
 import Styles from './styles';
 
 const Login = () => {
-  const { register, handleSubmit, errors } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const onSubmit = (form) => {
     Meteor.loginWithPassword(form.emailAddress, form.password, (error) => {
@@ -22,7 +27,7 @@ const Login = () => {
   };
 
   return (
-    <Styles.Login>
+    <Styles.Login className="mt-4">
       <Row>
         <Col xs={12}>
           <h4 className="page-header">Log In</h4>
@@ -36,10 +41,11 @@ const Login = () => {
                 placeholder="Email Address"
                 {...register('emailAddress', {
                   required: "What's your email address?",
+                  validate: (value) => isEmailAddress(value) || 'Is this email address correct?',
                 })}
               />
               {errors?.emailAddress && (
-                <span className="error-text">{errors?.emailAddress?.message}</span>
+                <span className="text-danger">{errors?.emailAddress?.message}</span>
               )}
             </Form.Group>
             <Form.Group>
@@ -49,11 +55,9 @@ const Login = () => {
                 name="password"
                 className="form-control"
                 placeholder="Password"
-                {...register('password', {
-                  required: 'Need a password here.',
-                  minLength: { value: 6, message: 'Please use at least six characters.' },
-                })}
+                {...register('password', { required: 'Need a password here.' })}
               />
+              {errors?.password && <span className="text-danger">{errors?.password?.message}</span>}
             </Form.Group>
             <div className="d-grid gap-2">
               <Button type="submit" variant="success">

@@ -4,20 +4,20 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import delay from '../../../../../modules/delay';
 import { timeago } from '../../../../../modules/dates';
 import Styles from './styles';
 
 const DocumentEditor = ({ doc }) => {
+  const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const formRef = useRef();
 
   const handleUpdateDocument = () => {
     setSaving(true);
     delay(() => {
-      console.log('handleUpdateDocument.doc._id', doc._id);
       const dataObj = {
         documentId: doc._id,
         title: formRef.current.title.value.trim(),
@@ -42,6 +42,7 @@ const DocumentEditor = ({ doc }) => {
     };
     Meteor.callAsync('updateDocument', dataObj)
       .then(() => {
+        Bert.alert('Visibility updated!', 'success');
         // NOTE: Delay setSaving to false so UI changes aren't jarring.
         setTimeout(() => setSaving(false), 1000);
       })
@@ -54,7 +55,7 @@ const DocumentEditor = ({ doc }) => {
     if (confirm('Are you sure? This is permanent!')) {
       Meteor.callAsync('removeDocument', { documentId: doc._id })
         .then(() => {
-          redirect('/documents');
+          navigate('/documents');
           Bert.alert('Document removed!', 'success');
         })
         .catch((error) => {

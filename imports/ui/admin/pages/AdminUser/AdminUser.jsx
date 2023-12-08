@@ -19,7 +19,7 @@ const AdminUser = () => {
   const users = useFind(() => Meteor.users.find({ _id: userId }));
 
   const handleUpdateUser = (userObj) => {
-    Meteor.callAsync('updateUser', { user: userObj })
+    Meteor.callAsync('updateUser', { ...userObj })
       .then(() => {
         Bert.alert('User updated!', 'success');
       })

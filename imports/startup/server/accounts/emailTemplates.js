@@ -27,7 +27,7 @@ emailTemplates.verifyEmail = {
   text(user, url) {
     const urlWithoutHash = url.replace('#/', '');
     if (Meteor.isDevelopment) {
-      console.info(`Verify Email Link: ${urlWithoutHash}`); // eslint-disable-line
+      console.info(`Verify Email Link: ${urlWithoutHash}`);
     }
     return templateToText(getPrivateFile('email-templates/verify-email.txt'), {
       productName,
@@ -53,7 +53,9 @@ emailTemplates.resetPassword = {
   },
   text(user, url) {
     const urlWithoutHash = url.replace('#/', '');
-    if (Meteor.isDevelopment) console.info(`Reset Password Link: ${urlWithoutHash}`); // eslint-disable-line
+    if (Meteor.isDevelopment) {
+      console.info(`Reset Password Link: ${urlWithoutHash}`);
+    }
     return templateToText(getPrivateFile('email-templates/reset-password.txt'), {
       firstName: user.profile.firstName,
       productName,

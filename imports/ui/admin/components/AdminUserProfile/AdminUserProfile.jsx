@@ -1,14 +1,20 @@
 /* eslint-disable no-underscore-dangle */
-import { Meteor } from 'meteor/meteor';
 import React, { useEffect, useState } from 'react';
+import { Meteor } from 'meteor/meteor';
+import { isEqual, union, without } from 'lodash';
 import PropTypes from 'prop-types';
 import { Button, Col, Form, ListGroup, Row } from 'react-bootstrap';
-import { isEqual, union, without } from 'lodash';
+import { useForm } from 'react-hook-form';
 
-import Validation from '../../../global/components/Validation';
+import { isEmailAddress } from '../../../../../modules/isEmailAddress';
 import Styles from './styles';
 
 const AdminUserProfile = ({ user, updateUser, removeUser }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [activeRoles, setActiveRoles] = useState(user.roles && user.roles.__global_roles__);
 
   useEffect(() => {
@@ -19,36 +25,29 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
     }
   }, [user]);
 
-  const handleSubmit = (form) => {
+  const onSubmit = (data) => {
+    if (Meteor.isDevelopment) {
+      console.log('AdminUserProfile.onSubmit.data:');
+      console.log(data);
+    }
     const existingUser = user;
-    const isPasswordUser = existingUser && !existingUser.oAuthProvider;
     const roleCheckboxes = document.querySelectorAll('[name="role"]:checked');
     const roles = [];
     [].forEach.call(roleCheckboxes, (role) => {
       roles.push(role.value);
     });
 
-    let userUpdate;
+    const dataObj = {
+      _id: existingUser._id,
+      email: data.emailAddress,
+      profile: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+      },
+      roles,
+    };
 
-    if (isPasswordUser) {
-      userUpdate = {
-        _id: existingUser._id,
-        email: form.emailAddress.value,
-        profile: {
-          firstName: form.firstName.value,
-          lastName: form.lastName.value,
-        },
-        roles,
-      };
-    }
-
-    if (!isPasswordUser) {
-      userUpdate = {
-        roles,
-      };
-    }
-
-    updateUser(userUpdate);
+    updateUser(dataObj);
   };
 
   const handleDeleteUser = () => {
@@ -78,132 +77,132 @@ const AdminUserProfile = ({ user, updateUser, removeUser }) => {
   };
 
   if (user) {
+    const emailAddress = user?.emails[0].address;
+    const emailVerified = user?.emails[0].verified;
     return (
-      <div className="AdminUserProfile">
-        <Validation
-          rules={{
-            firstName: {
-              required: true,
-            },
-            lastName: {
-              required: true,
-            },
-            emailAddress: {
-              required: true,
-              email: true,
-            },
-          }}
-          messages={{
-            firstName: {
-              required: "What's the user's first name?",
-            },
-            lastName: {
-              required: "What's the user's last name?",
-            },
-            emailAddress: {
-              required: 'Need an email address here.',
-              email: 'Is this email address correct?',
-            },
-          }}
-          submitHandler={(form) => handleSubmit(form)}
-        >
-          <form onSubmit={(event) => event.preventDefault()}>
-            <Row>
-              <Col md={6}>
-                <Row>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label>First Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="firstName"
-                        defaultValue={(user && user.profile && user.profile.firstName) || ''}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label>Last Name</Form.Label>
-                      <Form.Control
-                        disabled={user && user.oAuthProvider}
-                        type="text"
-                        name="lastName"
-                        defaultValue={(user && user.profile && user.profile.lastName) || ''}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label>Email Address</Form.Label>
-                      {/* NOTE: Need to add validation to this field if the email is not verified */}
-                      <Form.Control
-                        type="email"
-                        name="emailAddress"
-                        autoComplete="off"
-                        defaultValue={(user && user.emailAddress) || ''}
-                      />
-                      {user && !user.emailVerified && (
-                        <Form.Text className="text-muted">
-                          This email is not verified yet.
-                          <Styles.LinkButton
-                            variant="link"
-                            onClick={() => handleResendVerificationEmail()}
-                          >
-                            Re-send verification email
-                          </Styles.LinkButton>
-                        </Form.Text>
-                      )}
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label>Roles</Form.Label>
-                      <ListGroup>
-                        <ListGroup.Item>
-                          <Form.Check
-                            name="role"
-                            value="admin"
-                            type="checkbox"
-                            checked={userIsInRole('admin') || false}
-                            onChange={handleCheckboxChange}
-                            label="Admin"
-                          />
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                          <Form.Check
-                            name="role"
-                            value="user"
-                            type="checkbox"
-                            checked={userIsInRole('user') || false}
-                            onChange={handleCheckboxChange}
-                            label="User"
-                          />
-                        </ListGroup.Item>
-                      </ListGroup>
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Button type="submit" variant="success">
-                  {user ? 'Save Changes' : 'Create User'}
-                </Button>
-                {user && (
-                  <Button
-                    variant="danger"
-                    className="pull-right"
-                    onClick={() => handleDeleteUser()}
-                  >
-                    Delete User
-                  </Button>
-                )}
-              </Col>
-            </Row>
-          </form>
-        </Validation>
-      </div>
+      <Form noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Row>
+          <Col xs={6}>
+            <Form.Group>
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="firstName"
+                className="form-control"
+                placeholder="First Name"
+                defaultValue={(user && user.profile && user.profile.firstName) || ''}
+                {...register('firstName', { required: "What's your first name?" })}
+              />
+              {errors?.firstName && (
+                <span className="text-danger">{errors?.firstName?.message}</span>
+              )}
+            </Form.Group>
+          </Col>
+          <Col xs={6}>
+            <Form.Group>
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="lastName"
+                className="form-control"
+                placeholder="Last Name"
+                defaultValue={(user && user.profile && user.profile.lastName) || ''}
+                {...register('lastName', { required: "What's your last name?" })}
+              />
+              {errors?.lastName && <span className="text-danger">{errors?.lastName?.message}</span>}
+            </Form.Group>
+          </Col>
+        </Row>
+        <Form.Group>
+          <Form.Label>Email Address</Form.Label>
+          <Form.Control
+            type="email"
+            name="emailAddress"
+            className="form-control"
+            placeholder="Email Address"
+            defaultValue={emailAddress || ''}
+            {...register('emailAddress', {
+              required: "What's your email address?",
+              validate: (value) => isEmailAddress(value) || 'Is this email address correct?',
+            })}
+          />
+          {errors?.emailAddress && (
+            <span className="text-danger">{errors?.emailAddress?.message}</span>
+          )}
+          {!emailVerified && (
+            <Form.Text className="text-muted">
+              This email is not verified yet.
+              <Styles.LinkButton variant="link" onClick={() => handleResendVerificationEmail()}>
+                Re-send verification email
+              </Styles.LinkButton>
+            </Form.Text>
+          )}
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Current Password</Form.Label>
+          <Form.Control
+            type="password"
+            name="currentPassword"
+            className="form-control"
+            placeholder="Password"
+            {...register('currentPassword', {
+              minLength: { value: 6, message: 'Please use at least six characters.' },
+            })}
+          />
+          <Form.Text id="passwordHelpBlock" muted>
+            Use at least six characters.
+          </Form.Text>
+          {errors?.password && <span className="text-danger">{errors?.password?.message}</span>}
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>New Password</Form.Label>
+          <Form.Control
+            type="password"
+            name="newPassword"
+            className="form-control"
+            placeholder="Password"
+            {...register('newPassword', {
+              minLength: { value: 6, message: 'Please use at least six characters.' },
+            })}
+          />
+          <Form.Text id="passwordHelpBlock" muted>
+            Use at least six characters.
+          </Form.Text>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Roles</Form.Label>
+          <ListGroup>
+            <ListGroup.Item>
+              <Form.Check
+                name="role"
+                value="admin"
+                type="checkbox"
+                checked={userIsInRole('admin') || false}
+                onChange={handleCheckboxChange}
+                label="Admin"
+              />
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Form.Check
+                name="role"
+                value="user"
+                type="checkbox"
+                checked={userIsInRole('user') || false}
+                onChange={handleCheckboxChange}
+                label="User"
+              />
+            </ListGroup.Item>
+          </ListGroup>
+        </Form.Group>
+        <Button type="submit" variant="success">
+          {user ? 'Save Changes' : 'Create User'}
+        </Button>
+        {user && (
+          <Button variant="danger" className="pull-right" onClick={() => handleDeleteUser()}>
+            Delete User
+          </Button>
+        )}
+      </Form>
     );
   }
   return null;

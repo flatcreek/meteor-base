@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 const AdminUserHeader = styled.h4`
   .badge {
-    font-size: 0.875rem;
+    font-size: 0.65rem;
+    margin-right: 12px;
   }
   .badge-Facebook {
     background: var(--facebook);

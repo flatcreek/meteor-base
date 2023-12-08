@@ -11,12 +11,16 @@ import AccountPageFooter from '../../components/AccountPageFooter';
 import Styles from './styles';
 
 const Signup = () => {
-  const { register, handleSubmit, errors } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
     if (Meteor.isDevelopment) {
-      console.log('Signup.form:');
+      console.log('Signup.onSubmit.data:');
       console.log(data);
     }
     Accounts.createUser(
@@ -59,7 +63,7 @@ const Signup = () => {
                     {...register('firstName', { required: "What's your first name?" })}
                   />
                   {errors?.firstName && (
-                    <span className="error-text">{errors?.firstName?.message}</span>
+                    <span className="text-danger">{errors?.firstName?.message}</span>
                   )}
                 </Form.Group>
               </Col>
@@ -74,7 +78,7 @@ const Signup = () => {
                     {...register('lastName', { required: "What's your last name?" })}
                   />
                   {errors?.lastName && (
-                    <span className="error-text">{errors?.lastName?.message}</span>
+                    <span className="text-danger">{errors?.lastName?.message}</span>
                   )}
                 </Form.Group>
               </Col>
@@ -92,7 +96,7 @@ const Signup = () => {
                 })}
               />
               {errors?.emailAddress && (
-                <span className="error-text">{errors?.emailAddress?.message}</span>
+                <span className="text-danger">{errors?.emailAddress?.message}</span>
               )}
             </Form.Group>
             <Form.Group>
@@ -110,7 +114,7 @@ const Signup = () => {
               <Form.Text id="passwordHelpBlock" muted>
                 Use at least six characters.
               </Form.Text>
-              {errors?.password && <span className="error-text">{errors?.password?.message}</span>}
+              {errors?.password && <span className="text-danger">{errors?.password?.message}</span>}
             </Form.Group>
             <div className="d-grid gap-2">
               <Button type="submit" variant="success">
