@@ -18,12 +18,13 @@ const Comments = ({ sortBy, onChangeSortBy, documentId, comments }) => (
           </select>
         </Styles.CommentsListHeader>
         {comments.map(({ _id, user, createdAt, comment }) => {
-          const name = user && user.name;
+          const profile = user && user.profile;
+          const { firstName, lastName } = profile || {};
           return (
             <Styles.Comment key={_id}>
               <header>
                 <p>
-                  <strong>{`${name && name.first} ${name && name.last}`}</strong>
+                  <strong>{`${firstName} ${lastName}`}</strong>
                   <span>{timeago(createdAt)}</span>
                 </p>
               </header>

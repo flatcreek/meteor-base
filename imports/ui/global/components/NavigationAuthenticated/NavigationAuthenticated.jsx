@@ -18,11 +18,11 @@ const NavigationAuthenticated = () => {
     <Fragment>
       <Nav className="mr-auto">
         <LinkContainer to="/documents">
-          <Nav.Link active={false}>Documents</Nav.Link>
+          <Nav.Link>Documents</Nav.Link>
         </LinkContainer>
         {isInRole('admin') && (
           <NavDropdown title="Admin" id="admin-nav-dropdown">
-            <LinkContainer exact to="/admin/users">
+            <LinkContainer to="/admin/users">
               <NavDropdown.Item>Users</NavDropdown.Item>
             </LinkContainer>
           </NavDropdown>

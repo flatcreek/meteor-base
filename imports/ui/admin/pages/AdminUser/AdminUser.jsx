@@ -3,7 +3,7 @@ import React from 'react';
 import { useFind, useSubscribe } from 'meteor/react-meteor-data';
 import { Breadcrumb, Tabs, Tab } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useParams, redirect } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Bert } from 'meteor/themeteorchef:bert';
 
 import AdminPageHeader from '../../components/AdminPageHeader';
@@ -13,16 +13,13 @@ import Loading from '../../../global/components/Loading';
 import Styles from './styles';
 
 const AdminUser = () => {
-  const { _id } = useParams();
-  const isLoading = useSubscribe('user', { _id });
-  const data = useFind(() => Meteor.users.find({ _id }));
-
-  const user = data && data.user;
-  const name = user && user.name;
-  const username = user && user.username;
+  const navigate = useNavigate();
+  const { userId } = useParams();
+  const isLoading = useSubscribe('user', { userId });
+  const users = useFind(() => Meteor.users.find({ _id: userId }));
 
   const handleUpdateUser = (userObj) => {
-    Meteor.callAsync('updateUser', { user: userObj })
+    Meteor.callAsync('updateUser', { ...userObj })
       .then(() => {
         Bert.alert('User updated!', 'success');
       })
@@ -32,7 +29,7 @@ const AdminUser = () => {
   };
 
   const handleRemoveUser = () => {
-    Meteor.callAsync('removeUser', { _id })
+    Meteor.callAsync('removeUser', { userId })
       .then(() => {
         Bert.alert('User deleted!', 'success');
         history.push('/admin/users');
@@ -43,33 +40,46 @@ const AdminUser = () => {
   };
 
   const handleReturnToList = () => {
-    redirect('/admin/users');
+    navigate('/admin/users');
   };
 
   // Function to format an array of badges to send to the admin header.
   // Set parameter for AdminPageHeader as badges={headerBadges()}
-  const headerBadges = () => {
-    return [
-      {
-        label: user.oAuthProvider,
-      },
-    ];
+  const headerBadges = (thisUser) => {
+    const { roles } = thisUser || {};
+    // eslint-disable-next-line no-underscore-dangle
+    const userRoles = roles && roles.__global_roles__;
+    console.log('AdminUser.userRoles:');
+    console.log(userRoles);
+    return userRoles;
   };
 
-  if (isLoading()) return <Loading />;
+  if (isLoading()) {
+    return <Loading />;
+  }
 
-  if (user) {
+  console.log('AdminUser.user:');
+  console.log(users);
+
+  if (users && users.length > 0) {
+    const user = users[0];
+    const { profile, emails } = user;
+    const { firstName, lastName } = profile || {};
+    const emailAddress = emails[0].address;
+
     return (
       <Styles.AdminUser>
         <Breadcrumb>
           <LinkContainer to="/admin/users">
             <Breadcrumb.Item href="#">Users</Breadcrumb.Item>
           </LinkContainer>
-          <Breadcrumb.Item active>{name ? `${name.first} ${name.last}` : username}</Breadcrumb.Item>
+          <Breadcrumb.Item active>
+            {profile ? `${firstName} ${lastName}` : emailAddress}
+          </Breadcrumb.Item>
         </Breadcrumb>
         <AdminPageHeader
-          title={name ? `${name.first} ${name.last}` : username}
-          badges={headerBadges()}
+          title={profile ? `${firstName} ${lastName}` : emailAddress}
+          badges={headerBadges(user)}
         />
         <Tabs>
           <Tab eventKey="profile" title="Profile">

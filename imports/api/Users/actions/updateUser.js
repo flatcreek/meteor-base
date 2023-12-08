@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
 import { isAdmin } from './checkIfAuthorized';
@@ -53,12 +54,14 @@ const updateUserPassword = ({ _id, password }) => {
   }
 };
 
-const validateOptions = (options, context) => {
+const validateOptions = (options) => {
   try {
-    if (!options) throw new Error('options object is required.');
-    if (!context.user) throw new Error('You must be logged in to perform this action.');
-    if (!options.user) throw new Error('options.user is required.');
-    if (!isAdmin(context.user._id) && !(context.user._id === options.user._id)) {
+    check(options, Object);
+    if (!Meteor.userId()) {
+      throw new Error('You must be logged in to perform this action.');
+    }
+    // If there is a userId present, but this is not an admin, throw an error
+    if (options._id && !isAdmin(Meteor.userId())) {
       throw new Error('Sorry, you need to be an admin or the current user to do this.');
     }
   } catch (error) {
@@ -69,12 +72,12 @@ const validateOptions = (options, context) => {
 const updateUser = (args) => {
   if (Meteor.isDevelopment) {
     console.log('updateUser starting');
-    console.log(args.user);
+    console.log(args);
   }
   try {
     validateOptions(args);
     // eslint-disable-next-line prefer-const
-    let { user } = args;
+    let user = args;
 
     if (user && !user._id) {
       // NOTE: If passed user doesn't have an _id, we know we're updating the

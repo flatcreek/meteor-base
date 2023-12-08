@@ -18,7 +18,7 @@ class Validation extends React.Component {
 
     if (!React.Children.only(children) || children.type !== 'form') {
       console.warn(
-        '[Pup] A single <form></form> element is the only allowed child of the Validation component.',
+        'A single <form></form> element is the only allowed child of the Validation component.',
       );
       return null;
     }

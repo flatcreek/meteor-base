@@ -5,7 +5,7 @@ import sendEmail from '../../../../modules/server/sendEmail';
 
 const getEmailOptions = (user) => {
   try {
-    const firstName = user.profile.name.first;
+    const { firstName } = user?.profile || {};
     const { productName } = Meteor.settings.public;
 
     return {
@@ -18,7 +18,7 @@ const getEmailOptions = (user) => {
         subtitle: `Here's how to get started with ${productName}.`,
         productName,
         firstName,
-        welcomeUrl: Meteor.absoluteUrl('documents'), // e.g., returns http://localhost:3000/documents
+        welcomeUrl: Meteor.absoluteUrl(), // e.g., returns http://localhost:3000/
       },
     };
   } catch (error) {

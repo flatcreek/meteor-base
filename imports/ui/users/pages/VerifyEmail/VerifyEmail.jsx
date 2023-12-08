@@ -1,15 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 import Alert from 'react-bootstrap/Alert';
-import { redirect, useParams } from 'react-router-dom';
-
-import { AuthContext } from '../../../global/context/Authentication';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const VerifyEmail = () => {
-  const { login } = useContext(AuthContext);
   const [verifyError, setVerifyError] = useState(null);
   const { token } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     Accounts.verifyEmail(token, async (error) => {
@@ -19,9 +17,8 @@ const VerifyEmail = () => {
         Bert.alert(error.reason, 'danger');
         setVerifyError(`${error.reason}. Please try again.`);
       } else {
-        await login();
         Bert.alert('All set, thanks!', 'success');
-        redirect('/');
+        navigate('/');
       }
     });
   }, [verifyError]);

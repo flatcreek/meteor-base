@@ -20,10 +20,8 @@ const createAdmin = () => {
     const updateObj = {
       'emails.0.verified': true,
       profile: {
-        name: {
-          first: 'Andy',
-          last: 'Warhol',
-        },
+        firstName: 'Admin',
+        lastName: 'McAdmin',
       },
       isFixture: true,
     };
@@ -42,23 +40,23 @@ const createAdmin = () => {
 };
 
 const createUsers = () => {
+  const { fixtureCount } = Meteor.settings.private.admin;
+
   if (Meteor.users.find().count() === 1) {
     let count = 1;
-    times(5, () => {
+    times(fixtureCount, () => {
       const createObj = {
-        email: `user${count}@flatcreek.com`,
+        email: `user${count}@test.com`,
         password: 'password',
       };
 
       const userId = Accounts.createUser(createObj);
 
       const updateObj = {
-        'emails.0.verified': faker.random.boolean(),
+        'emails.0.verified': faker.datatype.boolean(),
         profile: {
-          name: {
-            first: faker.name.firstName(),
-            last: faker.name.lastName(),
-          },
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
         },
         isFixture: true,
       };
@@ -69,7 +67,7 @@ const createUsers = () => {
 
       Roles.addUsersToRoles(userId, 'user', Roles.GLOBAL_GROUP);
 
-      console.log(`[Startup] created user user${count}@flatcreek.com`);
+      console.log(`[Startup] created user user${count}@test.com`);
 
       count += 1;
 

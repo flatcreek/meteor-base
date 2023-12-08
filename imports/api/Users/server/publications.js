@@ -3,9 +3,22 @@ import { check, Match } from 'meteor/check';
 
 import { isAdmin } from '../actions/checkIfAuthorized';
 
+const getQuery = (search) => {
+  return search
+    ? {
+        $or: [
+          { 'profile.firstName': search },
+          { 'profile.lastName': search },
+          { 'emails.address': search },
+        ],
+      }
+    : {};
+};
+
 Meteor.publish('user', function (args) {
   if (Meteor.isDevelopment) {
     console.log('queryUser starting');
+    console.log(args);
   }
   check(args, {
     userId: Match.Maybe(String),
@@ -14,6 +27,7 @@ Meteor.publish('user', function (args) {
     this.error('You must be logged in to do this.');
   }
   const { userId } = args || {};
+
   return Meteor.users.find({ _id: userId });
 });
 
@@ -34,6 +48,7 @@ Meteor.publish('users', function (args) {
   if (!isAdmin(this.userId)) {
     this.error('You must be logged in to do this.');
   }
-  const { limit, skip, sort } = args || {};
-  return Meteor.users.find({}, { limit, skip, sort });
+  const { limit, search, skip, sort } = args || {};
+  const query = getQuery(new RegExp(search, 'i'));
+  return Meteor.users.find(query, { limit, skip, sort });
 });
