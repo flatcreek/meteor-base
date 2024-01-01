@@ -27,8 +27,7 @@ const Authentication = ({ children }) => {
   // currentUser is the user returned from Meteor's tracker. It is a reactive data source.
   // However, it does not include all user fields.
   const currentUserId = Meteor.userId();
-  useTracker(() => Meteor.user(), []);
-  const userData = Meteor.user();
+  const userData = useTracker(() => Meteor.user(), []);
 
   if (Meteor.isDevelopment) {
     console.log('Authentication.queryLoading:', queryLoading());

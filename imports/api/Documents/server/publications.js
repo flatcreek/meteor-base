@@ -51,6 +51,7 @@ Meteor.publish('document', function (args) {
 Meteor.publish('documents', function () {
   if (Meteor.isDevelopment) {
     console.log('queryDocuments starting');
+    console.log(this.userId);
   }
   if (!this.userId) {
     throw new Error('Must be logged in!');
