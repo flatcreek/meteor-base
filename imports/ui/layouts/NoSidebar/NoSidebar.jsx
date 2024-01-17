@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -13,23 +13,25 @@ const NoSidebar = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // If the user should be logged in, and they are not logged in -- redirect to the login page
-  if (authRequired && !userId) {
-    return navigate(`/login${`?redirect=${location.pathname}` || ''}`);
-  }
-
-  // If this is a public page and the user is logged in -- redirect to the index page
-  if (isPublic && userId) {
-    return navigate('/');
-  }
-
-  // If this page requires a role, check that the user is in that role
-  if (authRequired && userId && reqRole) {
-    const hasRole = isInRole(allowedRoles);
-    if (!hasRole) {
-      return navigate('/');
+  useEffect(() => {
+    // If the user should be logged in, and they are not logged in -- redirect to the login page
+    if (authRequired && !userId) {
+      navigate(`/login${`?redirect=${location.pathname}` || ''}`);
     }
-  }
+
+    // If this is a public page and the user is logged in -- redirect to the index page
+    if (isPublic && userId) {
+      navigate('/');
+    }
+
+    // If this page requires a role, check that the user is in that role
+    if (authRequired && userId && reqRole) {
+      const hasRole = isInRole(allowedRoles);
+      if (!hasRole) {
+        navigate('/');
+      }
+    }
+  }, []);
 
   // Otherwise -- show the page
   return (

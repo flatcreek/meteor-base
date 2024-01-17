@@ -58,7 +58,6 @@ const Signup = () => {
                   <Form.Control
                     type="text"
                     name="firstName"
-                    className="form-control"
                     placeholder="First Name"
                     {...register('firstName', { required: "What's your first name?" })}
                   />
@@ -73,7 +72,6 @@ const Signup = () => {
                   <Form.Control
                     type="text"
                     name="lastName"
-                    className="form-control"
                     placeholder="Last Name"
                     {...register('lastName', { required: "What's your last name?" })}
                   />
@@ -88,7 +86,6 @@ const Signup = () => {
               <Form.Control
                 type="email"
                 name="emailAddress"
-                className="form-control"
                 placeholder="Email Address"
                 {...register('emailAddress', {
                   required: "What's your email address?",
@@ -104,7 +101,6 @@ const Signup = () => {
               <Form.Control
                 type="password"
                 name="password"
-                className="form-control"
                 placeholder="Password"
                 {...register('password', {
                   required: 'Need a password here.',

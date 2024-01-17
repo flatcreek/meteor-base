@@ -51,7 +51,7 @@ const SEO = ({
   isHome,
 }) => (
   <Helmet>
-    <html lang="en" className="h-100" itemScope itemType={`http://schema.org/${schema}`} />
+    <html lang="en" itemScope itemType={`http://schema.org/${schema}`} />
     <meta charset="utf-8" />
 
     <title>{seoTitle(title, isHome)}</title>
@@ -76,7 +76,6 @@ const SEO = ({
     {updated && <meta name="article:modified_time" content={updated} />}
     {category && <meta name="article:section" content={category} />}
     {tags && <meta name="article:tag" content={tags} />}
-    <body className="h-100" />
   </Helmet>
 );
 
