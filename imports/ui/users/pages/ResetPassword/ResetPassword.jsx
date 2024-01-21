@@ -8,7 +8,7 @@ import AccountPageFooter from '../../components/AccountPageFooter';
 import StyledResetPassword from './styles';
 
 const ResetPassword = () => {
-  const { token } = useParams;
+  const { token } = useParams();
   const formRef = useRef();
 
   const handleSubmit = (form) => {
