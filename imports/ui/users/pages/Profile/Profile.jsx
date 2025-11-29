@@ -75,7 +75,6 @@ const Profile = () => {
                         <Form.Control
                           type="text"
                           name="firstName"
-                          className="form-control"
                           placeholder="First Name"
                           defaultValue={(user && user.profile && user.profile.firstName) || ''}
                           {...register('firstName', { required: "What's your first name?" })}
@@ -91,7 +90,6 @@ const Profile = () => {
                         <Form.Control
                           type="text"
                           name="lastName"
-                          className="form-control"
                           placeholder="Last Name"
                           defaultValue={(user && user.profile && user.profile.lastName) || ''}
                           {...register('lastName', { required: "What's your last name?" })}
@@ -107,7 +105,6 @@ const Profile = () => {
                     <Form.Control
                       type="email"
                       name="emailAddress"
-                      className="form-control"
                       placeholder="Email Address"
                       defaultValue={emailAddress || ''}
                       {...register('emailAddress', {
@@ -125,7 +122,6 @@ const Profile = () => {
                     <Form.Control
                       type="password"
                       name="currentPassword"
-                      className="form-control"
                       placeholder="Password"
                       {...register('currentPassword', {
                         minLength: { value: 6, message: 'Please use at least six characters.' },
@@ -144,7 +140,6 @@ const Profile = () => {
                     <Form.Control
                       type="password"
                       name="newPassword"
-                      className="form-control"
                       placeholder="Password"
                       {...register('newPassword', {
                         minLength: { value: 6, message: 'Please use at least six characters.' },
