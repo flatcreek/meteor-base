@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 
-const PageHeader = styled.div`
+const Wrapper = styled.div`
   border-bottom: 1px solid var(--gray-lighter);
-  padding: 0px 0 20px;
-  margin-bottom: 20px;
+  padding: 0px 0 1rem;
+  margin-bottom: 1rem;
 
-  h1 {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
+  h2 {
+    margin-bottom: 0;
   }
 
   p {
@@ -19,12 +17,8 @@ const PageHeader = styled.div`
   }
 
   @media screen and (min-width: 768px) {
-    padding: 10px 0 30px;
-    margin-bottom: 30px;
-
-    h1 {
-      font-size: 24px;
-    }
+    padding: 10px 0 1rem;
+    margin-bottom: 1rem;
 
     p {
       font-size: 16px;
@@ -32,16 +26,11 @@ const PageHeader = styled.div`
   }
 
   @media screen and (min-width: 992px) {
-    padding: 20px 0 40px;
-    margin-bottom: 40px;
+    padding: 20px 0 1rem;
+    margin-bottom: 1rem;
   }
 `;
 
-const PageHeaderContainer = styled.div`
-  text-align: center;
-`;
-
 export default {
-  PageHeader,
-  PageHeaderContainer,
+  Wrapper,
 };
