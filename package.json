@@ -45,7 +45,7 @@
     "jquery-validation": "^1.19.5",
     "jszip": "^3.7.0",
     "juice": "^8.1.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "luxon": "^3.4.4",
     "meteor-node-stubs": "^0.4.1",
     "polished": "^3.4.1",
