@@ -53,15 +53,41 @@ Static-first, deployed to Cloudflare Pages.
 | Errors | Sentry. |
 | AI | Anthropic Claude via official SDKs; every product exposes an MCP server for agent access. |
 | Agent instructions | AGENTS.md as the canonical instruction file + a CLAUDE.md pointer, following the core/sitecenter pattern. |
+| Branches | `develop` (default) + `main`, protected by the two rulesets below. See "Default branches & protection rules". |
 | Stack doc | This STACK.md, replicated to every repo; only the "This repo" section differs. Change the standard everywhere at once. |
+
+## Default branches & protection rules
+
+Every repo has exactly two long-lived branches:
+
+- **`develop`** — the default branch. All feature/agent branches come off it and all day-to-day PRs target it.
+- **`main`** — the release branch. It only receives release PRs from `develop`; nothing merges to `main` directly.
+
+Both are protected by a GitHub ruleset with identical rules:
+
+**Ruleset "Restrict develop branch"** (targets `develop`) and **ruleset "Restrict main branch"** (targets `main`):
+
+- Restrict deletions
+- Require a pull request before merging (0 required approvals)
+- Require status checks to pass
+- Block force pushes
+
+Zero required approvals is deliberate: the PR is the human review gate for agent-driven work, but a solo maintainer must be able to merge without a second reviewer. The status-check rule is what actually blocks a broken merge.
+
+Recommended additions (not yet mandated):
+
+- **Require conversation resolution before merging** — review threads, including automated review comments, must be resolved or explicitly accepted before merge.
+- **Keep the ruleset bypass list empty** (no admin bypass). For a genuine emergency, temporarily disable the ruleset instead — that makes the bypass deliberate and visible in the audit log.
+- Note: "Require status checks to pass" only takes effect once a named GitHub Actions check exists and is added to the ruleset. Repos without CI yet (patriotlibrary, patriotvotes) should add their check names to the rulesets when their CI lands — already a migration item in the conformance table.
 
 ## New-project checklist
 
 1. Pick Archetype A or B; record the choice (and any deviation, with why) in the new repo's STACK.md.
 2. Clone the reference repo's layout — patriotlibrary for A, SiteCenter tenant or the patriotvotes pattern for B.
-3. Day one: Node 22 `engines` + `.nvmrc`, ESLint 9 flat config, Prettier 3, GitHub Actions CI.
-4. Day one: AGENTS.md + CLAUDE.md pointer.
-5. Compose with the fleet before building anew: email/SMS → ContactDrive; web publishing → SiteCenter API/MCP; canonical content, voice, and search → Patriot Library MCP.
+3. Day one: create `develop` + `main`, set `develop` as the default branch, and apply the "Restrict develop branch" / "Restrict main branch" rulesets.
+4. Day one: Node 22 `engines` + `.nvmrc`, ESLint 9 flat config, Prettier 3, GitHub Actions CI.
+5. Day one: AGENTS.md + CLAUDE.md pointer.
+6. Compose with the fleet before building anew: email/SMS → ContactDrive; web publishing → SiteCenter API/MCP; canonical content, voice, and search → Patriot Library MCP.
 
 ## Fleet conformance (July 2026 survey)
 
