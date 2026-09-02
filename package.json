@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.10",
-    "@faker-js/faker": "^8.3.1",
+    "@faker-js/faker": "^10.5.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
